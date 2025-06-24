@@ -12,5 +12,8 @@ namespace YNOV_Password.Models
         
         [ObservableProperty]
         private bool _isPasswordVisible = false;
+        
+        [ObservableProperty]
+        private int _remainingTime = 0;
     }
 }

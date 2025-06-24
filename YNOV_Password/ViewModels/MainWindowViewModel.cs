@@ -160,24 +160,31 @@ public partial class MainWindowViewModel : ViewModelBase
 
         // Afficher le mot de passe
         entry.IsPasswordVisible = true;
+        entry.RemainingTime = 10; // Initialiser le temps restant à 10 secondes
         System.Diagnostics.Debug.WriteLine($"[DEBUG] IsPasswordVisible après: {entry.IsPasswordVisible}");
 
-        // Créer un timer pour masquer le mot de passe après 10 secondes
+        // Créer un timer qui se déclenche chaque seconde pour mettre à jour le countdown
         var timer = new Timer(_ =>
         {
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] Timer expiré pour {entry.Site}, masquage du mot de passe");
-            
-            // Utiliser Dispatcher pour s'assurer que le changement se fait sur le thread UI
             Dispatcher.UIThread.Post(() =>
             {
-                entry.IsPasswordVisible = false;
-                if (_passwordTimers.ContainsKey(entry))
+                entry.RemainingTime--;
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Temps restant pour {entry.Site}: {entry.RemainingTime}s");
+                
+                if (entry.RemainingTime <= 0)
                 {
-                    _passwordTimers[entry].Dispose();
-                    _passwordTimers.Remove(entry);
+                    System.Diagnostics.Debug.WriteLine($"[DEBUG] Timer expiré pour {entry.Site}, masquage du mot de passe");
+                    entry.IsPasswordVisible = false;
+                    entry.RemainingTime = 0;
+                    
+                    if (_passwordTimers.ContainsKey(entry))
+                    {
+                        _passwordTimers[entry].Dispose();
+                        _passwordTimers.Remove(entry);
+                    }
                 }
             });
-        }, null, TimeSpan.FromSeconds(10), Timeout.InfiniteTimeSpan);
+        }, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1)); // Se déclenche chaque seconde
 
         _passwordTimers[entry] = timer;
         System.Diagnostics.Debug.WriteLine("[DEBUG] Timer de 10 secondes démarré");
@@ -194,8 +201,9 @@ public partial class MainWindowViewModel : ViewModelBase
             _passwordTimers.Remove(entry);
         }
 
-        // Masquer le mot de passe
+        // Masquer le mot de passe et réinitialiser le timer
         entry.IsPasswordVisible = false;
+        entry.RemainingTime = 0;
     }
 
     private void PerformSearch(string? searchTerm)

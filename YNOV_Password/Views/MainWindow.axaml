@@ -18,6 +18,7 @@
     <Window.Resources>
         <converters:PasswordMaskConverter x:Key="PasswordMaskConverter"/>
         <converters:PasswordVisibilityConverter x:Key="PasswordVisibilityConverter"/>
+        <converters:RemainingTimeConverter x:Key="RemainingTimeConverter"/>
     </Window.Resources>
 
     <Window.Styles>
@@ -85,6 +86,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
@@ -92,8 +94,9 @@
                 <TextBlock Grid.Column="0" Text="Site" FontWeight="Bold" Margin="10,5" />
                 <TextBlock Grid.Column="1" Text="Nom d'utilisateur" FontWeight="Bold" Margin="10,5" />
                 <TextBlock Grid.Column="2" Text="Mot de passe" FontWeight="Bold" Margin="10,5" />
-                <TextBlock Grid.Column="3" Text="URL" FontWeight="Bold" Margin="10,5" />
-                <TextBlock Grid.Column="4" Text="Actions" FontWeight="Bold" Margin="10,5" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="3" Text="" FontWeight="Bold" Margin="5,5" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="4" Text="URL" FontWeight="Bold" Margin="10,5" />
+                <TextBlock Grid.Column="5" Text="Actions" FontWeight="Bold" Margin="10,5" HorizontalAlignment="Center" />
             </Grid>
 
             <!-- Contenu du tableau -->
@@ -106,6 +109,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="60"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
@@ -149,10 +153,20 @@
                                     </Button>
                                 </Grid>
                                 
-                                <TextBlock Grid.Column="3" Text="{Binding Url}" Margin="10,0" VerticalAlignment="Center" />
+                                <!-- Timer pour le temps restant -->
+                                <TextBlock Grid.Column="3" 
+                                           Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}" 
+                                           Margin="5,0" 
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           FontSize="12"
+                                           Foreground="#666666"
+                                           IsVisible="{Binding IsPasswordVisible}"/>
+                                
+                                <TextBlock Grid.Column="4" Text="{Binding Url}" Margin="10,0" VerticalAlignment="Center" />
                                 
                                 <!-- Bouton menu déroulant -->
-                                <Button Grid.Column="4" Content="⋯" HorizontalAlignment="Center" Width="30" Height="30">
+                                <Button Grid.Column="5" Content="⋯" HorizontalAlignment="Center" Width="30" Height="30">
                                     <Button.Flyout>
                                         <MenuFlyout>
                                             <MenuItem Header="Copier MDP" 
