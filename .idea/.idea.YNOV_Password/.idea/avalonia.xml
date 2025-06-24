@@ -3,6 +3,8 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="YNOV_Password/App.axaml" value="YNOV_Password/YNOV_Password.csproj" />
+        <entry key="YNOV_Password/Styles/main.axaml" value="YNOV_Password/YNOV_Password.csproj" />
         <entry key="YNOV_Password/Views/MainWindow.axaml" value="YNOV_Password/YNOV_Password.csproj" />
       </map>
     </option>

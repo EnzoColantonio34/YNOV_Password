@@ -1,11 +1,17 @@
 using Avalonia.Controls;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using YNOV_Password.Models;
+using YNOV_Password.ViewModels;
 
-namespace YNOV_Password.Views;
-
-public partial class MainWindow : Window
+namespace YNOV_Password.Views
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+            // Ne pas définir DataContext ici, il est défini dans App.axaml.cs
+        }
     }
 }

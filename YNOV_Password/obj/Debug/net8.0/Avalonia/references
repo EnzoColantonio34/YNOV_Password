@@ -26,6 +26,17 @@
 /Users/enzocolantonio/.nuget/packages/harfbuzzsharp/7.3.0.3/lib/net6.0/HarfBuzzSharp.dll
 /Users/enzocolantonio/.nuget/packages/microcom.runtime/0.11.0/lib/net5.0/MicroCom.Runtime.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/Microsoft.CSharp.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.data.sqlite.core/9.0.5/lib/net8.0/Microsoft.Data.Sqlite.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.5/lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.entityframeworkcore/9.0.5/lib/net8.0/Microsoft.EntityFrameworkCore.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.5/lib/net8.0/Microsoft.Extensions.Caching.Abstractions.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.caching.memory/9.0.5/lib/net8.0/Microsoft.Extensions.Caching.Memory.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.5/lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.5/lib/net8.0/Microsoft.Extensions.DependencyInjection.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.5/lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.logging/9.0.5/lib/net8.0/Microsoft.Extensions.Logging.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.options/9.0.5/lib/net8.0/Microsoft.Extensions.Options.dll
+/Users/enzocolantonio/.nuget/packages/microsoft.extensions.primitives/9.0.5/lib/net8.0/Microsoft.Extensions.Primitives.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/Microsoft.VisualBasic.Core.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/Microsoft.VisualBasic.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/Microsoft.Win32.Primitives.dll
@@ -33,6 +44,9 @@
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/mscorlib.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/netstandard.dll
 /Users/enzocolantonio/.nuget/packages/skiasharp/2.88.9/lib/net6.0/SkiaSharp.dll
+/Users/enzocolantonio/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.10/lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll
+/Users/enzocolantonio/.nuget/packages/sqlitepclraw.core/2.1.10/lib/netstandard2.0/SQLitePCLRaw.core.dll
+/Users/enzocolantonio/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.10/lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.AppContext.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Buffers.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Collections.Concurrent.dll
@@ -54,7 +68,7 @@
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Data.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Diagnostics.Contracts.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Diagnostics.Debug.dll
-/Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Diagnostics.DiagnosticSource.dll
+/Users/enzocolantonio/.nuget/packages/system.diagnostics.diagnosticsource/9.0.5/lib/net8.0/System.Diagnostics.DiagnosticSource.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Diagnostics.FileVersionInfo.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Diagnostics.Process.dll
 /Users/enzocolantonio/.nuget/packages/microsoft.netcore.app.ref/8.0.11/ref/net8.0/System.Diagnostics.StackTrace.dll
