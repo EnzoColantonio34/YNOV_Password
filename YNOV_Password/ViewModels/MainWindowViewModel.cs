@@ -128,10 +128,23 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public void AddPassword(PasswordEntry entry)
     {
-        // Ajouter à la base de données
-        _dbService.Add(entry);
-
-        // Rafraîchir la liste affichée
-        PerformSearch(SearchText);
+        try
+        {
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] Ajout du mot de passe pour {entry.Site}");
+            
+            // Ajouter à la base de données
+            _dbService.Add(entry);
+            
+            System.Diagnostics.Debug.WriteLine("[DEBUG] Mot de passe ajouté à la base de données");
+            
+            // Rafraîchir la liste affichée
+            PerformSearch(SearchText);
+            
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] Liste rafraîchie, {Passwords.Count} éléments");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] Erreur lors de l'ajout: {ex.Message}");
+        }
     }
 }
