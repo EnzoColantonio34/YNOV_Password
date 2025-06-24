@@ -35,6 +35,11 @@ namespace YNOV_Password.ViewModels
             CancelCommand = new RelayCommand<object>(_ => Cancel());
         }
 
+        public AddPasswordViewModel(Window window, MainWindowViewModel mainViewModel, string preGeneratedPassword) : this(window, mainViewModel)
+        {
+            Password = preGeneratedPassword;
+        }
+
         private void Save()
         {
             System.Diagnostics.Debug.WriteLine($"[DEBUG] Save() appelée - Site: '{Site}', Password: '{Password}'");

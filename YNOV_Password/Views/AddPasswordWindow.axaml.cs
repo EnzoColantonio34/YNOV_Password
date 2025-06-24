@@ -22,6 +22,12 @@ namespace YNOV_Password.Views
             DataContext = viewModel;
         }
 
+        public AddPasswordWindow(MainWindowViewModel mainViewModel, string preGeneratedPassword) : this()
+        {
+            var viewModel = new AddPasswordViewModel(this, mainViewModel, preGeneratedPassword);
+            DataContext = viewModel;
+        }
+
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);

@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Diagnostics;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using YNOV_Password.Models;
@@ -14,7 +15,6 @@ namespace YNOV_Password.Views
         public MainWindow()
         {
             InitializeComponent();
-            // Forcer le DataContext au cas où il ne serait pas défini
             if (DataContext == null)
             {
                 DataContext = new MainWindowViewModel();
@@ -22,16 +22,13 @@ namespace YNOV_Password.Views
             }
             System.Diagnostics.Debug.WriteLine($"[DEBUG] DataContext type: {DataContext?.GetType().Name}");
             
-            // Ajouter un gestionnaire d'événement global pour masquer les mots de passe quand on clique ailleurs
             this.PointerPressed += MainWindow_PointerPressed;
         }
 
         private void MainWindow_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            // Masquer tous les mots de passe visibles quand on clique ailleurs dans la fenêtre
             if (DataContext is MainWindowViewModel viewModel)
             {
-                // Vérifier si le clic n'est pas sur un bouton de mot de passe ou un menu
                 var hitTest = e.Source;
                 if (hitTest is not Button button || button.DataContext is not PasswordEntry)
                 {
@@ -62,8 +59,6 @@ namespace YNOV_Password.Views
                 System.Diagnostics.Debug.WriteLine($"[DEBUG] DataContext n'est pas MainWindowViewModel: {DataContext?.GetType().Name}");
             }
         }
-
-        // Nous utilisons le binding avec AddPasswordCommand, pas besoin de gestion d'événement supplémentaire
         
         private void CopyPassword_Click(object? sender, RoutedEventArgs e)
         {
@@ -128,6 +123,45 @@ namespace YNOV_Password.Views
                         viewModel.HidePassword(entry);
                     }
                 }
+            }
+        }
+
+        private async void GeneratePasswordButton_Click(object? sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] GeneratePasswordButton_Click appelé");
+            
+            var passwordGeneratorWindow = new PasswordGeneratorWindow
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+
+            try
+            {
+                await passwordGeneratorWindow.ShowDialog(this);
+                
+                if (passwordGeneratorWindow.WasPasswordSelected && 
+                    !string.IsNullOrEmpty(passwordGeneratorWindow.GeneratedPassword))
+                {
+                    System.Diagnostics.Debug.WriteLine($"[DEBUG] Mot de passe généré sélectionné: {passwordGeneratorWindow.GeneratedPassword}");
+                    
+                    // Copier le mot de passe généré dans le presse-papiers
+                    var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+                    if (clipboard != null)
+                    {
+                        await clipboard.SetTextAsync(passwordGeneratorWindow.GeneratedPassword);
+                        System.Diagnostics.Debug.WriteLine("[DEBUG] Mot de passe copié dans le presse-papiers");
+                    }
+                    
+                    // Optionnel : Ouvrir directement la fenêtre d'ajout avec le mot de passe pré-rempli
+                    if (DataContext is MainWindowViewModel viewModel)
+                    {
+                        await viewModel.ShowAddPasswordDialogWithGeneratedPassword(passwordGeneratorWindow.GeneratedPassword);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Erreur lors de l'ouverture de la fenêtre de génération: {ex.Message}");
             }
         }
     }

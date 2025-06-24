@@ -292,6 +292,28 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    public async System.Threading.Tasks.Task ShowAddPasswordDialogWithGeneratedPassword(string generatedPassword)
+    {
+        try
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] Ouverture de la fenêtre d'ajout avec mot de passe généré...");
+            var mainWindow = (App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+            if (mainWindow != null)
+            {
+                var dialog = new AddPasswordWindow(this, generatedPassword);
+                await dialog.ShowDialog(mainWindow);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("MainWindow est null, impossible d'afficher la boîte de dialogue");
+            }
+        }
+        catch (System.Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erreur lors de l'affichage de la boîte de dialogue: {ex}");
+        }
+    }
+
     private async System.Threading.Tasks.Task MessageBox(Window parent, string message)
     {
         var msgBox = new Window
