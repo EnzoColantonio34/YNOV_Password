@@ -19,9 +19,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string _searchText = string.Empty;
 
-    public ICommand CopyPasswordCommand { get; }
-    public ICommand SearchCommand { get; }
-    public ICommand AddPasswordCommand { get; }
+    public ICommand CopyPasswordCommand { get; private set; } = null!;
+    public ICommand CopyUrlCommand { get; private set; } = null!;
+    public ICommand DeletePasswordCommand { get; private set; } = null!;
+    public ICommand SearchCommand { get; private set; } = null!;
+    public ICommand AddPasswordCommand { get; private set; } = null!;
 
     public MainWindowViewModel()
     {
@@ -31,27 +33,102 @@ public partial class MainWindowViewModel : ViewModelBase
         // Si la base de données est vide, ajouter des exemples
         if (Passwords.Count == 0)
         {
-            Passwords.Add(new PasswordEntry { Site = "example.com", Username = "user1", Password = "pass1", Url = "http://example.com" });
-            Passwords.Add(new PasswordEntry { Site = "google.com", Username = "user2", Password = "pass2", Url = "http://google.com" });
+            var example1 = new PasswordEntry { Site = "example.com", Username = "user1", Password = "pass1", Url = "http://example.com" };
+            var example2 = new PasswordEntry { Site = "google.com", Username = "user2", Password = "pass2", Url = "http://google.com" };
+            
+            _dbService.Add(example1);
+            _dbService.Add(example2);
+            
+            // Recharger les données depuis la base
+            Passwords.Clear();
+            foreach (var entry in _dbService.GetAll())
+            {
+                Passwords.Add(entry);
+            }
         }
 
         CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
+        CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
+        DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
         SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
         AddPasswordCommand = new Commands.RelayCommand<object>(_ => {
             System.Diagnostics.Debug.WriteLine("[DEBUG] AddPasswordCommand exécutée");
             ShowAddPasswordDialog();
         });
+        
+        System.Diagnostics.Debug.WriteLine("[DEBUG] Toutes les commandes ont été initialisées");
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] CopyPasswordCommand: {CopyPasswordCommand != null}");
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] CopyUrlCommand: {CopyUrlCommand != null}");
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] DeletePasswordCommand: {DeletePasswordCommand != null}");
     }
 
     private async void CopyToClipboard(string password)
     {
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] CopyToClipboard appelée avec: {password}");
         if (password != null)
         {
             var topLevel = TopLevel.GetTopLevel((App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
             if (topLevel?.Clipboard != null)
             {
                 await topLevel.Clipboard.SetTextAsync(password);
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Mot de passe copié dans le presse-papiers");
             }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Impossible d'accéder au presse-papiers");
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] Mot de passe est null");
+        }
+    }
+
+    private async void CopyUrlToClipboard(string url)
+    {
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] CopyUrlToClipboard appelée avec: {url}");
+        if (url != null)
+        {
+            var topLevel = TopLevel.GetTopLevel((App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
+            if (topLevel?.Clipboard != null)
+            {
+                await topLevel.Clipboard.SetTextAsync(url);
+                System.Diagnostics.Debug.WriteLine("[DEBUG] URL copiée dans le presse-papiers");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Impossible d'accéder au presse-papiers");
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] URL est null");
+        }
+    }
+
+    private void DeletePassword(PasswordEntry entry)
+    {
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] DeletePassword appelée avec: {entry?.Site}");
+        if (entry != null)
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Suppression de l'entrée ID: {entry.Id}");
+                // Supprimer de la base de données
+                _dbService.Delete(entry.Id);
+                
+                // Supprimer de la collection affichée
+                Passwords.Remove(entry);
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Entrée supprimée avec succès");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la suppression: {ex.Message}");
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] Entry est null");
         }
     }
 

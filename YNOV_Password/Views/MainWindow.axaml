@@ -104,7 +104,24 @@
                                 <TextBlock Grid.Column="0" Text="{Binding Site}" Margin="10,0" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="1" Text="{Binding Username}" Margin="10,0" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="2" Text="{Binding Password, Converter={StaticResource PasswordMaskConverter}}" Margin="10,0" VerticalAlignment="Center" />
-                                <Button Grid.Column="3" Content="Copier" Command="{Binding $parent[ItemsControl].DataContext.CopyPasswordCommand}" CommandParameter="{Binding Password}" HorizontalAlignment="Center" />
+                                
+                                <!-- Bouton menu déroulant -->
+                                <Button Grid.Column="3" Content="⋯" HorizontalAlignment="Center" Width="30" Height="30">
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuItem Header="Copier MDP" 
+                                                      Click="CopyPassword_Click"
+                                                      Tag="{Binding}"/>
+                                            <MenuItem Header="Copier URL" 
+                                                      Click="CopyUrl_Click"
+                                                      Tag="{Binding}"/>
+                                            <Separator/>
+                                            <MenuItem Header="Supprimer" 
+                                                      Click="DeletePassword_Click"
+                                                      Tag="{Binding}"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
                             </Grid>
                         </Border>
                     </DataTemplate>

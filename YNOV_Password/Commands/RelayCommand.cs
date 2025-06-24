@@ -16,7 +16,21 @@ namespace YNOV_Password.Commands
 
         public bool CanExecute(object? parameter)
         {
-            return _canExecute == null || (parameter is T t && _canExecute(t));
+            if (_canExecute == null)
+                return true;
+
+            if (parameter is T t)
+                return _canExecute(t);
+            
+            // Si T est string et parameter est null, traiter comme chaîne vide
+            if (typeof(T) == typeof(string) && parameter == null)
+                return _canExecute((T)(object)"");
+                
+            // Pour les types référence nullable
+            if (parameter == null && !typeof(T).IsValueType)
+                return _canExecute(default(T)!);
+                
+            return false;
         }
 
         public void Execute(object? parameter)
@@ -25,12 +39,21 @@ namespace YNOV_Password.Commands
             {
                 _execute(t);
             }
+            else if (typeof(T) == typeof(string) && parameter == null)
+            {
+                _execute((T)(object)"");
+            }
+            else if (parameter == null && !typeof(T).IsValueType)
+            {
+                _execute(default(T)!);
+            }
         }
 
-        public event EventHandler? CanExecuteChanged
+        public event EventHandler? CanExecuteChanged;
+
+        public void RaiseCanExecuteChanged()
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -55,20 +78,11 @@ namespace YNOV_Password.Commands
             _execute();
         }
 
-        public event EventHandler? CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
-    }
+        public event EventHandler? CanExecuteChanged;
 
-    public static class CommandManager
-    {
-        public static event EventHandler? RequerySuggested;
-
-        public static void InvalidateRequerySuggested()
+        public void RaiseCanExecuteChanged()
         {
-            RequerySuggested?.Invoke(null, EventArgs.Empty);
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

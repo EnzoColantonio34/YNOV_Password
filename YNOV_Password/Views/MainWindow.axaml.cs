@@ -40,5 +40,35 @@ namespace YNOV_Password.Views
         }
 
         // Nous utilisons le binding avec AddPasswordCommand, pas besoin de gestion d'événement supplémentaire
+        
+        private void CopyPassword_Click(object? sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] CopyPassword_Click appelé");
+            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Copie du mot de passe pour: {entry.Site}");
+                viewModel.CopyPasswordCommand.Execute(entry.Password);
+            }
+        }
+
+        private void CopyUrl_Click(object? sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] CopyUrl_Click appelé");
+            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Copie de l'URL pour: {entry.Site}");
+                viewModel.CopyUrlCommand.Execute(entry.Url);
+            }
+        }
+
+        private void DeletePassword_Click(object? sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] DeletePassword_Click appelé");
+            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Suppression de l'entrée: {entry.Site}");
+                viewModel.DeletePasswordCommand.Execute(entry);
+            }
+        }
     }
 }

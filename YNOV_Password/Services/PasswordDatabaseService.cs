@@ -36,16 +36,17 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Site, Username, Password, Url FROM Passwords";
+            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords";
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
                 list.Add(new PasswordEntry
                 {
-                    Site = reader.GetString(0),
-                    Username = reader.GetString(1),
-                    Password = reader.GetString(2),
-                    Url = reader.GetString(3)
+                    Id = reader.GetInt32(0),
+                    Site = reader.GetString(1),
+                    Username = reader.GetString(2),
+                    Password = reader.GetString(3),
+                    Url = reader.GetString(4)
                 });
             }
             return list;
@@ -57,7 +58,7 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Site, Username, Password, Url FROM Passwords WHERE Site LIKE @search OR Username LIKE @search";
+            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords WHERE Site LIKE @search OR Username LIKE @search";
             command.Parameters.AddWithValue("@search", $"%{searchTerm}%");
 
             using var reader = command.ExecuteReader();
@@ -65,10 +66,11 @@ namespace YNOV_Password.Services
             {
                 list.Add(new PasswordEntry
                 {
-                    Site = reader.GetString(0),
-                    Username = reader.GetString(1),
-                    Password = reader.GetString(2),
-                    Url = reader.GetString(3)
+                    Id = reader.GetInt32(0),
+                    Site = reader.GetString(1),
+                    Username = reader.GetString(2),
+                    Password = reader.GetString(3),
+                    Url = reader.GetString(4)
                 });
             }
             return list;
@@ -94,6 +96,16 @@ namespace YNOV_Password.Services
             command.Parameters.AddWithValue("@username", entry.Username ?? "");
             command.Parameters.AddWithValue("@password", entry.Password);
             command.Parameters.AddWithValue("@url", entry.Url ?? "");
+            command.ExecuteNonQuery();
+        }
+
+        public void Delete(int id)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "DELETE FROM Passwords WHERE Id = @id";
+            command.Parameters.AddWithValue("@id", id);
             command.ExecuteNonQuery();
         }
     }
