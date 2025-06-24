@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows.Input;
 using YNOV_Password.Commands;
 using YNOV_Password.Models;
@@ -7,6 +9,7 @@ using YNOV_Password.Services;
 using YNOV_Password.Views;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace YNOV_Password.ViewModels;
@@ -15,6 +18,7 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     public ObservableCollection<PasswordEntry> Passwords { get; set; }
     private readonly PasswordDatabaseService _dbService;
+    private readonly Dictionary<PasswordEntry, Timer> _passwordTimers = new();
 
     [ObservableProperty]
     private string _searchText = string.Empty;
@@ -24,6 +28,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand DeletePasswordCommand { get; private set; } = null!;
     public ICommand SearchCommand { get; private set; } = null!;
     public ICommand AddPasswordCommand { get; private set; } = null!;
+    public ICommand ShowPasswordCommand { get; private set; } = null!;
 
     public MainWindowViewModel()
     {
@@ -51,6 +56,7 @@ public partial class MainWindowViewModel : ViewModelBase
         CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
         DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
         SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
+        ShowPasswordCommand = new Commands.RelayCommand<PasswordEntry>(ShowPassword);
         AddPasswordCommand = new Commands.RelayCommand<object>(_ => {
             System.Diagnostics.Debug.WriteLine("[DEBUG] AddPasswordCommand exécutée");
             ShowAddPasswordDialog();
@@ -130,6 +136,66 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             System.Diagnostics.Debug.WriteLine("[DEBUG] Entry est null");
         }
+    }
+
+    private void ShowPassword(PasswordEntry? entry)
+    {
+        if (entry == null) 
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] ShowPassword: entry est null");
+            return;
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] ShowPassword appelée pour {entry.Site}");
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] Password avant: {entry.Password}");
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] IsPasswordVisible avant: {entry.IsPasswordVisible}");
+
+        // Annuler le timer existant s'il y en a un
+        if (_passwordTimers.ContainsKey(entry))
+        {
+            _passwordTimers[entry].Dispose();
+            _passwordTimers.Remove(entry);
+            System.Diagnostics.Debug.WriteLine("[DEBUG] Timer existant supprimé");
+        }
+
+        // Afficher le mot de passe
+        entry.IsPasswordVisible = true;
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] IsPasswordVisible après: {entry.IsPasswordVisible}");
+
+        // Créer un timer pour masquer le mot de passe après 10 secondes
+        var timer = new Timer(_ =>
+        {
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] Timer expiré pour {entry.Site}, masquage du mot de passe");
+            
+            // Utiliser Dispatcher pour s'assurer que le changement se fait sur le thread UI
+            Dispatcher.UIThread.Post(() =>
+            {
+                entry.IsPasswordVisible = false;
+                if (_passwordTimers.ContainsKey(entry))
+                {
+                    _passwordTimers[entry].Dispose();
+                    _passwordTimers.Remove(entry);
+                }
+            });
+        }, null, TimeSpan.FromSeconds(10), Timeout.InfiniteTimeSpan);
+
+        _passwordTimers[entry] = timer;
+        System.Diagnostics.Debug.WriteLine("[DEBUG] Timer de 10 secondes démarré");
+    }
+
+    public void HidePassword(PasswordEntry? entry)
+    {
+        if (entry == null) return;
+
+        // Annuler le timer s'il existe
+        if (_passwordTimers.ContainsKey(entry))
+        {
+            _passwordTimers[entry].Dispose();
+            _passwordTimers.Remove(entry);
+        }
+
+        // Masquer le mot de passe
+        entry.IsPasswordVisible = false;
     }
 
     private void PerformSearch(string? searchTerm)
