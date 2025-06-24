@@ -30,18 +30,39 @@
             </Border.Background>
 
             <StackPanel>
-                <!-- Titre -->
-                <TextBlock Text="YNOV Password"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="White"
-                           HorizontalAlignment="Left"/>
+                <!-- Titre et bouton -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" 
+                               Text="YNOV Password"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"/>
+
+                    <Button Grid.Column="1"
+                            Content="Ajouter"
+                            Click="AddButton_Click"
+                            Padding="10,5"
+                            Background="White"
+                            Foreground="#059669"
+                            CornerRadius="4"
+                            HorizontalAlignment="Right"
+                            x:Name="AddButton"/>
+                </Grid>
 
                 <!-- Barre de recherche -->
                 <TextBox Classes="SearchBox"
                          Watermark="Rechercher..."
                          Width="200"
-                         HorizontalAlignment="Left"/>
+                         Text="{Binding SearchText}"
+                         HorizontalAlignment="Left"
+                         Margin="0,10,0,0"/>
             </StackPanel>
         </Border>
 
