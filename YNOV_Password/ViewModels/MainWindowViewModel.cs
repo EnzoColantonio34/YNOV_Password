@@ -25,6 +25,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _searchText = string.Empty;
 
     public ICommand CopyPasswordCommand { get; private set; } = null!;
+    public ICommand CopyUsernameCommand { get; private set; } = null!;
     public ICommand CopyUrlCommand { get; private set; } = null!;
     public ICommand DeletePasswordCommand { get; private set; } = null!;
     public ICommand SearchCommand { get; private set; } = null!;
@@ -55,6 +56,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
+        CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
         CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
         DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
         SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
@@ -112,6 +114,28 @@ public partial class MainWindowViewModel : ViewModelBase
         else
         {
             System.Diagnostics.Debug.WriteLine("[DEBUG] URL est null");
+        }
+    }
+
+    private async void CopyUsernameToClipboard(string username)
+    {
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] CopyUsernameToClipboard appelée avec: {username}");
+        if (username != null)
+        {
+            var topLevel = TopLevel.GetTopLevel((App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
+            if (topLevel?.Clipboard != null)
+            {
+                await topLevel.Clipboard.SetTextAsync(username);
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Nom d'utilisateur copié dans le presse-papiers");
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Impossible d'accéder au presse-papiers");
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] Nom d'utilisateur est null");
         }
     }
 

@@ -80,6 +80,16 @@ namespace YNOV_Password.Views
             }
         }
 
+        private void CopyUsername_Click(object? sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] CopyUsername_Click appelé");
+            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Copie du nom d'utilisateur pour: {entry.Site}");
+                viewModel.CopyUsernameCommand.Execute(entry.Username);
+            }
+        }
+
         private void OpenUrl_Click(object? sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("[DEBUG] OpenUrl_Click appelé");

@@ -205,6 +205,9 @@
                                             <MenuItem Header="Copier MDP" 
                                                       Click="CopyPassword_Click"
                                                       Tag="{Binding}"/>
+                                            <MenuItem Header="Copier l'utilisateur" 
+                                                      Click="CopyUsername_Click"
+                                                      Tag="{Binding}"/>
                                             <MenuItem Header="Copier URL" 
                                                       Click="CopyUrl_Click"
                                                       Tag="{Binding}"/>
