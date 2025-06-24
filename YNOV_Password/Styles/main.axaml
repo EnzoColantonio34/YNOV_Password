@@ -36,4 +36,18 @@
     <Style Selector="Grid.TableHeader">
         <Setter Property="Background" Value="#EEEEEE"/>
     </Style>
+
+    <!-- Style pour les champs de saisie de mot de passe -->
+    <Style Selector="TextBox.PasswordInput">
+        <Setter Property="FontFamily" Value="JetBrains Mono,Consolas,Monaco,Menlo,Courier New,monospace"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="LetterSpacing" Value="1"/>
+    </Style>
+
+    <!-- Style pour l'affichage des mots de passe dans la liste -->
+    <Style Selector="TextBlock.PasswordDisplay">
+        <Setter Property="FontFamily" Value="JetBrains Mono,Consolas,Monaco,Menlo,Courier New,monospace"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="LetterSpacing" Value="1"/>
+    </Style>
 </Styles>

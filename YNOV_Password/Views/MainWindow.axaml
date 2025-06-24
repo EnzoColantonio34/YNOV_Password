@@ -120,11 +120,13 @@
                                 <!-- Champ mot de passe cliquable -->
                                 <Grid Grid.Column="2">
                                     <TextBlock Text="{Binding Password, Converter={StaticResource PasswordMaskConverter}}" 
+                                               Classes="PasswordDisplay"
                                                Margin="10,0" 
                                                VerticalAlignment="Center"
                                                Background="Transparent"
                                                IsVisible="{Binding !IsPasswordVisible}"/>
                                     <TextBlock Text="{Binding Password}" 
+                                               Classes="PasswordDisplay"
                                                Margin="10,0" 
                                                VerticalAlignment="Center"
                                                Background="Transparent"
