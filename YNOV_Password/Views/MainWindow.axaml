@@ -163,7 +163,26 @@
                                            Foreground="#666666"
                                            IsVisible="{Binding IsPasswordVisible}"/>
                                 
-                                <TextBlock Grid.Column="4" Text="{Binding Url}" Margin="10,0" VerticalAlignment="Center" />
+                                <!-- URL cliquable -->
+                                <Button Grid.Column="4" 
+                                        Background="Transparent" 
+                                        BorderThickness="0" 
+                                        Padding="10,0" 
+                                        HorizontalAlignment="Stretch" 
+                                        HorizontalContentAlignment="Left"
+                                        VerticalAlignment="Stretch"
+                                        Content="{Binding Url}"
+                                        Cursor="Hand"
+                                        Foreground="#0066CC"
+                                        Click="OpenUrl_Click"
+                                        Tag="{Binding}">
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover">
+                                            <Setter Property="Background" Value="#F0F8FF"/>
+                                            <Setter Property="Foreground" Value="#0052A3"/>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
                                 
                                 <!-- Bouton menu déroulant -->
                                 <Button Grid.Column="5" Content="⋯" HorizontalAlignment="Center" Width="30" Height="30">

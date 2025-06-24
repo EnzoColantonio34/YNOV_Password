@@ -11,6 +11,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.Diagnostics;
 
 namespace YNOV_Password.ViewModels;
 
@@ -29,6 +30,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand SearchCommand { get; private set; } = null!;
     public ICommand AddPasswordCommand { get; private set; } = null!;
     public ICommand ShowPasswordCommand { get; private set; } = null!;
+    public ICommand OpenUrlCommand { get; private set; } = null!;
 
     public MainWindowViewModel()
     {
@@ -57,6 +59,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
         SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
         ShowPasswordCommand = new Commands.RelayCommand<PasswordEntry>(ShowPassword);
+        OpenUrlCommand = new Commands.RelayCommand<string>(OpenUrl);
         AddPasswordCommand = new Commands.RelayCommand<object>(_ => {
             System.Diagnostics.Debug.WriteLine("[DEBUG] AddPasswordCommand exécutée");
             ShowAddPasswordDialog();
@@ -109,6 +112,39 @@ public partial class MainWindowViewModel : ViewModelBase
         else
         {
             System.Diagnostics.Debug.WriteLine("[DEBUG] URL est null");
+        }
+    }
+
+    private void OpenUrl(string url)
+    {
+        System.Diagnostics.Debug.WriteLine($"[DEBUG] OpenUrl appelée avec: {url}");
+        if (!string.IsNullOrWhiteSpace(url))
+        {
+            try
+            {
+                // Ajouter https:// si aucun protocole n'est spécifié
+                if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+                {
+                    url = "https://" + url;
+                }
+                
+                // Utiliser Process.Start pour ouvrir l'URL dans le navigateur par défaut
+                var psi = new ProcessStartInfo
+                {
+                    FileName = url,
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] URL ouverte: {url}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Erreur lors de l'ouverture de l'URL: {ex.Message}");
+            }
+        }
+        else
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] URL est vide ou null");
         }
     }
 

@@ -85,6 +85,16 @@ namespace YNOV_Password.Views
             }
         }
 
+        private void OpenUrl_Click(object? sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] OpenUrl_Click appelé");
+            if (sender is Button button && button.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            {
+                System.Diagnostics.Debug.WriteLine($"[DEBUG] Ouverture de l'URL pour: {entry.Site} - {entry.Url}");
+                viewModel.OpenUrlCommand.Execute(entry.Url);
+            }
+        }
+
         private void DeletePassword_Click(object? sender, RoutedEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("[DEBUG] DeletePassword_Click appelé");
