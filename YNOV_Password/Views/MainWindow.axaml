@@ -79,13 +79,15 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="Site" FontWeight="Bold" Margin="10,5" />
                 <TextBlock Grid.Column="1" Text="Nom d'utilisateur" FontWeight="Bold" Margin="10,5" />
                 <TextBlock Grid.Column="2" Text="Mot de passe" FontWeight="Bold" Margin="10,5" />
-                <TextBlock Grid.Column="3" Text="Actions" FontWeight="Bold" Margin="10,5" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="3" Text="URL" FontWeight="Bold" Margin="10,5" />
+                <TextBlock Grid.Column="4" Text="Actions" FontWeight="Bold" Margin="10,5" HorizontalAlignment="Center" />
             </Grid>
 
             <!-- Contenu du tableau -->
@@ -98,15 +100,17 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{Binding Site}" Margin="10,0" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="1" Text="{Binding Username}" Margin="10,0" VerticalAlignment="Center" />
                                 <TextBlock Grid.Column="2" Text="{Binding Password, Converter={StaticResource PasswordMaskConverter}}" Margin="10,0" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="3" Text="{Binding Url}" Margin="10,0" VerticalAlignment="Center" />
                                 
                                 <!-- Bouton menu déroulant -->
-                                <Button Grid.Column="3" Content="⋯" HorizontalAlignment="Center" Width="30" Height="30">
+                                <Button Grid.Column="4" Content="⋯" HorizontalAlignment="Center" Width="30" Height="30">
                                     <Button.Flyout>
                                         <MenuFlyout>
                                             <MenuItem Header="Copier MDP" 
