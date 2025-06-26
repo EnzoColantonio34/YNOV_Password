@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using YNOV_Password.Commands;
 using YNOV_Password.Models;
@@ -28,6 +29,9 @@ namespace YNOV_Password.ViewModels
         [ObservableProperty]
         private string _errorMessage = string.Empty;
         
+        [ObservableProperty]
+        private string _successMessage = string.Empty;
+        
         public ICommand LoginCommand { get; private set; }
         public ICommand RegisterCommand { get; private set; }
         public ICommand SwitchToRegisterCommand { get; private set; }
@@ -51,10 +55,17 @@ namespace YNOV_Password.ViewModels
         private void PerformLogin()
         {
             ErrorMessage = string.Empty;
+            SuccessMessage = string.Empty;
             
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
                 ErrorMessage = "Veuillez remplir tous les champs.";
+                return;
+            }
+
+            if (!IsValidEmail(Email))
+            {
+                ErrorMessage = "L'adresse email entrée ne respecte pas le format valide (exemple: nom@domaine.com).";
                 return;
             }
 
@@ -76,10 +87,17 @@ namespace YNOV_Password.ViewModels
         private void PerformRegister()
         {
             ErrorMessage = string.Empty;
+            SuccessMessage = string.Empty;
             
             if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
                 ErrorMessage = "Veuillez remplir tous les champs.";
+                return;
+            }
+            
+            if (!IsValidEmail(Email))
+            {
+                ErrorMessage = "L'adresse email entrée ne respecte pas le format valide (exemple: nom@domaine.com).";
                 return;
             }
             
@@ -100,7 +118,7 @@ namespace YNOV_Password.ViewModels
             {
                 // Basculer vers le mode login après inscription réussie
                 SwitchToLogin();
-                ErrorMessage = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
+                SuccessMessage = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
                 System.Diagnostics.Debug.WriteLine($"[DEBUG] Inscription réussie pour {Email}");
             }
             else
@@ -114,6 +132,7 @@ namespace YNOV_Password.ViewModels
         {
             IsRegistering = true;
             ErrorMessage = string.Empty;
+            SuccessMessage = string.Empty;
             ClearFields();
         }
 
@@ -121,6 +140,7 @@ namespace YNOV_Password.ViewModels
         {
             IsRegistering = false;
             ErrorMessage = string.Empty;
+            SuccessMessage = string.Empty;
             ClearFields();
         }
 
@@ -130,6 +150,23 @@ namespace YNOV_Password.ViewModels
             Password = string.Empty;
             Username = string.Empty;
             ConfirmPassword = string.Empty;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                // Pattern regex pour valider le format email
+                string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+                return Regex.IsMatch(email, pattern);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
