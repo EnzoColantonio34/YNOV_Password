@@ -8,12 +8,25 @@ namespace YNOV_Password.Services
     public class PasswordDatabaseService
     {
         private readonly string _connectionString = "Data Source=passwords.db";
+        private readonly EncryptionService _encryptionService;
         public int CurrentUserId { get; set; }
 
-        public PasswordDatabaseService(int userId = 0)
+        public PasswordDatabaseService(int userId = 0, string masterPassword = "default_master_key")
         {
             CurrentUserId = userId;
+            _encryptionService = new EncryptionService(masterPassword);
             Initialize();
+            
+            // Migrer les mots de passe existants vers le format chiffré
+            if (userId > 0)
+            {
+                MigratePasswordsToEncrypted();
+            }
+        }
+
+        public PasswordDatabaseService(User user) : this(user.Id, user.Email + user.Password)
+        {
+            // Utilise l'email + password comme clé maître
         }
 
         public void Initialize()
@@ -73,12 +86,15 @@ namespace YNOV_Password.Services
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
+                var encryptedPassword = reader.GetString(3);
+                var decryptedPassword = _encryptionService.Decrypt(encryptedPassword);
+                
                 list.Add(new PasswordEntry
                 {
                     Id = reader.GetInt32(0),
                     Site = reader.GetString(1),
                     Username = reader.GetString(2),
-                    Password = reader.GetString(3),
+                    Password = decryptedPassword,
                     Url = reader.GetString(4)
                 });
             }
@@ -98,12 +114,15 @@ namespace YNOV_Password.Services
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
+                var encryptedPassword = reader.GetString(3);
+                var decryptedPassword = _encryptionService.Decrypt(encryptedPassword);
+                
                 list.Add(new PasswordEntry
                 {
                     Id = reader.GetInt32(0),
                     Site = reader.GetString(1),
                     Username = reader.GetString(2),
-                    Password = reader.GetString(3),
+                    Password = decryptedPassword,
                     Url = reader.GetString(4)
                 });
             }
@@ -129,7 +148,11 @@ namespace YNOV_Password.Services
             command.Parameters.AddWithValue("@userId", CurrentUserId);
             command.Parameters.AddWithValue("@site", entry.Site);
             command.Parameters.AddWithValue("@username", entry.Username ?? "");
-            command.Parameters.AddWithValue("@password", entry.Password);
+            
+            // Chiffrer le mot de passe avant de l'enregistrer
+            var encryptedPassword = _encryptionService.Encrypt(entry.Password ?? "");
+            command.Parameters.AddWithValue("@password", encryptedPassword);
+            
             command.Parameters.AddWithValue("@url", entry.Url ?? "");
             command.ExecuteNonQuery();
         }
@@ -142,6 +165,61 @@ namespace YNOV_Password.Services
             command.CommandText = "DELETE FROM Passwords WHERE Id = @id";
             command.Parameters.AddWithValue("@id", id);
             command.ExecuteNonQuery();
+        }
+
+        /// <summary>
+        /// Migre les mots de passe existants en texte clair vers le format chiffré
+        /// </summary>
+        public void MigratePasswordsToEncrypted()
+        {
+            try
+            {
+                using var connection = new SqliteConnection(_connectionString);
+                connection.Open();
+
+                // Récupérer tous les mots de passe pour cet utilisateur
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT Id, Password FROM Passwords WHERE UserId = @userId";
+                command.Parameters.AddWithValue("@userId", CurrentUserId);
+
+                var passwordsToMigrate = new List<(int Id, string Password)>();
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    var id = reader.GetInt32(0);
+                    var password = reader.GetString(1);
+                    
+                    // Vérifier si le mot de passe semble déjà chiffré
+                    if (!_encryptionService.IsEncrypted(password))
+                    {
+                        passwordsToMigrate.Add((id, password));
+                    }
+                }
+                reader.Close();
+
+                // Mettre à jour chaque mot de passe non chiffré
+                foreach (var (id, plainPassword) in passwordsToMigrate)
+                {
+                    var encryptedPassword = _encryptionService.Encrypt(plainPassword);
+                    
+                    var updateCommand = connection.CreateCommand();
+                    updateCommand.CommandText = "UPDATE Passwords SET Password = @password WHERE Id = @id";
+                    updateCommand.Parameters.AddWithValue("@password", encryptedPassword);
+                    updateCommand.Parameters.AddWithValue("@id", id);
+                    updateCommand.ExecuteNonQuery();
+                    
+                    System.Diagnostics.Debug.WriteLine($"[DEBUG] Migration: Mot de passe chiffré pour l'ID {id}");
+                }
+
+                if (passwordsToMigrate.Count > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[DEBUG] Migration: {passwordsToMigrate.Count} mots de passe migrés vers le format chiffré");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ERROR] Erreur lors de la migration des mots de passe: {ex.Message}");
+            }
         }
     }
 }

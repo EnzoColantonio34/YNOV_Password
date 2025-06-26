@@ -73,25 +73,18 @@ public partial class MainWindowViewModel : ViewModelBase
             CurrentUser = users.FirstOrDefault(u => u.Id == userId);
         }
         
-        _dbService = new PasswordDatabaseService(userId);
-        Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
-
-        // Si la base de données est vide, ajouter des exemples
-        if (Passwords.Count == 0)
+        // Utiliser le constructeur qui prend l'utilisateur pour le chiffrement
+        if (CurrentUser != null)
         {
-            var example1 = new PasswordEntry { Site = "example.com", Username = "user1", Password = "pass1", Url = "http://example.com" };
-            var example2 = new PasswordEntry { Site = "google.com", Username = "user2", Password = "pass2", Url = "http://google.com" };
-            
-            _dbService.Add(example1);
-            _dbService.Add(example2);
-            
-            // Recharger les données depuis la base
-            Passwords.Clear();
-            foreach (var entry in _dbService.GetAll())
-            {
-                Passwords.Add(entry);
-            }
+            _dbService = new PasswordDatabaseService(CurrentUser);
         }
+        else
+        {
+            // Fallback vers l'ancien constructeur
+            _dbService = new PasswordDatabaseService(userId);
+        }
+        
+        Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
 
         CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
         CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
