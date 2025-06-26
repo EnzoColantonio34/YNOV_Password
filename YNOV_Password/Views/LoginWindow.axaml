@@ -10,10 +10,11 @@
         Width="500"
         Height="600"
         WindowStartupLocation="CenterScreen"
-        CanResize="false">
+        CanResize="true">
   
-    <Border Background="#f5f5f5" Padding="40">
-        <StackPanel Spacing="20" MaxWidth="400">
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Border Background="#f5f5f5" Padding="40">
+            <StackPanel Spacing="20" MaxWidth="400">
             <!-- Logo/Title -->
             <StackPanel HorizontalAlignment="Center" Spacing="10">
                 <TextBlock Text="🔐" FontSize="48" HorizontalAlignment="Center"/>
@@ -105,13 +106,14 @@
                     <Button Name="RegisterButton"
                             Command="{Binding RegisterCommand}"
                             Content="S'inscrire"
-                            Background="#27ae60"
+                            Background="#34D399"
                             Foreground="White"
                             FontWeight="Medium"
                             Padding="0,12"
                             CornerRadius="5"
                             BorderThickness="0"
                             HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
                             IsVisible="{Binding IsRegistering}"/>
 
                     <!-- Switch mode button -->
@@ -126,4 +128,5 @@
             </Border>
         </StackPanel>
     </Border>
+    </ScrollViewer>
 </Window>

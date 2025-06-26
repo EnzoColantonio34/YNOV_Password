@@ -26,7 +26,8 @@
     </Window.Styles>
 
     <Grid>
-        <StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
 
         <!-- En-tête -->
         <Border Padding="30">
@@ -226,6 +227,7 @@
             </ItemsControl>
         </Grid>
     </StackPanel>
+    </ScrollViewer>
     
     <!-- Icône utilisateur avec menu de déconnexion -->
     <Button Name="UserMenuButton"
