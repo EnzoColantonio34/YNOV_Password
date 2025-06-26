@@ -22,7 +22,22 @@ namespace YNOV_Password.Views
             }
             System.Diagnostics.Debug.WriteLine($"[DEBUG] DataContext type: {DataContext?.GetType().Name}");
             
+            // S'abonner à l'événement de déconnexion
+            SetupLogoutEvent();
+            
+            // Écouter les changements de DataContext
+            this.DataContextChanged += (s, e) => SetupLogoutEvent();
+            
             this.PointerPressed += MainWindow_PointerPressed;
+        }
+
+        private void SetupLogoutEvent()
+        {
+            if (DataContext is MainWindowViewModel viewModel)
+            {
+                viewModel.LogoutRequested += HandleLogoutRequest;
+                System.Diagnostics.Debug.WriteLine("[DEBUG] LogoutRequested event attached");
+            }
         }
 
         private void MainWindow_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -172,6 +187,186 @@ namespace YNOV_Password.Views
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[DEBUG] Erreur lors de l'ouverture de la fenêtre de génération: {ex.Message}");
+            }
+        }
+
+        private void UserMenuButton_Click(object? sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("[DEBUG] UserMenuButton_Click appelé - Menu utilisateur ouvert");
+        }
+
+        private async void LogoutMenuItem_Click(object? sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("[DEBUG] LogoutMenuItem_Click appelé directement");
+            await PerformLogout();
+        }
+
+        private async void HandleLogoutRequest()
+        {
+            await PerformLogout();
+        }
+
+        private async System.Threading.Tasks.Task PerformLogout()
+        {
+            Console.WriteLine("[DEBUG] PerformLogout appelé");
+            
+            try
+            {
+                // Confirmer la déconnexion
+                var result = await ShowConfirmationDialog("Êtes-vous sûr de vouloir vous déconnecter ?");
+
+                if (result)
+                {
+                    Console.WriteLine("[DEBUG] Déconnexion confirmée");
+                    
+                    // Fermer la fenêtre actuelle et retourner au login
+                    var app = Avalonia.Application.Current;
+                    if (app?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+                    {
+                        // Fermer la fenêtre principale actuelle
+                        this.Close();
+                        
+                        // Ouvrir la fenêtre de login
+                        var loginWindow = new LoginWindow();
+                        var viewModel = loginWindow.GetViewModel();
+                        
+                        if (viewModel != null)
+                        {
+                            // S'abonner à l'événement de completion du login
+                            viewModel.LoginCompleted += () =>
+                            {
+                                if (viewModel.LoggedInUser != null)
+                                {
+                                    // Login réussi, ouvrir une nouvelle fenêtre principale
+                                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                                    {
+                                        desktop.MainWindow = new MainWindow
+                                        {
+                                            DataContext = new MainWindowViewModel(viewModel.LoggedInUser.Id),
+                                        };
+                                        desktop.MainWindow.Show();
+                                    });
+                                }
+                            };
+
+                            // Gérer la fermeture de la fenêtre de login
+                            loginWindow.Closed += (s, args) =>
+                            {
+                                if (!viewModel.LoginSuccessful)
+                                {
+                                    // Login annulé, fermer l'application
+                                    desktop.Shutdown();
+                                }
+                            };
+                        }
+                        
+                        // Afficher la fenêtre de login
+                        desktop.MainWindow = loginWindow;
+                        loginWindow.Show();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[DEBUG] Erreur lors de la déconnexion: {ex.Message}");
+            }
+        }
+
+        private async System.Threading.Tasks.Task<bool> ShowConfirmationDialog(string message)
+        {
+            try
+            {
+                var dialog = new Window
+                {
+                    Title = "Confirmation",
+                    Width = 400,
+                    Height = 180,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    CanResize = false,
+                    Background = Avalonia.Media.Brushes.White,
+                    ExtendClientAreaToDecorationsHint = false
+                };
+
+                bool result = false;
+                var yesButton = new Button 
+                { 
+                    Content = "Oui, se déconnecter", 
+                    Width = 140,
+                    Height = 35,
+                    Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#e74c3c")),
+                    Foreground = Avalonia.Media.Brushes.White,
+                    CornerRadius = new Avalonia.CornerRadius(4),
+                    FontWeight = Avalonia.Media.FontWeight.Medium,
+                    Margin = new Avalonia.Thickness(5),
+                    Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
+                };
+                
+                var cancelButton = new Button 
+                { 
+                    Content = "Annuler", 
+                    Width = 100,
+                    Height = 35,
+                    Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#059669")),
+                    Foreground = Avalonia.Media.Brushes.White,
+                    CornerRadius = new Avalonia.CornerRadius(4),
+                    FontWeight = Avalonia.Media.FontWeight.Medium,
+                    Margin = new Avalonia.Thickness(5),
+                    Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
+                };
+
+                yesButton.Click += (s, e) => { result = true; dialog.Close(); };
+                cancelButton.Click += (s, e) => { result = false; dialog.Close(); };
+
+                var content = new StackPanel
+                {
+                    Margin = new Avalonia.Thickness(30),
+                    Spacing = 20,
+                    Children =
+                    {
+                        new StackPanel
+                        {
+                            Orientation = Avalonia.Layout.Orientation.Horizontal,
+                            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                            Spacing = 15,
+                            Children =
+                            {
+                                new TextBlock
+                                {
+                                    Text = "⚠️",
+                                    FontSize = 32,
+                                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                                    Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#f39c12"))
+                                },
+                                new TextBlock 
+                                { 
+                                    Text = message,
+                                    FontSize = 14,
+                                    FontWeight = Avalonia.Media.FontWeight.Medium,
+                                    Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#2c3e50")),
+                                    TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                                    MaxWidth = 280
+                                }
+                            }
+                        },
+                        new StackPanel
+                        {
+                            Orientation = Avalonia.Layout.Orientation.Horizontal,
+                            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                            Spacing = 15,
+                            Children = { cancelButton, yesButton }
+                        }
+                    }
+                };
+
+                dialog.Content = content;
+                await dialog.ShowDialog(this);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[DEBUG] Erreur dans ShowConfirmationDialog: {ex.Message}");
+                return false;
             }
         }
     }

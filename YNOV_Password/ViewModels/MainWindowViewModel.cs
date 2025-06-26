@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Windows.Input;
 using YNOV_Password.Commands;
@@ -20,6 +21,9 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<PasswordEntry> Passwords { get; set; }
     private readonly PasswordDatabaseService _dbService;
     private readonly Dictionary<PasswordEntry, Timer> _passwordTimers = new();
+    
+    [ObservableProperty]
+    private User? _currentUser;
 
     [ObservableProperty]
     private string _searchText = string.Empty;
@@ -32,10 +36,33 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand AddPasswordCommand { get; private set; } = null!;
     public ICommand ShowPasswordCommand { get; private set; } = null!;
     public ICommand OpenUrlCommand { get; private set; } = null!;
+    public ICommand LogoutCommand { get; private set; } = null!;
 
-    public MainWindowViewModel()
+    public event Action? LogoutRequested;
+
+    public MainWindowViewModel() : this(0)
     {
-        _dbService = new PasswordDatabaseService();
+    }
+
+    public MainWindowViewModel(int userId)
+    {
+        // Si aucun userId n'est fourni, utiliser l'utilisateur par défaut (ID = 1)
+        if (userId == 0)
+        {
+            var userService = new UserDatabaseService();
+            var defaultUser = userService.GetUserByEmail("admin@example.com");
+            userId = defaultUser?.Id ?? 1;
+            CurrentUser = defaultUser;
+        }
+        else
+        {
+            // Récupérer les informations de l'utilisateur connecté
+            var userService = new UserDatabaseService();
+            var users = userService.GetAllUsers();
+            CurrentUser = users.FirstOrDefault(u => u.Id == userId);
+        }
+        
+        _dbService = new PasswordDatabaseService(userId);
         Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
 
         // Si la base de données est vide, ajouter des exemples
@@ -65,6 +92,10 @@ public partial class MainWindowViewModel : ViewModelBase
         AddPasswordCommand = new Commands.RelayCommand<object>(_ => {
             System.Diagnostics.Debug.WriteLine("[DEBUG] AddPasswordCommand exécutée");
             ShowAddPasswordDialog();
+        });
+        LogoutCommand = new Commands.RelayCommand<object>(_ => {
+            System.Diagnostics.Debug.WriteLine("[DEBUG] LogoutCommand exécutée");
+            LogoutRequested?.Invoke();
         });
         
         System.Diagnostics.Debug.WriteLine("[DEBUG] Toutes les commandes ont été initialisées");

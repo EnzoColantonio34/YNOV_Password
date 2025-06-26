@@ -8,9 +8,11 @@ namespace YNOV_Password.Services
     public class PasswordDatabaseService
     {
         private readonly string _connectionString = "Data Source=passwords.db";
+        public int CurrentUserId { get; set; }
 
-        public PasswordDatabaseService()
+        public PasswordDatabaseService(int userId = 0)
         {
+            CurrentUserId = userId;
             Initialize();
         }
 
@@ -18,6 +20,8 @@ namespace YNOV_Password.Services
         {
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
+            
+            // Créer la table Passwords si elle n'existe pas
             var command = connection.CreateCommand();
             command.CommandText =
                 @"CREATE TABLE IF NOT EXISTS Passwords (
@@ -28,6 +32,34 @@ namespace YNOV_Password.Services
                     Url TEXT
                 );";
             command.ExecuteNonQuery();
+
+            // Vérifier si la colonne UserId existe déjà
+            command = connection.CreateCommand();
+            command.CommandText = "PRAGMA table_info(Passwords)";
+            using var reader = command.ExecuteReader();
+            bool userIdExists = false;
+            while (reader.Read())
+            {
+                if (reader.GetString(1) == "UserId")
+                {
+                    userIdExists = true;
+                    break;
+                }
+            }
+            reader.Close();
+
+            // Si la colonne UserId n'existe pas, l'ajouter
+            if (!userIdExists)
+            {
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Migration: Ajout de la colonne UserId");
+                
+                // Ajouter la colonne UserId avec une valeur par défaut de 1
+                command = connection.CreateCommand();
+                command.CommandText = "ALTER TABLE Passwords ADD COLUMN UserId INTEGER NOT NULL DEFAULT 1";
+                command.ExecuteNonQuery();
+                
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Migration: Colonne UserId ajoutée avec succès");
+            }
         }
 
         public List<PasswordEntry> GetAll()
@@ -36,7 +68,8 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords";
+            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords WHERE UserId = @userId";
+            command.Parameters.AddWithValue("@userId", CurrentUserId);
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
@@ -58,7 +91,8 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords WHERE Site LIKE @search OR Username LIKE @search";
+            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords WHERE UserId = @userId AND (Site LIKE @search OR Username LIKE @search)";
+            command.Parameters.AddWithValue("@userId", CurrentUserId);
             command.Parameters.AddWithValue("@search", $"%{searchTerm}%");
 
             using var reader = command.ExecuteReader();
@@ -91,7 +125,8 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO Passwords (Site, Username, Password, Url) VALUES (@site, @username, @password, @url)";
+            command.CommandText = "INSERT INTO Passwords (UserId, Site, Username, Password, Url) VALUES (@userId, @site, @username, @password, @url)";
+            command.Parameters.AddWithValue("@userId", CurrentUserId);
             command.Parameters.AddWithValue("@site", entry.Site);
             command.Parameters.AddWithValue("@username", entry.Username ?? "");
             command.Parameters.AddWithValue("@password", entry.Password);

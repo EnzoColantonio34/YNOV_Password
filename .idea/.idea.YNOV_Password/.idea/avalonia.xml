@@ -8,6 +8,7 @@
         <entry key="YNOV_Password/Views/AddPasswordView.axaml" value="YNOV_Password/YNOV_Password.csproj" />
         <entry key="YNOV_Password/Views/AddPasswordWindow.axaml" value="YNOV_Password/YNOV_Password.csproj" />
         <entry key="YNOV_Password/Views/MainWindow.axaml" value="YNOV_Password/YNOV_Password.csproj" />
+        <entry key="YNOV_Password/Views/PasswordGeneratorWindow.axaml" value="YNOV_Password/YNOV_Password.csproj" />
       </map>
     </option>
   </component>

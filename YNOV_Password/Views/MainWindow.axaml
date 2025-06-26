@@ -25,7 +25,8 @@
         <StyleInclude Source="avares://YNOV_Password/Styles/main.axaml"/>
     </Window.Styles>
 
-    <StackPanel>
+    <Grid>
+        <StackPanel>
 
         <!-- En-tête -->
         <Border Padding="30">
@@ -225,4 +226,37 @@
             </ItemsControl>
         </Grid>
     </StackPanel>
+    
+    <!-- Icône utilisateur avec menu de déconnexion -->
+    <Button Name="UserMenuButton"
+            Width="55"
+            Height="55"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="0,0,20,20"
+            ToolTip.Tip="Menu utilisateur"
+            Click="UserMenuButton_Click">
+        <Button.Content>
+            <TextBlock Text="👤" 
+                       FontSize="22" 
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"/>
+        </Button.Content>
+        <Button.Flyout>
+            <MenuFlyout Placement="TopEdgeAlignedRight">
+                <MenuItem Header="{Binding CurrentUser.Username, StringFormat='👤 {0}'}"
+                          Classes="user-info"
+                          IsEnabled="False"/>
+                <MenuItem Header="{Binding CurrentUser.Email, StringFormat='📧 {0}'}"
+                          Classes="user-email"
+                          IsEnabled="False"/>
+                <Separator Background="#EEEEEE"/>
+                <MenuItem Header="🚪 Se déconnecter"
+                          Classes="logout-button"
+                          Click="LogoutMenuItem_Click"/>
+            </MenuFlyout>
+        </Button.Flyout>
+    </Button>
+</Grid>
 </Window>
