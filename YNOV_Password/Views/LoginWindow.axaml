@@ -11,122 +11,144 @@
         Height="600"
         WindowStartupLocation="CenterScreen"
         CanResize="true">
+
+    <Window.Styles>
+        <StyleInclude Source="avares://YNOV_Password/Styles/main.axaml"/>
+    </Window.Styles>
   
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <Border Background="#f5f5f5" Padding="40">
-            <StackPanel Spacing="20" MaxWidth="400">
-            <!-- Logo/Title -->
-            <StackPanel HorizontalAlignment="Center" Spacing="10">
-                <TextBlock Text="🔐" FontSize="48" HorizontalAlignment="Center"/>
-                <TextBlock Text="YNOV Password" 
-                          FontSize="24" 
-                          FontWeight="Bold" 
-                          HorizontalAlignment="Center"
-                          Foreground="#2c3e50"/>
-                <TextBlock Name="ModeText"
-                          FontSize="16" 
-                          HorizontalAlignment="Center"
-                          Foreground="#7f8c8d"/>
-            </StackPanel>
-
-            <!-- Login Form -->
-            <Border Background="White" 
-                    CornerRadius="10" 
-                    Padding="30"
-                    BoxShadow="0 2 10 #33000000">
-                <StackPanel Spacing="20">
-                    
-                    <!-- Username field (only for registration) -->
-                    <StackPanel Name="UsernamePanel" IsVisible="{Binding IsRegistering}" Spacing="5">
-                        <TextBlock Text="Nom d'utilisateur" FontWeight="Medium" Foreground="#2c3e50"/>
-                        <TextBox Text="{Binding Username}" 
-                                 Watermark="Entrez votre nom d'utilisateur"
-                                 Padding="12"
-                                 BorderThickness="1"
-                                 BorderBrush="#bdc3c7"
-                                 CornerRadius="5"/>
-                    </StackPanel>
-
-                    <!-- Email field -->
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="Email" FontWeight="Medium" Foreground="#2c3e50"/>
-                        <TextBox Text="{Binding Email}" 
-                                 Watermark="Entrez votre adresse email"
-                                 Padding="12"
-                                 BorderThickness="1"
-                                 BorderBrush="#bdc3c7"
-                                 CornerRadius="5"/>
-                    </StackPanel>
-
-                    <!-- Password field -->
-                    <StackPanel Spacing="5">
-                        <TextBlock Text="Mot de passe" FontWeight="Medium" Foreground="#2c3e50"/>
-                        <TextBox Text="{Binding Password}" 
-                                 PasswordChar="*"
-                                 Watermark="Entrez votre mot de passe"
-                                 Padding="12"
-                                 BorderThickness="1"
-                                 BorderBrush="#bdc3c7"
-                                 CornerRadius="5"/>
-                    </StackPanel>
-
-                    <!-- Confirm Password field (only for registration) -->
-                    <StackPanel Name="ConfirmPasswordPanel" IsVisible="{Binding IsRegistering}" Spacing="5">
-                        <TextBlock Text="Confirmer le mot de passe" FontWeight="Medium" Foreground="#2c3e50"/>
-                        <TextBox Text="{Binding ConfirmPassword}" 
-                                 PasswordChar="*"
-                                 Watermark="Confirmez votre mot de passe"
-                                 Padding="12"
-                                 BorderThickness="1"
-                                 BorderBrush="#bdc3c7"
-                                 CornerRadius="5"/>
-                    </StackPanel>
-
-                    <!-- Error message -->
-                    <TextBlock Name="ErrorText"
-                               Text="{Binding ErrorMessage}" 
-                               Foreground="Red" 
-                               FontSize="12"
-                               TextWrapping="Wrap"/>
-
-                    <!-- Login button -->
-                    <Button Name="LoginButton"
-                            Command="{Binding LoginCommand}"
-                            Content="Se connecter"
-                            Background="#34D399"
-                            Foreground="White"
-                            FontWeight="Medium"
-                            Padding="3,12"
-                            CornerRadius="5"
-                            BorderThickness="0"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"/>
-
-                    <!-- Register button -->
-                    <Button Name="RegisterButton"
-                            Command="{Binding RegisterCommand}"
-                            Content="S'inscrire"
-                            Background="#34D399"
-                            Foreground="White"
-                            FontWeight="Medium"
-                            Padding="0,12"
-                            CornerRadius="5"
-                            BorderThickness="0"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Center"
-                            IsVisible="{Binding IsRegistering}"/>
-
-                    <!-- Switch mode button -->
-                    <Button Name="SwitchButton"
-                            Background="Transparent"
-                            Foreground="#3498db"
-                            BorderThickness="0"
-                            HorizontalAlignment="Center"
-                            Padding="10,5"/>
-
+        <Border Background="#FAFBFC" Padding="40">
+            <StackPanel Spacing="32" MaxWidth="400">
+                <!-- Logo/Title -->
+                <StackPanel HorizontalAlignment="Center" Spacing="16">
+                    <Border Width="80" Height="80" 
+                            CornerRadius="40" 
+                            Background="#059669"
+                            BoxShadow="0 8 32 0 #20000000">
+                        <TextBlock Text="🔐" 
+                                   FontSize="40" 
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="YNOV Password" 
+                              FontSize="28" 
+                              FontWeight="Bold" 
+                              HorizontalAlignment="Center"
+                              Foreground="#1F2937"/>
+                    <TextBlock Name="ModeText"
+                              FontSize="16" 
+                              HorizontalAlignment="Center"
+                              Foreground="#6B7280"
+                              FontWeight="Medium"/>
                 </StackPanel>
-            </Border>
-        </StackPanel>
-    </Border>
+
+                <!-- Login Form -->
+                <Border Background="White" 
+                        CornerRadius="16" 
+                        Padding="32"
+                        BoxShadow="0 4 24 0 #0F000000">
+                    <StackPanel Spacing="24">
+                        
+                        <!-- Username field (only for registration) -->
+                        <StackPanel Name="UsernamePanel" IsVisible="{Binding IsRegistering}" Spacing="8">
+                            <TextBlock Text="Nom d'utilisateur" 
+                                       FontWeight="Medium" 
+                                       Foreground="#374151"/>
+                            <TextBox Text="{Binding Username}" 
+                                     Watermark="Entrez votre nom d'utilisateur"
+                                     Padding="16,12"
+                                     BorderThickness="1"
+                                     BorderBrush="#D1D5DB"
+                                     CornerRadius="8"
+                                     FontSize="14"/>
+                        </StackPanel>
+
+                        <!-- Email field -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Email" 
+                                       FontWeight="Medium" 
+                                       Foreground="#374151"/>
+                            <TextBox Text="{Binding Email}" 
+                                     Watermark="Entrez votre adresse email"
+                                     Padding="16,12"
+                                     BorderThickness="1"
+                                     BorderBrush="#D1D5DB"
+                                     CornerRadius="8"
+                                     FontSize="14"/>
+                        </StackPanel>
+
+                        <!-- Password field -->
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Mot de passe" 
+                                       FontWeight="Medium" 
+                                       Foreground="#374151"/>
+                            <TextBox Text="{Binding Password}" 
+                                     PasswordChar="*"
+                                     Watermark="Entrez votre mot de passe"
+                                     Classes="PasswordInput"/>
+                        </StackPanel>
+
+                        <!-- Confirm Password field (only for registration) -->
+                        <StackPanel Name="ConfirmPasswordPanel" IsVisible="{Binding IsRegistering}" Spacing="8">
+                            <TextBlock Text="Confirmer le mot de passe" 
+                                       FontWeight="Medium" 
+                                       Foreground="#374151"/>
+                            <TextBox Text="{Binding ConfirmPassword}" 
+                                     PasswordChar="*"
+                                     Watermark="Confirmez votre mot de passe"
+                                     Classes="PasswordInput"/>
+                        </StackPanel>
+
+                        <!-- Error message -->
+                        <Border IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                Background="#FEF2F2"
+                                BorderBrush="#FECACA"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
+                            <TextBlock Name="ErrorText"
+                                       Text="{Binding ErrorMessage}" 
+                                       Foreground="#DC2626" 
+                                       FontSize="14"
+                                       TextWrapping="Wrap"/>
+                        </Border>
+
+                        <!-- Login button -->
+                        <Button Name="LoginButton"
+                                Command="{Binding LoginCommand}"
+                                Content="Se connecter"
+                                FontWeight="SemiBold"
+                                Padding="0,16"
+                                CornerRadius="8"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                FontSize="16"/>
+
+                        <!-- Register button -->
+                        <Button Name="RegisterButton"
+                                Command="{Binding RegisterCommand}"
+                                Content="S'inscrire"
+                                FontWeight="SemiBold"
+                                Padding="0,16"
+                                CornerRadius="8"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                FontSize="16"
+                                IsVisible="{Binding IsRegistering}"/>
+
+                        <!-- Switch mode button -->
+                        <Button Name="SwitchButton"
+                                Background="Transparent"
+                                Foreground="#059669"
+                                BorderThickness="0"
+                                HorizontalAlignment="Center"
+                                Padding="16,8"
+                                FontWeight="Medium"
+                                CornerRadius="6"/>
+
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Border>
     </ScrollViewer>
 </Window>

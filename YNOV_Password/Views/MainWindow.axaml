@@ -30,7 +30,7 @@
             <StackPanel>
 
         <!-- En-tête -->
-        <Border Padding="30">
+        <Border Padding="30" Classes="HighlightCard">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
                     <GradientStop Color="#34D399" Offset="0"/>
@@ -49,30 +49,24 @@
 
                     <TextBlock Grid.Column="0" 
                                Text="YNOV Password"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="White"
+                               Classes="Title"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Center"/>
 
                     <Button Grid.Column="1"
                             Content="Générer un mot de passe"
+                            Classes="IconButton"
                             Click="GeneratePasswordButton_Click"
-                            Padding="10,5"
-                            Background="White"
-                            Foreground="#059669"
-                            CornerRadius="4"
+                            Padding="16,10"
                             HorizontalAlignment="Right"
-                            Margin="0,0,10,0"
+                            Margin="0,0,12,0"
                             x:Name="GeneratePasswordButton"/>
 
                     <Button Grid.Column="2"
                             Content="Ajouter"
+                            Classes="IconButton"
                             Click="AddButton_Click"
-                            Padding="10,5"
-                            Background="White"
-                            Foreground="#059669"
-                            CornerRadius="4"
+                            Padding="16,10"
                             HorizontalAlignment="Right"
                             x:Name="AddButton"/>
                 </Grid>
@@ -88,11 +82,12 @@
         </Border>
 
         <!-- Tableau des mots de passe -->
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Border Margin="20" CornerRadius="12" Classes="HighlightCard">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
             <!-- En-têtes du tableau -->
             <Grid Grid.Row="0" Classes="TableHeader">
@@ -170,12 +165,8 @@
                                             VerticalAlignment="Stretch"
                                             Content=""
                                             Cursor="Hand"
+                                            Classes="TableActionButton"
                                             PointerPressed="PasswordField_PointerPressed">
-                                        <Button.Styles>
-                                            <Style Selector="Button:pointerover">
-                                                <Setter Property="Background" Value="#F0F0F0"/>
-                                            </Style>
-                                        </Button.Styles>
                                         <Button.Flyout>
                                             <MenuFlyout>
                                                 <MenuItem Header="👁️ Afficher" 
@@ -207,31 +198,35 @@
                                         Content="{Binding Url}"
                                         Cursor="Hand"
                                         Foreground="#0066CC"
+                                        Classes="TableActionButton"
                                         Click="OpenUrl_Click"
                                         Tag="{Binding}">
                                     <Button.Styles>
                                         <Style Selector="Button:pointerover">
-                                            <Setter Property="Background" Value="#F0F8FF"/>
                                             <Setter Property="Foreground" Value="#0052A3"/>
                                         </Style>
                                     </Button.Styles>
                                 </Button>
                                 
                                 <!-- Bouton menu déroulant -->
-                                <Button Grid.Column="5" Content="⋯" HorizontalAlignment="Center" Width="30" Height="30">
+                                <Button Grid.Column="5" 
+                                        Content="⋯" 
+                                        HorizontalAlignment="Center" 
+                                        Classes="MenuActionButton">
                                     <Button.Flyout>
                                         <MenuFlyout>
-                                            <MenuItem Header="Copier MDP" 
+                                            <MenuItem Header="📄 Copier MDP" 
                                                       Click="CopyPassword_Click"
                                                       Tag="{Binding}"/>
-                                            <MenuItem Header="Copier l'utilisateur" 
+                                            <MenuItem Header="👤 Copier l'utilisateur" 
                                                       Click="CopyUsername_Click"
                                                       Tag="{Binding}"/>
-                                            <MenuItem Header="Copier URL" 
+                                            <MenuItem Header="🔗 Copier URL" 
                                                       Click="CopyUrl_Click"
                                                       Tag="{Binding}"/>
                                             <Separator/>
-                                            <MenuItem Header="Supprimer" 
+                                            <MenuItem Header="🗑️ Supprimer" 
+                                                      Classes="logout-button"
                                                       Click="DeletePassword_Click"
                                                       Tag="{Binding}"/>
                                         </MenuFlyout>
@@ -243,6 +238,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
+        </Border>
     </StackPanel>
     </ScrollViewer>
     

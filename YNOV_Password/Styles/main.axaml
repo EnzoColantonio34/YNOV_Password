@@ -5,103 +5,227 @@
         </Border>
     </Design.PreviewWith>
 
+    <!-- Styles généraux avec animations -->
     <Style Selector="TextBox.SearchBox">
         <Setter Property="Background" Value="White"/>
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="CornerRadius" Value="25"/>
-        <Setter Property="Padding" Value="10,5"/>
-        <Setter Property="Margin" Value="0,10,0,0"/>
+        <Setter Property="Padding" Value="15,12"/>
+        <Setter Property="Margin" Value="0,15,0,0"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="TextBox.SearchBox:focus">
+        <Setter Property="BorderBrush" Value="#059669"/>
+        <Setter Property="RenderTransform" Value="scale(1.02)"/>
     </Style>
 
     <Style Selector="Button.BoutonRecherche">
         <Setter Property="Background" Value="#059669"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="CornerRadius" Value="25"/>
-        <Setter Property="Padding" Value="15,8"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector="Button">
         <Setter Property="Background" Value="#059669"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="CornerRadius" Value="4"/>
-        <Setter Property="Padding" Value="8,5"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector="Border.TableRow">
-        <Setter Property="BorderBrush" Value="#EEEEEE"/>
+        <Setter Property="BorderBrush" Value="#F1F5F9"/>
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
-        <Setter Property="Padding" Value="0,8"/>
+        <Setter Property="Padding" Value="0,16"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Border.TableRow:pointerover">
+        <Setter Property="Background" Value="#F8FAFC"/>
+        <Setter Property="RenderTransform" Value="translate(4px, 0)"/>
     </Style>
 
     <Style Selector="Grid.TableHeader">
-        <Setter Property="Background" Value="#EEEEEE"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#F8FAFC" Offset="0"/>
+                    <GradientStop Color="#F1F5F9" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Margin" Value="0,0,0,8"/>
     </Style>
 
     <Style Selector="TextBox.PasswordInput">
         <Setter Property="FontFamily" Value="JetBrains Mono,Consolas,Monaco,Menlo,Courier New,monospace"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="LetterSpacing" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="BorderBrush" Value="#E2E8F0"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="TextBox.PasswordInput:focus">
+        <Setter Property="BorderBrush" Value="#059669"/>
     </Style>
 
     <Style Selector="TextBlock.PasswordDisplay">
         <Setter Property="FontFamily" Value="JetBrains Mono,Consolas,Monaco,Menlo,Courier New,monospace"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="LetterSpacing" Value="1"/>
+        <Setter Property="Opacity" Value="0.8"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
     </Style>
 
-    <!-- Styles pour l'icône utilisateur -->
+    <!-- Styles pour l'icône utilisateur avec animations -->
     <Style Selector="Button#UserMenuButton">
         <Setter Property="Background" Value="#059669"/>
         <Setter Property="BorderBrush" Value="White"/>
         <Setter Property="BorderThickness" Value="3"/>
         <Setter Property="CornerRadius" Value="27.5"/>
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector="Button#UserMenuButton:pointerover">
         <Setter Property="Background" Value="#34D399"/>
+        <Setter Property="RenderTransform" Value="scale(1.05)"/>
     </Style>
 
     <Style Selector="Button#UserMenuButton:pressed">
         <Setter Property="Background" Value="#047857"/>
+        <Setter Property="RenderTransform" Value="scale(0.95)"/>
     </Style>
 
     <!-- Styles pour les MenuItems du menu utilisateur -->
     <Style Selector="MenuItem.user-info">
         <Setter Property="Foreground" Value="#2c3e50"/>
         <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector="MenuItem.user-email">
-        <Setter Property="Foreground" Value="#7f8c8d"/>
+        <Setter Property="Foreground" Value="#64748B"/>
         <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Padding" Value="12,6"/>
     </Style>
 
     <Style Selector="MenuItem.logout-button">
-        <Setter Property="Foreground" Value="#e74c3c"/>
+        <Setter Property="Foreground" Value="#DC2626"/>
         <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+                <BrushTransition Property="Foreground" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
     </Style>
 
     <Style Selector="MenuItem.logout-button:pointerover">
-        <Setter Property="Background" Value="#ffebee"/>
-        <Setter Property="Foreground" Value="#c62828"/>
+        <Setter Property="Background" Value="#FECACA"/>
+        <Setter Property="Foreground" Value="#B91C1C"/>
     </Style>
 
-    <!-- Styles supplémentaires pour l'harmonisation -->
+    <Style Selector="MenuItem.import-library-button">
+        <Setter Property="Foreground" Value="#059669"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="MenuItem.import-library-button:pointerover">
+        <Setter Property="Background" Value="#DCFCE7"/>
+    </Style>
+
+    <!-- Styles pour l'harmonisation générale -->
     <Style Selector="Window">
-        <Setter Property="Background" Value="#f8f9fa"/>
+        <Setter Property="Background" Value="#FAFBFC"/>
     </Style>
 
     <Style Selector="Button:pointerover">
         <Setter Property="Background" Value="#34D399"/>
+        <Setter Property="RenderTransform" Value="translate(0, -1px)"/>
     </Style>
 
     <Style Selector="Button:pressed">
         <Setter Property="Background" Value="#047857"/>
+        <Setter Property="RenderTransform" Value="translate(0, 0) scale(0.98)"/>
+    </Style>
+
+    <!-- Styles pour les menus contextuels -->
+    <Style Selector="MenuItem">
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="MenuItem:pointerover">
+        <Setter Property="Background" Value="#F1F5F9"/>
     </Style>
 
     <Style Selector="MenuItem:disabled">
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Opacity" Value="0.6"/>
     </Style>
 
     <Style Selector="MenuItem:disabled:pointerover">
@@ -109,8 +233,211 @@
     </Style>
 
     <Style Selector="Separator">
-        <Setter Property="Background" Value="#e9ecef"/>
+        <Setter Property="Background" Value="#E2E8F0"/>
         <Setter Property="Height" Value="1"/>
         <Setter Property="Margin" Value="8,4"/>
+    </Style>
+
+    <!-- Styles pour les éléments interactifs du tableau -->
+    <Style Selector="Button.TableActionButton">
+        <Setter Property="Background" Value="#F8FAFC"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#E2E8F0"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Foreground" Value="#6B7280"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.TableActionButton:pointerover">
+        <Setter Property="Background" Value="#059669"/>
+        <Setter Property="BorderBrush" Value="#059669"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="RenderTransform" Value="scale(1.05)"/>
+    </Style>
+
+    <!-- Animations d'entrée pour les éléments de liste -->
+    <Style Selector="Border.TableRow">
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+
+    <!-- Styles pour les TextBlocks avec animations -->
+    <Style Selector="TextBlock.Title">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.3"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <!-- Amélioration des boutons avec icônes -->
+    <Style Selector="Button.IconButton">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="#059669"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#E2E8F0"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.IconButton:pointerover">
+        <Setter Property="Background" Value="#F0FDF4"/>
+        <Setter Property="BorderBrush" Value="#059669"/>
+        <Setter Property="RenderTransform" Value="translate(0, -2px)"/>
+    </Style>
+
+    <Style Selector="Button.IconButton:pressed">
+        <Setter Property="RenderTransform" Value="translate(0, 0) scale(0.98)"/>
+    </Style>
+
+    <!-- Animations avancées et micro-interactions -->
+    <Style Selector="Window">
+        <Setter Property="Background" Value="#FAFBFC"/>
+    </Style>
+
+    <!-- Améliorations pour les TextBoxes avec focus animé -->
+    <Style Selector="TextBox">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="BorderBrush" Value="#D1D5DB"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="#059669"/>
+        <Setter Property="RenderTransform" Value="scale(1.01)"/>
+    </Style>
+
+    <!-- Animation de survol pour les éléments de liste supprimée - déjà définie plus haut -->
+
+    <!-- Amélioration des CheckBox et RadioButton -->
+    <Style Selector="CheckBox">
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="CheckBox:pointerover">
+        <Setter Property="RenderTransform" Value="scale(1.05)"/>
+    </Style>
+
+    <Style Selector="RadioButton">
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="RadioButton:pointerover">
+        <Setter Property="RenderTransform" Value="scale(1.05)"/>
+    </Style>
+
+    <!-- Amélioration des sliders -->
+    <Style Selector="Slider">
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Slider:pointerover">
+        <Setter Property="RenderTransform" Value="scale(1.02)"/>
+    </Style>
+
+    <!-- Animation de chargement subtile -->
+    <Style Selector="ProgressBar">
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Value" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <!-- Style pour les titres avec animation -->
+    <Style Selector="TextBlock.AnimatedTitle">
+        <Setter Property="Opacity" Value="1"/>
+    </Style>
+
+    <!-- Effet de brillance pour les cartes importantes -->
+    <Style Selector="Border.HighlightCard">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="#F8FAFC" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Border.HighlightCard:pointerover">
+        <Setter Property="RenderTransform" Value="translate(0, -2px)"/>
+    </Style>
+
+    <!-- Style spécifique pour le bouton menu avec trois points -->
+    <Style Selector="Button.MenuActionButton">
+        <Setter Property="Background" Value="#F1F5F9"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#D1D5DB"/>
+        <Setter Property="CornerRadius" Value="18"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="Foreground" Value="#374151"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Width" Value="36"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15"/>
+                <BrushTransition Property="Foreground" Duration="0:0:0.15"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.MenuActionButton:pointerover">
+        <Setter Property="Background" Value="#059669"/>
+        <Setter Property="BorderBrush" Value="#059669"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="RenderTransform" Value="scale(1.1)"/>
+    </Style>
+
+    <Style Selector="Button.MenuActionButton:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.95)"/>
     </Style>
 </Styles>
