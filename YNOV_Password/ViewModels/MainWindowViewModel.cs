@@ -39,6 +39,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string _searchText = string.Empty;
 
+    // Propriété pour afficher un message quand il n'y a pas de mots de passe
+    public bool HasNoPasswords => !Passwords.Any();
+    public string NoPasswordsMessageTitle => "Pas encore de mot de passe créé !";
+    public string NoPasswordsMessageSubtitle => "Ne tarde pas pour te sécuriser";
+
     public ICommand CopyPasswordCommand { get; private set; } = null!;
     public ICommand CopyUsernameCommand { get; private set; } = null!;
     public ICommand CopyUrlCommand { get; private set; } = null!;
@@ -85,6 +90,9 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         
         Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
+        
+        // Notifier le changement initial pour HasNoPasswords
+        OnPropertyChanged(nameof(HasNoPasswords));
 
         CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
         CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
@@ -220,6 +228,10 @@ public partial class MainWindowViewModel : ViewModelBase
                 
                 // Supprimer de la collection affichée
                 Passwords.Remove(entry);
+                
+                // Notifier le changement pour la propriété HasNoPasswords
+                OnPropertyChanged(nameof(HasNoPasswords));
+                
                 System.Diagnostics.Debug.WriteLine("[DEBUG] Entrée supprimée avec succès");
             }
             catch (Exception ex)
@@ -321,6 +333,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 Passwords.Add(entry);
             }
         }
+
+        // Notifier le changement pour la propriété HasNoPasswords
+        OnPropertyChanged(nameof(HasNoPasswords));
     }
 
     partial void OnSearchTextChanged(string value)

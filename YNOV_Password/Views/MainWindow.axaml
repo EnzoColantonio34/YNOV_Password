@@ -113,8 +113,25 @@
                 <TextBlock Grid.Column="5" Text="Actions" FontWeight="Bold" Margin="10,5" HorizontalAlignment="Center" />
             </Grid>
 
+            <!-- Message quand il n'y a pas de mots de passe -->
+            <Border Grid.Row="1" IsVisible="{Binding HasNoPasswords}" Padding="20" Margin="0,40,0,20">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding NoPasswordsMessageTitle}" 
+                               FontSize="16" 
+                               FontWeight="Bold" 
+                               Foreground="#9CA3AF" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,8"/>
+                    <TextBlock Text="{Binding NoPasswordsMessageSubtitle}" 
+                               FontSize="12" 
+                               FontWeight="Normal" 
+                               Foreground="#9CA3AF" 
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
             <!-- Contenu du tableau -->
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Passwords}">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding Passwords}" IsVisible="{Binding !HasNoPasswords}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Classes="TableRow">
