@@ -12,7 +12,7 @@
         WindowStartupLocation="CenterScreen"
         CanResize="true">
   
-    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <Border Background="#f5f5f5" Padding="40">
             <StackPanel Spacing="20" MaxWidth="400">
             <!-- Logo/Title -->

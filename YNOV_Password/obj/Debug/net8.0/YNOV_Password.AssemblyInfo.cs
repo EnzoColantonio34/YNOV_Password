@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("YNOV_Password")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0f0805e3304aba43080474cc3ad6051b4fd5f5d0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9ee70288e12ba9a9c0fc9b74babacd555c5d4be4")]
 [assembly: System.Reflection.AssemblyProductAttribute("YNOV_Password")]
 [assembly: System.Reflection.AssemblyTitleAttribute("YNOV_Password")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
