@@ -25,6 +25,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private User? _currentUser;
 
+    // Propriété calculée pour la première lettre du nom d'utilisateur
+    public string UserInitial => CurrentUser?.Username?.Length > 0 
+        ? CurrentUser.Username[0].ToString().ToUpper() 
+        : "?";
+
+    // Méthode appelée quand CurrentUser change
+    partial void OnCurrentUserChanged(User? value)
+    {
+        OnPropertyChanged(nameof(UserInitial));
+    }
+
     [ObservableProperty]
     private string _searchText = string.Empty;
 

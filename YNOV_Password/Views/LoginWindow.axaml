@@ -92,13 +92,14 @@
                     <Button Name="LoginButton"
                             Command="{Binding LoginCommand}"
                             Content="Se connecter"
-                            Background="#3498db"
+                            Background="#34D399"
                             Foreground="White"
                             FontWeight="Medium"
-                            Padding="0,12"
+                            Padding="3,12"
                             CornerRadius="5"
                             BorderThickness="0"
-                            HorizontalAlignment="Stretch"/>
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"/>
 
                     <!-- Register button -->
                     <Button Name="RegisterButton"

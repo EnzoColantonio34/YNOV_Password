@@ -237,7 +237,7 @@
             ToolTip.Tip="Menu utilisateur"
             Click="UserMenuButton_Click">
         <Button.Content>
-            <TextBlock Text="👤" 
+            <TextBlock Text="{Binding UserInitial}" 
                        FontSize="22" 
                        Foreground="White"
                        HorizontalAlignment="Center"
