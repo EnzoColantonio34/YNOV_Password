@@ -47,15 +47,12 @@ namespace YNOV_Password.Services
 
                 if (count == 0)
                 {
-                    // Aucun utilisateur n'existe, créer un utilisateur par défaut
-                    System.Diagnostics.Debug.WriteLine("[DEBUG] Création d'un utilisateur par défaut");
                     Register("admin", "admin@example.com", "admin123");
-                    System.Diagnostics.Debug.WriteLine("[DEBUG] Utilisateur par défaut créé: admin@example.com / admin123");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Erreur lors de la création de l'utilisateur par défaut: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la création de l'utilisateur par défaut: {ex.Message}");
             }
         }
 

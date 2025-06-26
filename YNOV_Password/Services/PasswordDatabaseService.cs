@@ -64,14 +64,9 @@ namespace YNOV_Password.Services
             // Si la colonne UserId n'existe pas, l'ajouter
             if (!userIdExists)
             {
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Migration: Ajout de la colonne UserId");
-                
-                // Ajouter la colonne UserId avec une valeur par défaut de 1
                 command = connection.CreateCommand();
                 command.CommandText = "ALTER TABLE Passwords ADD COLUMN UserId INTEGER NOT NULL DEFAULT 1";
                 command.ExecuteNonQuery();
-                
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Migration: Colonne UserId ajoutée avec succès");
             }
         }
 
@@ -207,18 +202,11 @@ namespace YNOV_Password.Services
                     updateCommand.Parameters.AddWithValue("@password", encryptedPassword);
                     updateCommand.Parameters.AddWithValue("@id", id);
                     updateCommand.ExecuteNonQuery();
-                    
-                    System.Diagnostics.Debug.WriteLine($"[DEBUG] Migration: Mot de passe chiffré pour l'ID {id}");
-                }
-
-                if (passwordsToMigrate.Count > 0)
-                {
-                    System.Diagnostics.Debug.WriteLine($"[DEBUG] Migration: {passwordsToMigrate.Count} mots de passe migrés vers le format chiffré");
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[ERROR] Erreur lors de la migration des mots de passe: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la migration des mots de passe: {ex.Message}");
             }
         }
     }

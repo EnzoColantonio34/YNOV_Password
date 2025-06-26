@@ -1,11 +1,7 @@
 using Avalonia.Controls;
-using Avalonia.Diagnostics;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 using YNOV_Password.Models;
 using YNOV_Password.ViewModels;
 using YNOV_Password.Services;
@@ -21,16 +17,10 @@ namespace YNOV_Password.Views
             if (DataContext == null)
             {
                 DataContext = new MainWindowViewModel();
-                System.Diagnostics.Debug.WriteLine("[DEBUG] DataContext forcé dans MainWindow constructor");
             }
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] DataContext type: {DataContext?.GetType().Name}");
             
-            // S'abonner à l'événement de déconnexion
             SetupLogoutEvent();
-            
-            // Écouter les changements de DataContext
             this.DataContextChanged += (s, e) => SetupLogoutEvent();
-            
             this.PointerPressed += MainWindow_PointerPressed;
         }
 
@@ -39,7 +29,6 @@ namespace YNOV_Password.Views
             if (DataContext is MainWindowViewModel viewModel)
             {
                 viewModel.LogoutRequested += HandleLogoutRequest;
-                System.Diagnostics.Debug.WriteLine("[DEBUG] LogoutRequested event attached");
             }
         }
 
@@ -63,77 +52,57 @@ namespace YNOV_Password.Views
 
         private async void AddButton_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] AddButton_Click appelé");
             if (DataContext is MainWindowViewModel viewModel)
             {
-                System.Diagnostics.Debug.WriteLine("[DEBUG] DataContext est bien MainWindowViewModel");
-                // Appeler directement la méthode
-                var mainWindow = this;
                 var dialog = new AddPasswordWindow(viewModel);
-                await dialog.ShowDialog(mainWindow);
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] DataContext n'est pas MainWindowViewModel: {DataContext?.GetType().Name}");
+                await dialog.ShowDialog(this);
             }
         }
         
         private void CopyPassword_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] CopyPassword_Click appelé");
             if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Copie du mot de passe pour: {entry.Site}");
                 viewModel.CopyPasswordCommand.Execute(entry.Password);
             }
         }
 
         private void CopyUrl_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] CopyUrl_Click appelé");
             if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Copie de l'URL pour: {entry.Site}");
                 viewModel.CopyUrlCommand.Execute(entry.Url);
             }
         }
 
         private void CopyUsername_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] CopyUsername_Click appelé");
             if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Copie du nom d'utilisateur pour: {entry.Site}");
                 viewModel.CopyUsernameCommand.Execute(entry.Username);
             }
         }
 
         private void OpenUrl_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] OpenUrl_Click appelé");
             if (sender is Button button && button.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Ouverture de l'URL pour: {entry.Site} - {entry.Url}");
                 viewModel.OpenUrlCommand.Execute(entry.Url);
             }
         }
 
         private void DeletePassword_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] DeletePassword_Click appelé");
             if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Suppression de l'entrée: {entry.Site}");
                 viewModel.DeletePasswordCommand.Execute(entry);
             }
         }
 
         private void ShowPassword_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] ShowPassword_Click appelé");
             if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Affichage du mot de passe pour: {entry.Site}");
                 viewModel.ShowPasswordCommand.Execute(entry);
             }
         }
@@ -156,8 +125,6 @@ namespace YNOV_Password.Views
 
         private async void GeneratePasswordButton_Click(object? sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] GeneratePasswordButton_Click appelé");
-            
             var passwordGeneratorWindow = new PasswordGeneratorWindow
             {
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
@@ -170,17 +137,12 @@ namespace YNOV_Password.Views
                 if (passwordGeneratorWindow.WasPasswordSelected && 
                     !string.IsNullOrEmpty(passwordGeneratorWindow.GeneratedPassword))
                 {
-                    System.Diagnostics.Debug.WriteLine($"[DEBUG] Mot de passe généré sélectionné: {passwordGeneratorWindow.GeneratedPassword}");
-                    
-                    // Copier le mot de passe généré dans le presse-papiers
                     var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
                     if (clipboard != null)
                     {
                         await clipboard.SetTextAsync(passwordGeneratorWindow.GeneratedPassword);
-                        System.Diagnostics.Debug.WriteLine("[DEBUG] Mot de passe copié dans le presse-papiers");
                     }
                     
-                    // Optionnel : Ouvrir directement la fenêtre d'ajout avec le mot de passe pré-rempli
                     if (DataContext is MainWindowViewModel viewModel)
                     {
                         await viewModel.ShowAddPasswordDialogWithGeneratedPassword(passwordGeneratorWindow.GeneratedPassword);
@@ -189,18 +151,16 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Erreur lors de l'ouverture de la fenêtre de génération: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ouverture de la fenêtre de génération: {ex.Message}");
             }
         }
 
         private void UserMenuButton_Click(object? sender, RoutedEventArgs e)
         {
-            Console.WriteLine("[DEBUG] UserMenuButton_Click appelé - Menu utilisateur ouvert");
         }
 
         private async void LogoutMenuItem_Click(object? sender, RoutedEventArgs e)
         {
-            Console.WriteLine("[DEBUG] LogoutMenuItem_Click appelé directement");
             await PerformLogout();
         }
 
@@ -211,36 +171,26 @@ namespace YNOV_Password.Views
 
         private async System.Threading.Tasks.Task PerformLogout()
         {
-            Console.WriteLine("[DEBUG] PerformLogout appelé");
-            
             try
             {
-                // Confirmer la déconnexion
                 var result = await ShowConfirmationDialog("Êtes-vous sûr de vouloir vous déconnecter ?");
 
                 if (result)
                 {
-                    Console.WriteLine("[DEBUG] Déconnexion confirmée");
-                    
-                    // Fermer la fenêtre actuelle et retourner au login
                     var app = Avalonia.Application.Current;
                     if (app?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
                     {
-                        // Fermer la fenêtre principale actuelle
                         this.Close();
                         
-                        // Ouvrir la fenêtre de login
                         var loginWindow = new LoginWindow();
                         var viewModel = loginWindow.GetViewModel();
                         
                         if (viewModel != null)
                         {
-                            // S'abonner à l'événement de completion du login
                             viewModel.LoginCompleted += () =>
                             {
                                 if (viewModel.LoggedInUser != null)
                                 {
-                                    // Login réussi, ouvrir une nouvelle fenêtre principale
                                     Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                                     {
                                         desktop.MainWindow = new MainWindow
@@ -252,18 +202,15 @@ namespace YNOV_Password.Views
                                 }
                             };
 
-                            // Gérer la fermeture de la fenêtre de login
                             loginWindow.Closed += (s, args) =>
                             {
                                 if (!viewModel.LoginSuccessful)
                                 {
-                                    // Login annulé, fermer l'application
                                     desktop.Shutdown();
                                 }
                             };
                         }
                         
-                        // Afficher la fenêtre de login
                         desktop.MainWindow = loginWindow;
                         loginWindow.Show();
                     }
@@ -271,7 +218,7 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[DEBUG] Erreur lors de la déconnexion: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erreur lors de la déconnexion: {ex.Message}");
             }
         }
 
@@ -368,14 +315,13 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[DEBUG] Erreur dans ShowConfirmationDialog: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Erreur dans ShowConfirmationDialog: {ex.Message}");
                 return false;
             }
         }
 
         private async void ImportLibraryMenuItem_Click(object? sender, RoutedEventArgs e)
         {
-            Console.WriteLine("[DEBUG] ImportLibraryMenuItem_Click appelé");
             
             try
             {
@@ -405,7 +351,6 @@ namespace YNOV_Password.Views
                 {
                     var file = result[0];
                     var filePath = file.Path.LocalPath;
-                    Console.WriteLine($"[DEBUG] Fichier sélectionné: {filePath}");
                     
                     var wordLibraryService = WordLibraryService.Instance;
                     var success = await wordLibraryService.LoadWordsFromFileAsync(filePath);
@@ -413,7 +358,6 @@ namespace YNOV_Password.Views
                     if (success)
                     {
                         await ShowInfoDialog($"Bibliothèque importée avec succès!\n{wordLibraryService.Words.Count} mots chargés.");
-                        Console.WriteLine($"[DEBUG] {wordLibraryService.Words.Count} mots chargés");
                     }
                     else
                     {
@@ -423,7 +367,6 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[DEBUG] Erreur lors de l'importation: {ex.Message}");
                 await ShowErrorDialog($"Erreur lors de l'importation: {ex.Message}");
             }
         }

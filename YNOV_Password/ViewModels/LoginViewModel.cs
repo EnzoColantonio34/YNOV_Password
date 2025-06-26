@@ -74,13 +74,11 @@ namespace YNOV_Password.ViewModels
             {
                 LoggedInUser = user;
                 LoginSuccessful = true;
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Login réussi pour {user.Email}");
                 LoginCompleted?.Invoke();
             }
             else
             {
                 ErrorMessage = "Email ou mot de passe incorrect.";
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Login échoué");
             }
         }
 
@@ -116,15 +114,12 @@ namespace YNOV_Password.ViewModels
             bool success = _userService.Register(Username, Email, Password);
             if (success)
             {
-                // Basculer vers le mode login après inscription réussie
                 SwitchToLogin();
                 SuccessMessage = "Inscription réussie ! Vous pouvez maintenant vous connecter.";
-                System.Diagnostics.Debug.WriteLine($"[DEBUG] Inscription réussie pour {Email}");
             }
             else
             {
                 ErrorMessage = "Erreur lors de l'inscription. Cet email existe peut-être déjà.";
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Inscription échouée");
             }
         }
 

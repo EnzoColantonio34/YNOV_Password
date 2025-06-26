@@ -42,12 +42,8 @@ namespace YNOV_Password.ViewModels
 
         private void Save()
         {
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] Save() appelée - Site: '{Site}', Password: '{Password}'");
-            
             if (!string.IsNullOrWhiteSpace(Site) && !string.IsNullOrWhiteSpace(Password))
             {
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Validation OK, création de l'entrée");
-                
                 var newEntry = new PasswordEntry
                 {
                     Site = Site,
@@ -56,15 +52,8 @@ namespace YNOV_Password.ViewModels
                     Url = Url
                 };
 
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Appel de AddPassword sur MainViewModel");
                 _mainViewModel.AddPassword(newEntry);
-                
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Fermeture de la fenêtre");
                 _window.Close();
-            }
-            else
-            {
-                System.Diagnostics.Debug.WriteLine("[DEBUG] Validation échouée - Site ou Password vide");
             }
         }
 
@@ -75,13 +64,11 @@ namespace YNOV_Password.ViewModels
 
         public void SaveEntry()
         {
-            System.Diagnostics.Debug.WriteLine($"[DEBUG] SaveEntry() appelée directement - Site: '{Site}', Password: '{Password}'");
             Save();
         }
 
         public void CancelEntry()
         {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] CancelEntry() appelée directement");
             Cancel();
         }
     }

@@ -73,8 +73,8 @@ namespace YNOV_Password.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[ERROR] Erreur lors du déchiffrement: {ex.Message}");
-                return cipherText; // Retourne le texte original en cas d'erreur
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du déchiffrement: {ex.Message}");
+                return cipherText;
             }
         }
         
