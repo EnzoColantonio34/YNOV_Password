@@ -254,7 +254,10 @@
                           Classes="user-email"
                           IsEnabled="False"/>
                 <Separator Background="#EEEEEE"/>
-                <MenuItem Header="🚪 Se déconnecter"
+                <MenuItem Header="Importer une bibliothèque"
+                          Classes="import-library-button"
+                          Click="ImportLibraryMenuItem_Click"/>
+                <MenuItem Header="Se déconnecter"
                           Classes="logout-button"
                           Click="LogoutMenuItem_Click"/>
             </MenuFlyout>

@@ -20,6 +20,7 @@ namespace YNOV_Password.Views
             if (DataContext is PasswordGeneratorViewModel viewModel)
             {
                 viewModel.PropertyChanged += ViewModel_PropertyChanged;
+                viewModel.RefreshWordAvailability(); // Mettre à jour la disponibilité des mots
                 UpdatePasswordStrength(viewModel.GeneratedPassword);
             }
         }

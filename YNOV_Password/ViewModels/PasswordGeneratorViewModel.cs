@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using YNOV_Password.Commands;
+using YNOV_Password.Services;
 
 namespace YNOV_Password.ViewModels
 {
@@ -30,6 +31,19 @@ namespace YNOV_Password.ViewModels
         [ObservableProperty]
         private string customSpecialChars = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
+        // Propriétés pour la génération basée sur les mots
+        [ObservableProperty]
+        private bool useWordBased = false;
+
+        [ObservableProperty]
+        private int wordCount = 3;
+
+        [ObservableProperty]
+        private string wordSeparator = "-";
+
+        [ObservableProperty]
+        private bool hasWordsAvailable = false;
+
         private const string UppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string LowercaseChars = "abcdefghijklmnopqrstuvwxyz";
         private const string NumberChars = "0123456789";
@@ -37,12 +51,59 @@ namespace YNOV_Password.ViewModels
         public PasswordGeneratorViewModel()
         {
             GeneratePasswordCommand = new RelayCommand<object>(_ => GeneratePassword());
+            
+            // Vérifier si des mots sont disponibles
+            UpdateWordAvailability();
+            
             GeneratePassword(); // Générer un mot de passe initial
         }
 
         public ICommand GeneratePasswordCommand { get; }
 
+        private void UpdateWordAvailability()
+        {
+            HasWordsAvailable = WordLibraryService.Instance.HasWords;
+        }
+
+        public void RefreshWordAvailability()
+        {
+            UpdateWordAvailability();
+            OnPropertyChanged(nameof(HasWordsAvailable));
+        }
+
         private void GeneratePassword()
+        {
+            UpdateWordAvailability();
+            
+            if (UseWordBased && HasWordsAvailable)
+            {
+                GenerateWordBasedPassword();
+            }
+            else
+            {
+                GenerateCharacterBasedPassword();
+            }
+        }
+
+        private void GenerateWordBasedPassword()
+        {
+            if (WordCount < 1)
+            {
+                GeneratedPassword = string.Empty;
+                return;
+            }
+
+            var wordLibrary = WordLibraryService.Instance;
+            if (!wordLibrary.HasWords)
+            {
+                GeneratedPassword = "Aucune bibliothèque de mots disponible";
+                return;
+            }
+
+            GeneratedPassword = wordLibrary.GeneratePasswordFromWords(WordCount, WordSeparator);
+        }
+
+        private void GenerateCharacterBasedPassword()
         {
             if (PasswordLength < 1)
             {
@@ -108,33 +169,59 @@ namespace YNOV_Password.ViewModels
         {
             if (value > 0 && value <= 128) // Limiter la longueur maximale
             {
-                GeneratePassword();
+                if (!UseWordBased)
+                    GeneratePassword();
             }
         }
 
         partial void OnIncludeUppercaseChanged(bool value)
         {
-            GeneratePassword();
+            if (!UseWordBased)
+                GeneratePassword();
         }
 
         partial void OnIncludeLowercaseChanged(bool value)
         {
-            GeneratePassword();
+            if (!UseWordBased)
+                GeneratePassword();
         }
 
         partial void OnIncludeNumbersChanged(bool value)
         {
-            GeneratePassword();
+            if (!UseWordBased)
+                GeneratePassword();
         }
 
         partial void OnIncludeSpecialCharsChanged(bool value)
         {
-            GeneratePassword();
+            if (!UseWordBased)
+                GeneratePassword();
         }
 
         partial void OnCustomSpecialCharsChanged(string value)
         {
-            if (IncludeSpecialChars)
+            if (IncludeSpecialChars && !UseWordBased)
+            {
+                GeneratePassword();
+            }
+        }
+
+        partial void OnUseWordBasedChanged(bool value)
+        {
+            GeneratePassword();
+        }
+
+        partial void OnWordCountChanged(int value)
+        {
+            if (UseWordBased && value > 0 && value <= 10)
+            {
+                GeneratePassword();
+            }
+        }
+
+        partial void OnWordSeparatorChanged(string value)
+        {
+            if (UseWordBased)
             {
                 GeneratePassword();
             }

@@ -3,10 +3,13 @@ using Avalonia.Diagnostics;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using YNOV_Password.Models;
 using YNOV_Password.ViewModels;
+using YNOV_Password.Services;
+using Avalonia.Platform.Storage;
 
 namespace YNOV_Password.Views
 {
@@ -290,7 +293,7 @@ namespace YNOV_Password.Views
                 bool result = false;
                 var yesButton = new Button 
                 { 
-                    Content = "Oui, se déconnecter", 
+                    Content = "Se déconnecter", 
                     Width = 140,
                     Height = 35,
                     Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#e74c3c")),
@@ -368,6 +371,207 @@ namespace YNOV_Password.Views
                 Console.WriteLine($"[DEBUG] Erreur dans ShowConfirmationDialog: {ex.Message}");
                 return false;
             }
+        }
+
+        private async void ImportLibraryMenuItem_Click(object? sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("[DEBUG] ImportLibraryMenuItem_Click appelé");
+            
+            try
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel == null) return;
+
+                var filePickerOptions = new FilePickerOpenOptions
+                {
+                    Title = "Sélectionner un fichier de bibliothèque de mots",
+                    AllowMultiple = false,
+                    FileTypeFilter = new[]
+                    {
+                        new FilePickerFileType("Fichiers texte")
+                        {
+                            Patterns = new[] { "*.txt" }
+                        },
+                        new FilePickerFileType("Tous les fichiers")
+                        {
+                            Patterns = new[] { "*.*" }
+                        }
+                    }
+                };
+
+                var result = await topLevel.StorageProvider.OpenFilePickerAsync(filePickerOptions);
+                
+                if (result.Count > 0)
+                {
+                    var file = result[0];
+                    var filePath = file.Path.LocalPath;
+                    Console.WriteLine($"[DEBUG] Fichier sélectionné: {filePath}");
+                    
+                    var wordLibraryService = WordLibraryService.Instance;
+                    var success = await wordLibraryService.LoadWordsFromFileAsync(filePath);
+                    
+                    if (success)
+                    {
+                        await ShowInfoDialog($"Bibliothèque importée avec succès!\n{wordLibraryService.Words.Count} mots chargés.");
+                        Console.WriteLine($"[DEBUG] {wordLibraryService.Words.Count} mots chargés");
+                    }
+                    else
+                    {
+                        await ShowErrorDialog("Erreur lors de l'importation de la bibliothèque.\nVérifiez que le fichier est valide.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[DEBUG] Erreur lors de l'importation: {ex.Message}");
+                await ShowErrorDialog($"Erreur lors de l'importation: {ex.Message}");
+            }
+        }
+
+        private async System.Threading.Tasks.Task ShowInfoDialog(string message)
+        {
+            var dialog = new Window
+            {
+                Title = "Information",
+                Width = 400,
+                Height = 180,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                CanResize = false,
+                Background = Avalonia.Media.Brushes.White,
+                ExtendClientAreaToDecorationsHint = false
+            };
+
+            var okButton = new Button 
+            { 
+                Content = "OK", 
+                Width = 100,
+                Height = 35,
+                Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#34D399")),
+                Foreground = Avalonia.Media.Brushes.White,
+                CornerRadius = new Avalonia.CornerRadius(4),
+                FontWeight = Avalonia.Media.FontWeight.Medium,
+                Margin = new Avalonia.Thickness(5),
+                Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
+            };
+
+            okButton.Click += (s, e) => dialog.Close();
+
+            var content = new StackPanel
+            {
+                Margin = new Avalonia.Thickness(30),
+                Spacing = 20,
+                Children =
+                {
+                    new StackPanel
+                    {
+                        Orientation = Avalonia.Layout.Orientation.Horizontal,
+                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                        Spacing = 15,
+                        Children =
+                        {
+                            new TextBlock
+                            {
+                                Text = "ℹ️",
+                                FontSize = 32,
+                                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                                Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#3498db"))
+                            },
+                            new TextBlock 
+                            { 
+                                Text = message,
+                                FontSize = 14,
+                                FontWeight = Avalonia.Media.FontWeight.Medium,
+                                Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#2c3e50")),
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                                MaxWidth = 280
+                            }
+                        }
+                    },
+                    new StackPanel
+                    {
+                        Orientation = Avalonia.Layout.Orientation.Horizontal,
+                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                        Children = { okButton }
+                    }
+                }
+            };
+
+            dialog.Content = content;
+            await dialog.ShowDialog(this);
+        }
+
+        private async System.Threading.Tasks.Task ShowErrorDialog(string message)
+        {
+            var dialog = new Window
+            {
+                Title = "Erreur",
+                Width = 400,
+                Height = 180,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                CanResize = false,
+                Background = Avalonia.Media.Brushes.White,
+                ExtendClientAreaToDecorationsHint = false
+            };
+
+            var okButton = new Button 
+            { 
+                Content = "OK", 
+                Width = 100,
+                Height = 35,
+                Background = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#e74c3c")),
+                Foreground = Avalonia.Media.Brushes.White,
+                CornerRadius = new Avalonia.CornerRadius(4),
+                FontWeight = Avalonia.Media.FontWeight.Medium,
+                Margin = new Avalonia.Thickness(5),
+                Cursor = new Avalonia.Input.Cursor(Avalonia.Input.StandardCursorType.Hand)
+            };
+
+            okButton.Click += (s, e) => dialog.Close();
+
+            var content = new StackPanel
+            {
+                Margin = new Avalonia.Thickness(30),
+                Spacing = 20,
+                Children =
+                {
+                    new StackPanel
+                    {
+                        Orientation = Avalonia.Layout.Orientation.Horizontal,
+                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                        Spacing = 15,
+                        Children =
+                        {
+                            new TextBlock
+                            {
+                                Text = "❌",
+                                FontSize = 32,
+                                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                                Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#e74c3c"))
+                            },
+                            new TextBlock 
+                            { 
+                                Text = message,
+                                FontSize = 14,
+                                FontWeight = Avalonia.Media.FontWeight.Medium,
+                                Foreground = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse("#2c3e50")),
+                                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                                MaxWidth = 280
+                            }
+                        }
+                    },
+                    new StackPanel
+                    {
+                        Orientation = Avalonia.Layout.Orientation.Horizontal,
+                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                        Children = { okButton }
+                    }
+                }
+            };
+
+            dialog.Content = content;
+            await dialog.ShowDialog(this);
         }
     }
 }
