@@ -10,6 +10,8 @@ namespace YNOV_Password.Services
     {
         private static WordLibraryService? _instance;
         private List<string> _words = new();
+        private WordDatabaseService? _dbService;
+        private int _currentUserId;
         
         public static WordLibraryService Instance => _instance ??= new WordLibraryService();
 
@@ -17,7 +19,29 @@ namespace YNOV_Password.Services
         
         public bool HasWords => _words.Count > 0;
 
-        public async Task<bool> LoadWordsFromFileAsync(string filePath)
+        public void SetUserId(int userId)
+        {
+            _currentUserId = userId;
+            _dbService = new WordDatabaseService(userId);
+            LoadWordsFromDatabase();
+        }
+
+        private void LoadWordsFromDatabase()
+        {
+            if (_dbService == null) return;
+            
+            try
+            {
+                _words = _dbService.GetAllWords();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des mots depuis la BDD: {ex.Message}");
+                _words = new List<string>();
+            }
+        }
+
+        public async Task<bool> LoadWordsFromFileAsync(string filePath, string libraryName = "Default")
         {
             try
             {
@@ -27,7 +51,17 @@ namespace YNOV_Password.Services
                     .Where(word => !string.IsNullOrWhiteSpace(word))
                     .ToList();
 
-                _words = words;
+                // Sauvegarder en base de données
+                if (_dbService != null)
+                {
+                    _dbService.SaveWords(words, libraryName);
+                    LoadWordsFromDatabase(); // Recharger depuis la BDD
+                }
+                else
+                {
+                    _words = words; // Fallback si pas de BDD
+                }
+                
                 return true;
             }
             catch (Exception ex)
@@ -63,6 +97,54 @@ namespace YNOV_Password.Services
         public void ClearWords()
         {
             _words.Clear();
+            
+            // Supprimer aussi de la base de données si disponible
+            if (_dbService != null)
+            {
+                try
+                {
+                    var libraries = _dbService.GetLibraryNames();
+                    foreach (var library in libraries)
+                    {
+                        _dbService.DeleteLibrary(library);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Erreur lors de la suppression des mots en BDD: {ex.Message}");
+                }
+            }
+        }
+
+        public List<string> GetLibraryNames()
+        {
+            return _dbService?.GetLibraryNames() ?? new List<string>();
+        }
+
+        public void LoadSpecificLibrary(string libraryName)
+        {
+            if (_dbService == null) return;
+            
+            try
+            {
+                _words = _dbService.GetWords(libraryName);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement de la bibliothèque {libraryName}: {ex.Message}");
+                _words = new List<string>();
+            }
+        }
+
+        public void DeleteLibrary(string libraryName)
+        {
+            _dbService?.DeleteLibrary(libraryName);
+            LoadWordsFromDatabase(); // Recharger après suppression
+        }
+
+        public int GetWordCount(string libraryName = "Default")
+        {
+            return _dbService?.GetWordCount(libraryName) ?? 0;
         }
     }
 }

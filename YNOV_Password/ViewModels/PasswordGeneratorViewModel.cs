@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
@@ -44,6 +45,8 @@ namespace YNOV_Password.ViewModels
         [ObservableProperty]
         private bool hasWordsAvailable = false;
 
+        public ICommand ManageLibrariesCommand { get; }
+
         private const string UppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string LowercaseChars = "abcdefghijklmnopqrstuvwxyz";
         private const string NumberChars = "0123456789";
@@ -51,6 +54,7 @@ namespace YNOV_Password.ViewModels
         public PasswordGeneratorViewModel()
         {
             GeneratePasswordCommand = new RelayCommand<object>(_ => GeneratePassword());
+            ManageLibrariesCommand = new RelayCommand<object>(_ => OpenLibraryManager());
             
             // Vérifier si des mots sont disponibles
             UpdateWordAvailability();
@@ -59,6 +63,15 @@ namespace YNOV_Password.ViewModels
         }
 
         public ICommand GeneratePasswordCommand { get; }
+
+        private void OpenLibraryManager()
+        {
+            var libraryWindow = new Views.WordLibraryManagerWindow();
+            libraryWindow.Show();
+            
+            // Rafraîchir la disponibilité des mots après fermeture de la fenêtre
+            libraryWindow.Closed += (s, e) => RefreshWordAvailability();
+        }
 
         private void UpdateWordAvailability()
         {
@@ -163,6 +176,29 @@ namespace YNOV_Password.ViewModels
             }
 
             GeneratedPassword = new string(passwordArray);
+        }
+
+        // Méthodes pour gérer les bibliothèques de mots
+        public List<string> GetAvailableLibraries()
+        {
+            return WordLibraryService.Instance.GetLibraryNames();
+        }
+
+        public void LoadLibrary(string libraryName)
+        {
+            WordLibraryService.Instance.LoadSpecificLibrary(libraryName);
+            RefreshWordAvailability();
+        }
+
+        public void DeleteLibrary(string libraryName)
+        {
+            WordLibraryService.Instance.DeleteLibrary(libraryName);
+            RefreshWordAvailability();
+        }
+
+        public int GetLibraryWordCount(string libraryName)
+        {
+            return WordLibraryService.Instance.GetWordCount(libraryName);
         }
 
         partial void OnPasswordLengthChanged(int value)

@@ -88,10 +88,14 @@ public partial class MainWindowViewModel : ViewModelBase
             if (CurrentUser != null)
             {
                 _dbService = new PasswordDatabaseService(CurrentUser);
+                // Initialiser le service de mots avec l'ID utilisateur
+                WordLibraryService.Instance.SetUserId(CurrentUser.Id);
             }
             else
             {
                 _dbService = new PasswordDatabaseService(userId);
+                // Initialiser le service de mots avec l'ID utilisateur
+                WordLibraryService.Instance.SetUserId(userId);
             }
             
             // Initialiser la collection vide d'abord

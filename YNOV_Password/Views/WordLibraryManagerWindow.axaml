@@ -1,0 +1,123 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:YNOV_Password.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+        x:Class="YNOV_Password.Views.WordLibraryManagerWindow"
+        x:DataType="vm:WordLibraryManagerViewModel"
+        Title="Gestionnaire de bibliothèques de mots"
+        Width="600" Height="500"
+        MinWidth="500" MinHeight="400"
+        WindowStartupLocation="CenterOwner">
+
+  <Design.DataContext>
+    <vm:WordLibraryManagerViewModel/>
+  </Design.DataContext>
+
+  <Grid Margin="20" RowDefinitions="Auto,*,Auto,Auto">
+    
+    <!-- Header -->
+    <TextBlock Grid.Row="0" 
+               Text="Gestionnaire de bibliothèques de mots" 
+               FontSize="18" 
+               FontWeight="Bold" 
+               Margin="0,0,0,20"/>
+
+    <!-- Liste des bibliothèques -->
+    <Border Grid.Row="1" 
+            BorderBrush="#E0E0E0" 
+            BorderThickness="1" 
+            CornerRadius="8" 
+            Padding="15"
+            Margin="0,0,0,20">
+      
+      <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+          <TextBlock Text="Bibliothèques disponibles" 
+                     FontWeight="SemiBold" 
+                     VerticalAlignment="Center"/>
+          <Button Grid.Column="1" 
+                  Content="🔄" 
+                  Command="{Binding RefreshCommand}"
+                  ToolTip.Tip="Actualiser"
+                  Padding="8,4"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+          <ItemsControl ItemsSource="{Binding Libraries}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Border BorderBrush="#F0F0F0" 
+                        BorderThickness="0,0,0,1" 
+                        Padding="10,8">
+                  <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0" 
+                               Text="{Binding DisplayText}" 
+                               VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" 
+                            Content="🗑️" 
+                            Command="{Binding ((vm:WordLibraryManagerViewModel)DataContext).DeleteLibraryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            CommandParameter="{Binding}"
+                            ToolTip.Tip="Supprimer cette bibliothèque"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Padding="8,4"/>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </Grid>
+    </Border>
+
+    <!-- Section d'import -->
+    <Border Grid.Row="2" 
+            BorderBrush="#E0E0E0" 
+            BorderThickness="1" 
+            CornerRadius="8" 
+            Padding="15"
+            Margin="0,0,0,20">
+      
+      <Grid RowDefinitions="Auto,Auto,Auto">
+        <TextBlock Grid.Row="0" 
+                   Text="Importer une nouvelle bibliothèque" 
+                   FontWeight="SemiBold" 
+                   Margin="0,0,0,10"/>
+
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+          <TextBox Grid.Column="0" 
+                   Watermark="Nom de la bibliothèque (optionnel - défaut: Français)"
+                   Text="{Binding NewLibraryName}"
+                   Margin="0,0,10,0"/>
+          <Button Grid.Column="1" 
+                  Content="� Importer mots français"
+                  Command="{Binding ImportWordsCommand}"
+                  IsEnabled="{Binding !IsLoading}"
+                  Padding="15,8"/>
+        </Grid>
+
+        <TextBlock Grid.Row="2" 
+                   Text="Import automatique du fichier 'liste_mots_francais.txt' du projet"
+                   FontSize="12"
+                   Foreground="Gray"/>
+      </Grid>
+    </Border>
+
+    <!-- Status bar -->
+    <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
+      <TextBlock Grid.Column="0" 
+                 Text="{Binding StatusMessage}" 
+                 VerticalAlignment="Center"
+                 FontSize="12"/>
+      
+      <ProgressBar Grid.Column="1" 
+                   IsIndeterminate="True"
+                   IsVisible="{Binding IsLoading}"
+                   Width="100"
+                   Height="4"/>
+    </Grid>
+
+  </Grid>
+</Window>
