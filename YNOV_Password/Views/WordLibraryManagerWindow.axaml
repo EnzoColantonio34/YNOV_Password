@@ -18,57 +18,49 @@
     <vm:WordLibraryManagerViewModel/>
   </Design.DataContext>
 
-  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-    <StackPanel Margin="32" Spacing="24" Background="#F8FAFC">
-      <!-- Titre principal -->
-      <TextBlock Text="Gestionnaire de bibliothèques de mots" Classes="PageTitle" Margin="0,0,0,16"/>
+  <StackPanel Classes="MainContainer">
+    <TextBlock Text="Gestionnaire de bibliothèques de mots" Classes="PageTitle"/>
 
-      <!-- Carte principale -->
-      <Border Classes="Card">
-        <StackPanel Spacing="20">
-          <!-- Header section -->
-          <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
-            <TextBlock Text="Bibliothèques disponibles" Classes="SectionTitle"/>
-            <Button Content="Actualiser"
-                    Command="{Binding RefreshCommand}"
-                    ToolTip.Tip="Actualiser les bibliothèques"
-                    Classes="RefreshButton"/>
-          </Grid>
+    <Border Classes="Card">
+      <StackPanel Spacing="20">
+        <TextBlock Text="Bibliothèques disponibles" Classes="SectionTitle"/>
+        <Button Content="Actualiser"
+                Command="{Binding RefreshCommand}"
+                ToolTip.Tip="Actualiser les bibliothèques"
+                Classes="RefreshButton"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,8"/>
+        <ItemsControl ItemsSource="{Binding Libraries}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Border Classes="LibraryListItem">
+                <Grid ColumnDefinitions="*,Auto">
+                  <TextBlock Grid.Column="0"
+                             Text="{Binding DisplayText}"
+                             Classes="FormLabel"/>
+                  <Button Grid.Column="1"
+                          Command="{Binding ((vm:WordLibraryManagerViewModel)DataContext).DeleteLibraryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                          CommandParameter="{Binding}"
+                          ToolTip.Tip="Supprimer cette bibliothèque"
+                          Classes="DeleteLibraryButton"/>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </Border>
 
-          <!-- Liste des bibliothèques -->
-          <ItemsControl ItemsSource="{Binding Libraries}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <Border Classes="LibraryListItem">
-                  <Grid ColumnDefinitions="*,Auto">
-                    <TextBlock Grid.Column="0"
-                               Text="{Binding DisplayText}"
-                               Classes="FormLabel"/>
-                    <Button Grid.Column="1"
-                            Command="{Binding ((vm:WordLibraryManagerViewModel)DataContext).DeleteLibraryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                            CommandParameter="{Binding}"
-                            ToolTip.Tip="Supprimer cette bibliothèque"
-                            Classes="DeleteLibraryButton"/>
-                  </Grid>
-                </Border>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </StackPanel>
-      </Border>
-
-      <!-- Carte de statut -->
-      <Border Classes="StatusCard">
-        <Grid ColumnDefinitions="*,Auto">
-          <TextBlock Grid.Column="0"
-                     Text="{Binding StatusMessage}"
-                     Classes="StatusText"/>
-          <ProgressBar Grid.Column="1"
-                       IsIndeterminate="True"
-                       IsVisible="{Binding IsLoading}"
-                       Classes="StatusProgress"/>
-        </Grid>
-      </Border>
-    </StackPanel>
-  </ScrollViewer>
+    <Border Classes="StatusCard">
+      <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0"
+                   Text="{Binding StatusMessage}"
+                   Classes="StatusText"/>
+        <ProgressBar Grid.Column="1"
+                     IsIndeterminate="True"
+                     IsVisible="{Binding IsLoading}"
+                     Classes="StatusProgress"/>
+      </Grid>
+    </Border>
+  </StackPanel>
 </Window>
