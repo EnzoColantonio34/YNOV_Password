@@ -39,8 +39,13 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _searchText = string.Empty;
 
     public bool HasNoPasswords => !Passwords.Any();
-    public string NoPasswordsMessageTitle => "Pas encore de mot de passe créé !";
-    public string NoPasswordsMessageSubtitle => "Ne tarde pas pour te sécuriser";
+    public bool IsSearchActive => !string.IsNullOrWhiteSpace(SearchText);
+    public string NoPasswordsMessageTitle => IsSearchActive 
+        ? "Aucun élément correspondant à la recherche..." 
+        : "Pas encore de mot de passe créé !";
+    public string NoPasswordsMessageSubtitle => IsSearchActive 
+        ? $"Aucun résultat trouvé pour \"{SearchText}\"" 
+        : "Ne tarde pas pour te sécuriser";
 
     public ICommand CopyPasswordCommand { get; private set; } = null!;
     public ICommand CopyUsernameCommand { get; private set; } = null!;
@@ -91,6 +96,9 @@ public partial class MainWindowViewModel : ViewModelBase
             
             Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
             OnPropertyChanged(nameof(HasNoPasswords));
+            OnPropertyChanged(nameof(IsSearchActive));
+            OnPropertyChanged(nameof(NoPasswordsMessageTitle));
+            OnPropertyChanged(nameof(NoPasswordsMessageSubtitle));
             System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: {Passwords.Count} mots de passe chargés");
 
             CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
@@ -195,6 +203,9 @@ public partial class MainWindowViewModel : ViewModelBase
                 _dbService.Delete(entry.Id);
                 Passwords.Remove(entry);
                 OnPropertyChanged(nameof(HasNoPasswords));
+                OnPropertyChanged(nameof(IsSearchActive));
+                OnPropertyChanged(nameof(NoPasswordsMessageTitle));
+                OnPropertyChanged(nameof(NoPasswordsMessageSubtitle));
             }
             catch (Exception ex)
             {
@@ -278,11 +289,17 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         OnPropertyChanged(nameof(HasNoPasswords));
+        OnPropertyChanged(nameof(IsSearchActive));
+        OnPropertyChanged(nameof(NoPasswordsMessageTitle));
+        OnPropertyChanged(nameof(NoPasswordsMessageSubtitle));
     }
 
     partial void OnSearchTextChanged(string value)
     {
         PerformSearch(value);
+        OnPropertyChanged(nameof(IsSearchActive));
+        OnPropertyChanged(nameof(NoPasswordsMessageTitle));
+        OnPropertyChanged(nameof(NoPasswordsMessageSubtitle));
     }
 
     private async void ShowAddPasswordDialog()
