@@ -92,7 +92,7 @@
                    Text="{Binding NewLibraryName}"
                    Margin="0,0,10,0"/>
           <Button Grid.Column="1" 
-                  Content="� Importer mots français"
+                  Content="Importer une bibliothèque"
                   Command="{Binding ImportWordsCommand}"
                   IsEnabled="{Binding !IsLoading}"
                   Padding="15,8"/>
