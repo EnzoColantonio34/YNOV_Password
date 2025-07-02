@@ -60,41 +60,68 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel(int userId)
     {
-        if (userId == 0)
+        try
         {
-            var userService = new UserDatabaseService();
-            var defaultUser = userService.GetUserByEmail("admin@example.com");
-            userId = defaultUser?.Id ?? 1;
-            CurrentUser = defaultUser;
-        }
-        else
-        {
-            var userService = new UserDatabaseService();
-            var users = userService.GetAllUsers();
-            CurrentUser = users.FirstOrDefault(u => u.Id == userId);
-        }
-        
-        if (CurrentUser != null)
-        {
-            _dbService = new PasswordDatabaseService(CurrentUser);
-        }
-        else
-        {
-            _dbService = new PasswordDatabaseService(userId);
-        }
-        
-        Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
-        OnPropertyChanged(nameof(HasNoPasswords));
+            System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Initialisation avec userId = {userId}");
+            
+            if (userId == 0)
+            {
+                var userService = new UserDatabaseService();
+                var defaultUser = userService.GetUserByEmail("admin@example.com");
+                userId = defaultUser?.Id ?? 1;
+                CurrentUser = defaultUser;
+                System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Utilisateur par défaut chargé = {CurrentUser?.Username}");
+            }
+            else
+            {
+                var userService = new UserDatabaseService();
+                var users = userService.GetAllUsers();
+                CurrentUser = users.FirstOrDefault(u => u.Id == userId);
+                System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Utilisateur chargé = {CurrentUser?.Username}");
+            }
+            
+            if (CurrentUser != null)
+            {
+                _dbService = new PasswordDatabaseService(CurrentUser);
+            }
+            else
+            {
+                _dbService = new PasswordDatabaseService(userId);
+            }
+            
+            Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
+            OnPropertyChanged(nameof(HasNoPasswords));
+            System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: {Passwords.Count} mots de passe chargés");
 
-        CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
-        CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
-        CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
-        DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
-        SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
-        ShowPasswordCommand = new Commands.RelayCommand<PasswordEntry>(ShowPassword);
-        OpenUrlCommand = new Commands.RelayCommand<string>(OpenUrl);
-        AddPasswordCommand = new Commands.RelayCommand<object>(_ => ShowAddPasswordDialog());
-        LogoutCommand = new Commands.RelayCommand<object>(_ => LogoutRequested?.Invoke());
+            CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
+            CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
+            CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
+            DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
+            SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
+            ShowPasswordCommand = new Commands.RelayCommand<PasswordEntry>(ShowPassword);
+            OpenUrlCommand = new Commands.RelayCommand<string>(OpenUrl);
+            AddPasswordCommand = new Commands.RelayCommand<object>(_ => ShowAddPasswordDialog());
+            LogoutCommand = new Commands.RelayCommand<object>(_ => LogoutRequested?.Invoke());
+            
+            System.Diagnostics.Debug.WriteLine("MainWindowViewModel: Initialisation terminée avec succès");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Erreur lors de l'initialisation = {ex.Message}");
+            // Initialiser avec des valeurs par défaut pour éviter les crashes
+            Passwords = new ObservableCollection<PasswordEntry>();
+            _dbService = new PasswordDatabaseService(userId);
+            
+            CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
+            CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
+            CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
+            DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
+            SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
+            ShowPasswordCommand = new Commands.RelayCommand<PasswordEntry>(ShowPassword);
+            OpenUrlCommand = new Commands.RelayCommand<string>(OpenUrl);
+            AddPasswordCommand = new Commands.RelayCommand<object>(_ => ShowAddPasswordDialog());
+            LogoutCommand = new Commands.RelayCommand<object>(_ => LogoutRequested?.Invoke());
+        }
     }
 
     private async void CopyToClipboard(string password)

@@ -32,12 +32,7 @@ namespace YNOV_Password.Views
             // Subscribe to login completion
             _viewModel.LoginCompleted += () =>
             {
-                // Fermer la fenêtre après un court délai pour permettre la transition
-                Avalonia.Threading.Dispatcher.UIThread.Post(async () =>
-                {
-                    await System.Threading.Tasks.Task.Delay(500);
-                    Close();
-                });
+                // Ne pas fermer automatiquement ici, c'est géré dans App.axaml.cs
             };
         }
 
