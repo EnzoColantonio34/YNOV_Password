@@ -12,8 +12,7 @@
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Icon="/Assets/avalonia-logo.ico"
         Title="YNOV_Password"
-        Width="800"
-        Height="450">
+        Classes="MainWindow">
 
     <Window.Resources>
         <converters:PasswordMaskConverter x:Key="PasswordMaskConverter"/>
@@ -31,13 +30,7 @@
             <StackPanel>
 
         <!-- En-tête -->
-        <Border Padding="30" Classes="HighlightCard">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                    <GradientStop Color="#34D399" Offset="0"/>
-                    <GradientStop Color="#059669" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.Background>
+        <Border Classes="HeaderSection HighlightCard">
 
             <StackPanel>
                 <!-- Titre et boutons -->
@@ -59,9 +52,7 @@
                             Content="❓"
                             Classes="IconButton"
                             Click="HelpButton_Click"
-                            Padding="12,10"
                             HorizontalAlignment="Right"
-                            Margin="0,0,12,0"
                             ToolTip.Tip="Aide - Guide d'utilisation"
                             x:Name="HelpButton"/>
 
@@ -69,16 +60,13 @@
                             Content="Générer un mot de passe"
                             Classes="IconButton"
                             Click="GeneratePasswordButton_Click"
-                            Padding="16,10"
                             HorizontalAlignment="Right"
-                            Margin="0,0,12,0"
                             x:Name="GeneratePasswordButton"/>
 
                     <Button Grid.Column="3"
                             Content="Ajouter"
                             Classes="IconButton"
                             Click="AddButton_Click"
-                            Padding="16,10"
                             HorizontalAlignment="Right"
                             x:Name="AddButton"/>
                 </Grid>
@@ -86,10 +74,8 @@
                 <!-- Barre de recherche -->
                 <TextBox Classes="SearchBox"
                          Watermark="Rechercher..."
-                         Width="200"
                          Text="{Binding SearchText}"
-                         HorizontalAlignment="Left"
-                         Margin="0,10,0,0"/>
+                         HorizontalAlignment="Left"/>
             </StackPanel>
         </Border>
 
@@ -112,28 +98,21 @@
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Site" FontWeight="Bold" Margin="10,5" />
-                <TextBlock Grid.Column="1" Text="Nom d'utilisateur" FontWeight="Bold" Margin="10,5" />
-                <TextBlock Grid.Column="2" Text="Mot de passe" FontWeight="Bold" Margin="10,5" />
-                <TextBlock Grid.Column="3" Text="" FontWeight="Bold" Margin="5,5" HorizontalAlignment="Center" />
-                <TextBlock Grid.Column="4" Text="URL" FontWeight="Bold" Margin="10,5" />
-                <TextBlock Grid.Column="5" Text="Actions" FontWeight="Bold" Margin="10,5" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="0" Text="Site" Classes="TableHeader" />
+                <TextBlock Grid.Column="1" Text="Nom d'utilisateur" Classes="TableHeader" />
+                <TextBlock Grid.Column="2" Text="Mot de passe" Classes="TableHeader" />
+                <TextBlock Grid.Column="3" Text="" Classes="TableHeader" HorizontalAlignment="Center" />
+                <TextBlock Grid.Column="4" Text="URL" Classes="TableHeader" />
+                <TextBlock Grid.Column="5" Text="Actions" Classes="TableHeader" HorizontalAlignment="Center" />
             </Grid>
 
             <!-- Message quand il n'y a pas de mots de passe -->
-            <Border Grid.Row="1" IsVisible="{Binding HasNoPasswords}" Padding="20" Margin="0,40,0,20">
+            <Border Grid.Row="1" IsVisible="{Binding HasNoPasswords}" Classes="NoPasswordsMessage">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Text="{Binding NoPasswordsMessageTitle}" 
-                               FontSize="16" 
-                               FontWeight="Bold" 
-                               Foreground="#9CA3AF" 
-                               HorizontalAlignment="Center" 
-                               Margin="0,0,0,8"/>
+                               Classes="NoPasswordsTitle"/>
                     <TextBlock Text="{Binding NoPasswordsMessageSubtitle}" 
-                               FontSize="12" 
-                               FontWeight="Normal" 
-                               Foreground="#9CA3AF" 
-                               HorizontalAlignment="Center"/>
+                               Classes="NoPasswordsSubtitle"/>
                 </StackPanel>
             </Border>
 
@@ -169,15 +148,7 @@
                                                VerticalAlignment="Center"
                                                Background="Transparent"
                                                IsVisible="{Binding IsPasswordVisible}"/>
-                                    <Button Background="Transparent" 
-                                            BorderThickness="0" 
-                                            Padding="10,0" 
-                                            HorizontalAlignment="Stretch" 
-                                            HorizontalContentAlignment="Left"
-                                            VerticalAlignment="Stretch"
-                                            Content=""
-                                            Cursor="Hand"
-                                            Classes="TableActionButton"
+                                    <Button Classes="TransparentTableButton TableActionButton"
                                             PointerPressed="PasswordField_PointerPressed">
                                         <Button.Flyout>
                                             <MenuFlyout>
@@ -201,59 +172,23 @@
                                     
                                     <!-- Timer pour le temps restant -->
                                     <TextBlock Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}" 
-                                               VerticalAlignment="Center"
-                                               FontSize="12"
-                                               Foreground="#666666"
-                                               MinWidth="30"
-                                               TextAlignment="Center"
+                                               Classes="PasswordTimer"
                                                IsVisible="{Binding IsPasswordVisible}"/>
                                     
                                     <!-- Icône d'alerte pour les mots de passe dupliqués -->
-                                    <Button Background="#FEF3C7" 
-                                            BorderThickness="1" 
-                                            BorderBrush="#F59E0B"
-                                            Padding="3" 
-                                            CornerRadius="4"
-                                            VerticalAlignment="Center"
-                                            HorizontalAlignment="Center"
-                                            Content="⚠️"
+                                    <Button Classes="TableDuplicateAlert"
                                             IsVisible="{Binding IsDuplicate}"
-                                            Cursor="Hand"
-                                            FontSize="12"
-                                            MinWidth="24"
-                                            MinHeight="24"
                                             Click="DuplicateAlert_Click"
                                             Tag="{Binding}"
-                                            ToolTip.Tip="Ce mot de passe est réutilisé - Cliquez pour plus d'options">
-                                        <Button.Styles>
-                                            <Style Selector="Button:pointerover">
-                                                <Setter Property="Background" Value="#FDE68A"/>
-                                                <Setter Property="BorderBrush" Value="#D97706"/>
-                                            </Style>
-                                        </Button.Styles>
-                                    </Button>
+                                            ToolTip.Tip="Ce mot de passe est réutilisé - Cliquez pour plus d'options"/>
                                 </StackPanel>
                                 
                                 <!-- URL cliquable -->
                                 <Button Grid.Column="4" 
-                                        Background="Transparent" 
-                                        BorderThickness="0" 
-                                        Padding="10,0" 
-                                        HorizontalAlignment="Stretch" 
-                                        HorizontalContentAlignment="Left"
-                                        VerticalAlignment="Stretch"
+                                        Classes="UrlButton TableActionButton"
                                         Content="{Binding Url}"
-                                        Cursor="Hand"
-                                        Foreground="#0066CC"
-                                        Classes="TableActionButton"
                                         Click="OpenUrl_Click"
-                                        Tag="{Binding}">
-                                    <Button.Styles>
-                                        <Style Selector="Button:pointerover">
-                                            <Setter Property="Foreground" Value="#0052A3"/>
-                                        </Style>
-                                    </Button.Styles>
-                                </Button>
+                                        Tag="{Binding}"/>
                                 
                                 <!-- Bouton menu déroulant -->
                                 <Button Grid.Column="5" 
@@ -291,19 +226,11 @@
     
     <!-- Icône utilisateur avec menu de déconnexion -->
     <Button Name="UserMenuButton"
-            Width="55"
-            Height="55"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Margin="0,0,20,20"
             ToolTip.Tip="Menu utilisateur"
             Click="UserMenuButton_Click">
         <Button.Content>
             <TextBlock Text="{Binding UserInitial}" 
-                       FontSize="22" 
-                       Foreground="White"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
+                       Classes="UserInitial"/>
         </Button.Content>
         <Button.Flyout>
             <MenuFlyout Placement="TopEdgeAlignedRight">

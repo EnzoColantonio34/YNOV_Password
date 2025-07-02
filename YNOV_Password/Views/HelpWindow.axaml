@@ -6,8 +6,7 @@
         x:Class="YNOV_Password.Views.HelpWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="Aide - YNOV Password"
-        Width="800"
-        Height="650"
+        Classes="HelpWindow"
         WindowStartupLocation="CenterOwner">
 
     <Window.Styles>
@@ -21,7 +20,7 @@
         </Grid.RowDefinitions>
         
         <!-- Barre de recherche -->
-        <Border Grid.Row="0" Padding="15" Background="#F8F9FA" BorderBrush="#E9ECEF" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0" Classes="HelpSearchBar">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="300"/>
@@ -32,20 +31,17 @@
                 <TextBox Grid.Column="0"
                          x:Name="SearchTextBox"
                          Watermark="Rechercher dans l'aide..."
-                         Classes="SearchBox"
+                         Classes="SearchBox HelpSearchBox"
                          TextChanged="SearchTextBox_TextChanged"/>
                 
                 <TextBlock Grid.Column="2"
                            x:Name="SearchResultsText"
-                           VerticalAlignment="Center"
-                           Foreground="Gray"
-                           FontSize="12"
-                           Margin="10,0,0,0"/>
+                           Classes="SearchResultsText"/>
             </Grid>
         </Border>
 
-        <ScrollViewer Grid.Row="1" Padding="20" VerticalScrollBarVisibility="Auto" x:Name="MainScrollViewer">
-            <StackPanel Spacing="20" x:Name="MainContent">
+        <ScrollViewer Grid.Row="1" Classes="HelpContent" x:Name="MainScrollViewer">
+            <StackPanel Classes="HelpMainContent" x:Name="MainContent">
                 
                 <!-- Titre principal -->
                 <TextBlock Text="Bienvenue dans votre gestionnaire de mots de passe !" 

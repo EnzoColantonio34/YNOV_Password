@@ -11,7 +11,8 @@
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="CornerRadius" Value="25"/>
         <Setter Property="Padding" Value="15,12"/>
-        <Setter Property="Margin" Value="0,15,0,0"/>
+        <Setter Property="Margin" Value="0,10,0,0"/>
+        <Setter Property="Width" Value="200"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="2"/>
@@ -114,6 +115,11 @@
         <Setter Property="BorderBrush" Value="White"/>
         <Setter Property="BorderThickness" Value="3"/>
         <Setter Property="CornerRadius" Value="27.5"/>
+        <Setter Property="Width" Value="55"/>
+        <Setter Property="Height" Value="55"/>
+        <Setter Property="HorizontalAlignment" Value="Right"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="0,0,20,20"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Transitions">
             <Transitions>
@@ -131,6 +137,14 @@
     <Style Selector="Button#UserMenuButton:pressed">
         <Setter Property="Background" Value="#047857"/>
         <Setter Property="RenderTransform" Value="scale(0.97)"/>
+    </Style>
+
+    <!-- Style pour le contenu du bouton utilisateur -->
+    <Style Selector="TextBlock.UserInitial">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <!-- Styles pour les MenuItems du menu utilisateur -->
@@ -270,6 +284,7 @@
         <Setter Property="Foreground" Value="#059669"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
         <Setter Property="FontWeight" Value="Medium"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="#E2E8F0"/>
@@ -280,6 +295,11 @@
                 <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
             </Transitions>
         </Setter>
+    </Style>
+
+    <!-- Style spécifique pour le bouton d'aide -->
+    <Style Selector="Button.IconButton#HelpButton">
+        <Setter Property="Padding" Value="12,10"/>
     </Style>
 
     <Style Selector="Button.IconButton:pointerover">
@@ -520,5 +540,564 @@
     <Style Selector="Button.DuplicateAlertButton:pressed">
         <Setter Property="Background" Value="#F59E0B"/>
         <Setter Property="RenderTransform" Value="scale(0.95)"/>
+    </Style>
+
+    <!-- Styles pour les fenêtres principales -->
+    <Style Selector="Window.MainWindow">
+        <Setter Property="Width" Value="800"/>
+        <Setter Property="Height" Value="450"/>
+    </Style>
+
+    <Style Selector="Window.AddPasswordWindow">
+        <Setter Property="Width" Value="400"/>
+        <Setter Property="Height" Value="300"/>
+    </Style>
+
+    <Style Selector="Window.DuplicatePasswordAlertWindow">
+        <Setter Property="Width" Value="600"/>
+        <Setter Property="Height" Value="400"/>
+    </Style>
+
+    <Style Selector="Window.LoginWindow">
+        <Setter Property="Width" Value="500"/>
+        <Setter Property="Height" Value="600"/>
+    </Style>
+
+    <Style Selector="Window.PasswordGeneratorWindow">
+        <Setter Property="Width" Value="500"/>
+        <Setter Property="Height" Value="700"/>
+    </Style>
+
+    <!-- Styles pour la fenêtre d'aide -->
+    <Style Selector="Window.HelpWindow">
+        <Setter Property="Width" Value="800"/>
+        <Setter Property="Height" Value="650"/>
+    </Style>
+
+    <!-- Styles pour la barre de recherche de l'aide -->
+    <Style Selector="Border.HelpSearchBar">
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Background" Value="#F8F9FA"/>
+        <Setter Property="BorderBrush" Value="#E9ECEF"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    </Style>
+
+    <Style Selector="TextBox.HelpSearchBox">
+        <Setter Property="Width" Value="300"/>
+    </Style>
+
+    <Style Selector="TextBlock.SearchResultsText">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Margin" Value="10,0,0,0"/>
+    </Style>
+
+    <!-- Styles pour le contenu de l'aide -->
+    <Style Selector="ScrollViewer.HelpContent">
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+    </Style>
+
+    <Style Selector="StackPanel.HelpMainContent">
+        <Setter Property="Spacing" Value="20"/>
+    </Style>
+
+    <!-- Styles pour les en-têtes de sections -->
+    <Style Selector="Border.HeaderSection">
+        <Setter Property="Padding" Value="30"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#34D399" Offset="0"/>
+                    <GradientStop Color="#059669" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Styles pour les grilles de colonnes du tableau -->
+    <Style Selector="Grid.TableColumns">
+        <Setter Property="Margin" Value="10,5"/>
+    </Style>
+
+    <!-- Styles pour les TextBlock d'en-tête de tableau -->
+    <Style Selector="TextBlock.TableHeader">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Margin" Value="10,5"/>
+    </Style>
+
+    <!-- Styles pour les champs d'entrée avec label -->
+    <Style Selector="TextBlock.FormLabel">
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Foreground" Value="#374151"/>
+        <Setter Property="Margin" Value="0,0,0,6"/>
+    </Style>
+
+    <Style Selector="TextBox.FormInput">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="BorderBrush" Value="#D1D5DB"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="TextBox.FormInput:focus">
+        <Setter Property="BorderBrush" Value="#059669"/>
+    </Style>
+
+    <!-- Styles pour les titres de pages -->
+    <Style Selector="TextBlock.PageTitle">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#1F2937"/>
+        <Setter Property="Margin" Value="0,0,0,24"/>
+    </Style>
+
+    <Style Selector="TextBlock.SectionTitle">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#1F2937"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <!-- Styles pour les boutons d'annulation -->
+    <Style Selector="Button.CancelButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#6B7280"/>
+        <Setter Property="BorderBrush" Value="#D1D5DB"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="20,10"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.CancelButton:pointerover">
+        <Setter Property="Background" Value="#F9FAFB"/>
+        <Setter Property="BorderBrush" Value="#9CA3AF"/>
+    </Style>
+
+    <!-- Styles pour les textes de connexion -->
+    <Style Selector="TextBlock.LoginTitle">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="#1F2937"/>
+    </Style>
+
+    <Style Selector="TextBlock.LoginSubtitle">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="#6B7280"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <!-- Styles pour les conteneurs de connexion -->
+    <Style Selector="Border.LoginContainer">
+        <Setter Property="Background" Value="#FAFBFC"/>
+        <Setter Property="Padding" Value="40"/>
+    </Style>
+
+    <Style Selector="StackPanel.LoginForm">
+        <Setter Property="Spacing" Value="32"/>
+        <Setter Property="MaxWidth" Value="400"/>
+    </Style>
+
+    <Style Selector="Border.LoginFormCard">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="BoxShadow" Value="0 4 24 0 #0F000000"/>
+    </Style>
+
+    <!-- Styles pour le logo de connexion -->
+    <Style Selector="Border.LoginLogo">
+        <Setter Property="Width" Value="80"/>
+        <Setter Property="Height" Value="80"/>
+        <Setter Property="CornerRadius" Value="40"/>
+        <Setter Property="Background" Value="#059669"/>
+        <Setter Property="BoxShadow" Value="0 8 32 0 #20000000"/>
+    </Style>
+
+    <Style Selector="TextBlock.LoginLogoIcon">
+        <Setter Property="Text" Value="🔐"/>
+        <Setter Property="FontSize" Value="40"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Styles pour les messages d'erreur -->
+    <Style Selector="Border.ErrorMessage">
+        <Setter Property="Background" Value="#FEF2F2"/>
+        <Setter Property="BorderBrush" Value="#FECACA"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12"/>
+    </Style>
+
+    <Style Selector="TextBlock.ErrorText">
+        <Setter Property="Foreground" Value="#DC2626"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!-- Styles pour les boutons de connexion -->
+    <Style Selector="Button.LoginButton">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="0,16"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
+    <Style Selector="Button.SwitchModeButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#059669"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="16,8"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.SwitchModeButton:pointerover">
+        <Setter Property="Background" Value="#F0FDF4"/>
+    </Style>
+
+    <!-- Styles pour les zones de message sans mots de passe -->
+    <Style Selector="Border.NoPasswordsMessage">
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="Margin" Value="0,40,0,20"/>
+    </Style>
+
+    <Style Selector="TextBlock.NoPasswordsTitle">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#9CA3AF"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
+
+    <Style Selector="TextBlock.NoPasswordsSubtitle">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="#9CA3AF"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Styles pour les éléments de tableau transparents -->
+    <Style Selector="Button.TransparentTableButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Content" Value=""/>
+    </Style>
+
+    <!-- Styles pour les boutons URL dans le tableau -->
+    <Style Selector="Button.UrlButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="#0066CC"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Foreground" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.UrlButton:pointerover">
+        <Setter Property="Foreground" Value="#0052A3"/>
+    </Style>
+
+    <!-- Styles pour les alertes de duplication dans le tableau -->
+    <Style Selector="Button.TableDuplicateAlert">
+        <Setter Property="Background" Value="#FEF3C7"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="#F59E0B"/>
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Content" Value="⚠️"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="MinWidth" Value="24"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.TableDuplicateAlert:pointerover">
+        <Setter Property="Background" Value="#FDE68A"/>
+        <Setter Property="BorderBrush" Value="#D97706"/>
+    </Style>
+
+    <!-- Styles pour les timers dans le tableau -->
+    <Style Selector="TextBlock.PasswordTimer">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="#666666"/>
+        <Setter Property="MinWidth" Value="30"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Styles pour les containers des mots de passe générés -->
+    <Style Selector="Border.GeneratedPasswordContainer">
+        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BoxShadow" Value="0 1 3 0 #1F29371A"/>
+    </Style>
+
+    <Style Selector="TextBlock.GeneratedPasswordLabel">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="#374151"/>
+    </Style>
+
+    <Style Selector="TextBlock.PasswordLength">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="#6B7280"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Margin" Value="0,0,12,0"/>
+    </Style>
+
+    <!-- Styles pour les boutons ronds d'action -->
+    <Style Selector="Button.RoundActionButton">
+        <Setter Property="Width" Value="40"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Margin" Value="0,0,6,0"/>
+    </Style>
+
+    <!-- Styles pour les conteneurs de section -->
+    <Style Selector="Border.SectionContainer">
+        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BoxShadow" Value="0 1 3 0 #1F29371A"/>
+    </Style>
+
+    <Style Selector="TextBlock.SectionLabel">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Foreground" Value="#1F2937"/>
+    </Style>
+
+    <!-- Styles pour les alertes d'alerte de duplication -->
+    <Style Selector="TextBlock.DuplicateAlertIcon">
+        <Setter Property="Text" Value="⚠️"/>
+        <Setter Property="FontSize" Value="48"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="TextBlock.DuplicateAlertTitle">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#DC2626"/>
+    </Style>
+
+    <Style Selector="TextBlock.DuplicateAlertSubtitle">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="#666666"/>
+    </Style>
+
+    <Style Selector="Border.DuplicateAlertMessage">
+        <Setter Property="Background" Value="#FEF3C7"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="20"/>
+    </Style>
+
+    <Style Selector="TextBlock.DuplicateAlertText">
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="#92400E"/>
+    </Style>
+
+    <Style Selector="TextBlock.SiteLabel">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style Selector="TextBlock.SiteName">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Foreground" Value="#059669"/>
+    </Style>
+
+    <!-- Styles pour les boutons d'action des alertes -->
+    <Style Selector="StackPanel.AlertActionButtons">
+        <Setter Property="Orientation" Value="Horizontal"/>
+        <Setter Property="Spacing" Value="20"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,25,0,0"/>
+    </Style>
+
+    <Style Selector="Button.AlertActionButton">
+        <Setter Property="Width" Value="200"/>
+        <Setter Property="Height" Value="45"/>
+    </Style>
+
+    <Style Selector="Button.AlertCloseButton">
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Height" Value="40"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,15,0,0"/>
+    </Style>
+
+    <!-- Styles pour les éléments du générateur de mots de passe -->
+    <Style Selector="RadioButton.GenerationMode">
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Foreground" Value="#374151"/>
+        <Setter Property="Margin" Value="0,4"/>
+    </Style>
+
+    <!-- Styles pour les messages d'avertissement -->
+    <Style Selector="Border.WarningMessage">
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="Background" Value="#FEF2F2"/>
+        <Setter Property="BorderBrush" Value="#FECACA"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+
+    <Style Selector="TextBlock.WarningText">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="#DC2626"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <!-- Styles pour les champs de saisie numériques -->
+    <Style Selector="NumericUpDown.FormNumeric">
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="ShowButtonSpinner" Value="True"/>
+    </Style>
+
+    <!-- Styles pour les TextBox avec largeur spécifique -->
+    <Style Selector="TextBox.SmallInput">
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="10,8"/>
+    </Style>
+
+    <!-- Styles pour les textes d'aide -->
+    <Style Selector="TextBlock.HelpText">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="#6B7280"/>
+    </Style>
+
+    <!-- Styles pour les boutons de gestion -->
+    <Style Selector="Button.ManageButton">
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+
+    <!-- Styles pour les sliders -->
+    <Style Selector="Slider.ParameterSlider">
+        <Setter Property="Margin" Value="0,0,16,0"/>
+    </Style>
+
+    <!-- Styles pour le gestionnaire de bibliothèques -->
+    <Style Selector="Window.WordLibraryManagerWindow">
+        <Setter Property="Width" Value="600"/>
+        <Setter Property="Height" Value="500"/>
+        <Setter Property="MinWidth" Value="500"/>
+        <Setter Property="MinHeight" Value="400"/>
+    </Style>
+
+    <!-- Styles pour les titres de section -->
+    <Style Selector="TextBlock.LibraryManagerTitle">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+    </Style>
+
+    <Style Selector="TextBlock.LibrarySubtitle">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Styles pour les conteneurs de bibliothèques -->
+    <Style Selector="Border.LibraryContainer">
+        <Setter Property="BorderBrush" Value="#E0E0E0"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="Margin" Value="0,0,0,20"/>
+    </Style>
+
+    <!-- Styles pour les boutons de rafraîchissement -->
+    <Style Selector="Button.RefreshButton">
+        <Setter Property="Content" Value="🔄"/>
+        <Setter Property="Padding" Value="8,4"/>
+    </Style>
+
+    <!-- Styles pour les grilles du gestionnaire -->
+    <Style Selector="Grid.LibraryManagerMain">
+        <Setter Property="Margin" Value="20"/>
+    </Style>
+
+    <Style Selector="Grid.LibraryHeader">
+        <Setter Property="Margin" Value="0,0,0,10"/>
+    </Style>
+
+    <!-- Styles pour les CheckBox de formulaire -->
+    <Style Selector="CheckBox.FormCheckBox">
+        <Setter Property="Foreground" Value="#374151"/>
+        <Setter Property="Margin" Value="0,2"/>
+    </Style>
+
+    <!-- Styles pour la barre de force de mot de passe -->
+    <Style Selector="ProgressBar.PasswordStrengthBar">
+        <Setter Property="Height" Value="12"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Margin" Value="0,0,16,0"/>
+    </Style>
+
+    <Style Selector="TextBlock.PasswordStrengthText">
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- Styles pour les boutons d'action du générateur -->
+    <Style Selector="Button.UsePasswordButton">
+        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="FontWeight" Value="Medium"/>
     </Style>
 </Styles>
