@@ -3,112 +3,72 @@
         xmlns:vm="using:YNOV_Password.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="600"
         x:Class="YNOV_Password.Views.WordLibraryManagerWindow"
         x:DataType="vm:WordLibraryManagerViewModel"
         Title="Gestionnaire de bibliothèques de mots"
         Classes="WordLibraryManagerWindow"
         WindowStartupLocation="CenterOwner">
 
+  <Window.Styles>
+    <StyleInclude Source="avares://YNOV_Password/Styles/main.axaml"/>
+  </Window.Styles>
+
   <Design.DataContext>
     <vm:WordLibraryManagerViewModel/>
   </Design.DataContext>
 
-  <Grid Classes="LibraryManagerMain" RowDefinitions="Auto,*,Auto,Auto">
-    
-    <!-- Header -->
-    <TextBlock Grid.Row="0" 
-               Text="Gestionnaire de bibliothèques de mots" 
-               Classes="LibraryManagerTitle"/>
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="32" Spacing="24" Background="#F8FAFC">
+      <!-- Titre principal -->
+      <TextBlock Text="Gestionnaire de bibliothèques de mots" Classes="PageTitle" Margin="0,0,0,16"/>
 
-    <!-- Liste des bibliothèques -->
-    <Border Grid.Row="1" 
-            Classes="LibraryContainer">
-      
-      <Grid RowDefinitions="Auto,*">
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Classes="LibraryHeader">
-          <TextBlock Text="Bibliothèques disponibles" 
-                     Classes="LibrarySubtitle"/>
-          <Button Grid.Column="1" 
-                  Command="{Binding RefreshCommand}"
-                  ToolTip.Tip="Actualiser"
-                  Classes="RefreshButton"/>
-        </Grid>
+      <!-- Carte principale -->
+      <Border Classes="Card">
+        <StackPanel Spacing="20">
+          <!-- Header section -->
+          <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+            <TextBlock Text="Bibliothèques disponibles" Classes="SectionTitle"/>
+            <Button Content="Actualiser"
+                    Command="{Binding RefreshCommand}"
+                    ToolTip.Tip="Actualiser les bibliothèques"
+                    Classes="RefreshButton"/>
+          </Grid>
 
-        <ScrollViewer Grid.Row="1">
+          <!-- Liste des bibliothèques -->
           <ItemsControl ItemsSource="{Binding Libraries}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <Border BorderBrush="#F0F0F0" 
-                        BorderThickness="0,0,0,1" 
-                        Padding="10,8">
+                <Border Classes="LibraryListItem">
                   <Grid ColumnDefinitions="*,Auto">
-                    <TextBlock Grid.Column="0" 
-                               Text="{Binding DisplayText}" 
-                               VerticalAlignment="Center"/>
-                    <Button Grid.Column="1" 
-                            Content="🗑️" 
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding DisplayText}"
+                               Classes="FormLabel"/>
+                    <Button Grid.Column="1"
                             Command="{Binding ((vm:WordLibraryManagerViewModel)DataContext).DeleteLibraryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                             CommandParameter="{Binding}"
                             ToolTip.Tip="Supprimer cette bibliothèque"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Padding="8,4"/>
+                            Classes="DeleteLibraryButton"/>
                   </Grid>
                 </Border>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
-        </ScrollViewer>
-      </Grid>
-    </Border>
+        </StackPanel>
+      </Border>
 
-    <!-- Section d'import -->
-    <Border Grid.Row="2" 
-            BorderBrush="#E0E0E0" 
-            BorderThickness="1" 
-            CornerRadius="8" 
-            Padding="15"
-            Margin="0,0,0,20">
-      
-      <Grid RowDefinitions="Auto,Auto,Auto">
-        <TextBlock Grid.Row="0" 
-                   Text="Importer une nouvelle bibliothèque" 
-                   FontWeight="SemiBold" 
-                   Margin="0,0,0,10"/>
-
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
-          <TextBox Grid.Column="0" 
-                   Watermark="Nom de la bibliothèque (optionnel - défaut: Français)"
-                   Text="{Binding NewLibraryName}"
-                   Margin="0,0,10,0"/>
-          <Button Grid.Column="1" 
-                  Content="Importer une bibliothèque"
-                  Command="{Binding ImportWordsCommand}"
-                  IsEnabled="{Binding !IsLoading}"
-                  Padding="15,8"/>
+      <!-- Carte de statut -->
+      <Border Classes="StatusCard">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Grid.Column="0"
+                     Text="{Binding StatusMessage}"
+                     Classes="StatusText"/>
+          <ProgressBar Grid.Column="1"
+                       IsIndeterminate="True"
+                       IsVisible="{Binding IsLoading}"
+                       Classes="StatusProgress"/>
         </Grid>
-
-        <TextBlock Grid.Row="2" 
-                   Text="Import automatique du fichier 'liste_mots_francais.txt' du projet"
-                   FontSize="12"
-                   Foreground="Gray"/>
-      </Grid>
-    </Border>
-
-    <!-- Status bar -->
-    <Grid Grid.Row="3" ColumnDefinitions="*,Auto">
-      <TextBlock Grid.Column="0" 
-                 Text="{Binding StatusMessage}" 
-                 VerticalAlignment="Center"
-                 FontSize="12"/>
-      
-      <ProgressBar Grid.Column="1" 
-                   IsIndeterminate="True"
-                   IsVisible="{Binding IsLoading}"
-                   Width="100"
-                   Height="4"/>
-    </Grid>
-
-  </Grid>
+      </Border>
+    </StackPanel>
+  </ScrollViewer>
 </Window>

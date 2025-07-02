@@ -660,7 +660,7 @@
     </Style>
 
     <Style Selector="TextBlock.SectionTitle">
-        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="#1F2937"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -719,7 +719,6 @@
         <Setter Property="Background" Value="White"/>
         <Setter Property="CornerRadius" Value="16"/>
         <Setter Property="Padding" Value="32"/>
-        <Setter Property="BoxShadow" Value="0 4 24 0 #0F000000"/>
     </Style>
 
     <!-- Styles pour le logo de connexion -->
@@ -728,7 +727,6 @@
         <Setter Property="Height" Value="80"/>
         <Setter Property="CornerRadius" Value="40"/>
         <Setter Property="Background" Value="#059669"/>
-        <Setter Property="BoxShadow" Value="0 8 32 0 #20000000"/>
     </Style>
 
     <Style Selector="TextBlock.LoginLogoIcon">
@@ -876,7 +874,6 @@
         <Setter Property="CornerRadius" Value="12"/>
         <Setter Property="Padding" Value="20"/>
         <Setter Property="Background" Value="White"/>
-        <Setter Property="BoxShadow" Value="0 1 3 0 #1F29371A"/>
     </Style>
 
     <Style Selector="TextBlock.GeneratedPasswordLabel">
@@ -908,7 +905,6 @@
         <Setter Property="CornerRadius" Value="12"/>
         <Setter Property="Padding" Value="20"/>
         <Setter Property="Background" Value="White"/>
-        <Setter Property="BoxShadow" Value="0 1 3 0 #1F29371A"/>
     </Style>
 
     <Style Selector="TextBlock.SectionLabel">
@@ -1034,46 +1030,341 @@
 
     <!-- Styles pour le gestionnaire de bibliothèques -->
     <Style Selector="Window.WordLibraryManagerWindow">
-        <Setter Property="Width" Value="600"/>
-        <Setter Property="Height" Value="500"/>
-        <Setter Property="MinWidth" Value="500"/>
-        <Setter Property="MinHeight" Value="400"/>
+        <Setter Property="Width" Value="800"/>
+        <Setter Property="Height" Value="650"/>
+        <Setter Property="MinWidth" Value="700"/>
+        <Setter Property="MinHeight" Value="550"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#F8FAFC" Offset="0"/>
+                    <GradientStop Color="#F1F5F9" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Styles pour les titres de section -->
     <Style Selector="TextBlock.LibraryManagerTitle">
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontWeight" Value="Bold"/>
-        <Setter Property="Margin" Value="0,0,0,20"/>
+        <Setter Property="Foreground" Value="#1F2937"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
     </Style>
 
     <Style Selector="TextBlock.LibrarySubtitle">
-        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="#059669"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <!-- Styles pour les conteneurs de bibliothèques -->
     <Style Selector="Border.LibraryContainer">
-        <Setter Property="BorderBrush" Value="#E0E0E0"/>
-        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="Margin" Value="0,0,0,16"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.3"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Border.LibraryContainer:pointerover">
+        <Setter Property="Background" Value="#FAFBFC"/>
+        <Setter Property="RenderTransform" Value="translateY(-2px)"/>
+    </Style>
+
+    <!-- Styles pour les éléments de liste des bibliothèques -->
+    <Style Selector="Border.LibraryItem">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Padding" Value="8,8"/>
         <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="15"/>
-        <Setter Property="Margin" Value="0,0,0,20"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Border.LibraryItem:pointerover">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#F0FDF4" Offset="0"/>
+                    <GradientStop Color="#DCFCE7" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransform" Value="translateX(8px)"/>
+        <Setter Property="BorderBrush" Value="#059669"/>
+    </Style>
+
+    <Style Selector="TextBlock.LibraryItemText">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="#374151"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <!-- Styles pour les boutons de rafraîchissement -->
     <Style Selector="Button.RefreshButton">
-        <Setter Property="Content" Value="🔄"/>
-        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="Content" Value="🔄 Actualiser"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#059669" Offset="0"/>
+                    <GradientStop Color="#047857" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="20,12"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.RefreshButton:pointerover">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#34D399" Offset="0"/>
+                    <GradientStop Color="#059669" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransform" Value="translateY(-2px)"/>
+    </Style>
+
+    <Style Selector="Button.RefreshButton:pressed">
+        <Setter Property="RenderTransform" Value="translateY(0px) scale(0.95)"/>
+    </Style>
+
+    <!-- Styles pour les boutons de suppression -->
+    <Style Selector="Button.DeleteLibraryButton">
+        <Setter Property="Content" Value="🗑️"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#DC2626"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="12,10"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.DeleteLibraryButton:pointerover">
+        <Setter Property="Background" Value="#FEE2E2"/>
+        <Setter Property="BorderBrush" Value="#FECACA"/>
+        <Setter Property="RenderTransform" Value="scale(1.15)"/>
+    </Style>
+
+    <Style Selector="Button.DeleteLibraryButton:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.9)"/>
+        <Setter Property="Background" Value="#FCA5A5"/>
     </Style>
 
     <!-- Styles pour les grilles du gestionnaire -->
     <Style Selector="Grid.LibraryManagerMain">
-        <Setter Property="Margin" Value="20"/>
+        <Setter Property="Margin" Value="40"/>
     </Style>
 
     <Style Selector="Grid.LibraryHeader">
-        <Setter Property="Margin" Value="0,0,0,10"/>
+        <Setter Property="Margin" Value="0,0,0,24"/>
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#F8FAFC" Offset="0"/>
+                    <GradientStop Color="#F1F5F9" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Styles pour la section d'import -->
+    <Style Selector="Border.ImportSection">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="White" Offset="0"/>
+                    <GradientStop Color="#FAFBFC" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="20"/>
+        <Setter Property="Padding" Value="32"/>
+        <Setter Property="Margin" Value="0,0,0,32"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.3"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Border.ImportSection:pointerover">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#FAFBFC" Offset="0"/>
+                    <GradientStop Color="#F3F4F6" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransform" Value="translateY(-2px)"/>
+    </Style>
+
+    <Style Selector="TextBlock.ImportTitle">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="Foreground" Value="#1F2937"/>
+        <Setter Property="Margin" Value="0,0,0,24"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="TextBox.LibraryNameInput">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#D1D5DB"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="TextBox.LibraryNameInput:focus">
+        <Setter Property="BorderBrush" Value="#059669"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="RenderTransform" Value="scale(1.02)"/>
+    </Style>
+
+    <Style Selector="Button.ImportButton">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#059669" Offset="0"/>
+                    <GradientStop Color="#047857" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.2"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.ImportButton:pointerover">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#34D399" Offset="0"/>
+                    <GradientStop Color="#059669" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransform" Value="translateY(-2px)"/>
+    </Style>
+
+    <Style Selector="Button.ImportButton:pressed">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#047857" Offset="0"/>
+                    <GradientStop Color="#065F46" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransform" Value="translateY(0px) scale(0.95)"/>
+    </Style>
+
+    <Style Selector="Button.ImportButton:disabled">
+        <Setter Property="Background" Value="#9CA3AF"/>
+        <Setter Property="Opacity" Value="0.6"/>
+    </Style>
+
+    <Style Selector="TextBlock.ImportHelpText">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="#6B7280"/>
+        <Setter Property="FontStyle" Value="Italic"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Opacity" Value="0.8"/>
+    </Style>
+
+    <!-- Styles pour la barre de statut -->
+    <Style Selector="Border.StatusBar">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#F8FAFC" Offset="0"/>
+                    <GradientStop Color="#F1F5F9" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        <Setter Property="BorderThickness" Value="2,2,0,0"/>
+        <Setter Property="CornerRadius" Value="20,20,0,0"/>
+        <Setter Property="Padding" Value="32,20"/>
+    </Style>
+
+    <Style Selector="TextBlock.StatusText">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="#6B7280"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="ProgressBar.StatusProgress">
+        <Setter Property="Width" Value="140"/>
+        <Setter Property="Height" Value="8"/>
+        <Setter Property="CornerRadius" Value="4"/>
+        <Setter Property="Background" Value="#E5E7EB"/>
+        <Setter Property="Foreground">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#059669" Offset="0"/>
+                    <GradientStop Color="#34D399" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- Styles pour les CheckBox de formulaire -->
@@ -1099,5 +1390,77 @@
         <Setter Property="Padding" Value="20,12"/>
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <!-- Styles améliorés pour une meilleure cohérence avec l'app -->
+    
+    <!-- ScrollViewer personnalisé pour le gestionnaire de bibliothèques -->
+    <Style Selector="ScrollViewer.LibraryScrollViewer">
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="Padding" Value="0,0,8,0"/>
+    </Style>
+
+    <!-- Amélioration du titre principal avec animation d'entrée -->
+    <Style Selector="TextBlock.LibraryManagerTitle">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="#1F2937"/>
+        <Setter Property="Margin" Value="0,0,0,32"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Opacity" Value="1"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.5"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.5"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <!-- Style pour les ItemsControl dans le gestionnaire -->
+    <Style Selector="ItemsControl.LibraryItemsControl">
+        <Setter Property="Margin" Value="0"/>
+    </Style>
+
+    <!-- Amélioration des messages d'état vides -->
+    <Style Selector="TextBlock.EmptyLibraryMessage">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Foreground" Value="#9CA3AF"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,40"/>
+        <Setter Property="Opacity" Value="0.8"/>
+    </Style>
+
+    <!-- Style pour les icônes dans les boutons du gestionnaire -->
+    <Style Selector="Button.RefreshButton > TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Carte principale générique pour sections importantes -->
+    <Style Selector="Border.Card">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="Padding" Value="24"/>
+        <Setter Property="BoxShadow" Value="0 2 12 0 #00000010"/>
+        <Setter Property="Margin" Value="0,0,0,16"/>
+    </Style>
+
+    <!-- Carte secondaire pour messages ou statuts -->
+    <Style Selector="Border.StatusCard">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="Padding" Value="20"/>
+        <Setter Property="BoxShadow" Value="0 2 12 0 #00000010"/>
+    </Style>
+
+    <!-- Carte d'élément de liste -->
+    <Style Selector="Border.LibraryListItem">
+        <Setter Property="Background" Value="#F8FAFC"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="16"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+        <Setter Property="BoxShadow" Value="0 1 4 0 #00000008"/>
     </Style>
 </Styles>
