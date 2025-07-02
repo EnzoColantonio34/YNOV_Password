@@ -51,8 +51,8 @@
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Transitions">
             <Transitions>
-                <DoubleTransition Property="Opacity" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+                <DoubleTransition Property="Opacity" Duration="0:0:0.15"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
             </Transitions>
         </Setter>
     </Style>
@@ -62,17 +62,7 @@
         <Setter Property="BorderThickness" Value="0,0,0,1"/>
         <Setter Property="Padding" Value="0,16"/>
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Transitions">
-            <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
-            </Transitions>
-        </Setter>
-    </Style>
-
-    <Style Selector="Border.TableRow:pointerover">
-        <Setter Property="Background" Value="#F8FAFC"/>
-        <Setter Property="RenderTransform" Value="translate(4px, 0)"/>
+        <Setter Property="Cursor" Value="Arrow"/>
     </Style>
 
     <Style Selector="Grid.TableHeader">
@@ -127,20 +117,20 @@
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3" Easing="CubicEaseOut"/>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Button#UserMenuButton:pointerover">
         <Setter Property="Background" Value="#34D399"/>
-        <Setter Property="RenderTransform" Value="scale(1.05)"/>
+        <Setter Property="RenderTransform" Value="scale(1.03)"/>
     </Style>
 
     <Style Selector="Button#UserMenuButton:pressed">
         <Setter Property="Background" Value="#047857"/>
-        <Setter Property="RenderTransform" Value="scale(0.95)"/>
+        <Setter Property="RenderTransform" Value="scale(0.97)"/>
     </Style>
 
     <!-- Styles pour les MenuItems du menu utilisateur -->
@@ -205,7 +195,7 @@
 
     <Style Selector="Button:pressed">
         <Setter Property="Background" Value="#047857"/>
-        <Setter Property="RenderTransform" Value="translate(0, 0) scale(0.98)"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
     </Style>
 
     <!-- Styles pour les menus contextuels -->
@@ -249,9 +239,8 @@
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.15"/>
-                <BrushTransition Property="BorderBrush" Duration="0:0:0.15"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+                <BrushTransition Property="Background" Duration="0:0:0.1"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.1"/>
             </Transitions>
         </Setter>
     </Style>
@@ -260,12 +249,6 @@
         <Setter Property="Background" Value="#059669"/>
         <Setter Property="BorderBrush" Value="#059669"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="RenderTransform" Value="scale(1.05)"/>
-    </Style>
-
-    <!-- Animations d'entrée pour les éléments de liste -->
-    <Style Selector="Border.TableRow">
-        <Setter Property="Cursor" Value="Hand"/>
     </Style>
 
     <!-- Styles pour les TextBlocks avec animations -->
@@ -291,9 +274,9 @@
         <Setter Property="BorderBrush" Value="#E2E8F0"/>
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.2"/>
-                <BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
             </Transitions>
         </Setter>
     </Style>
@@ -301,11 +284,11 @@
     <Style Selector="Button.IconButton:pointerover">
         <Setter Property="Background" Value="#F0FDF4"/>
         <Setter Property="BorderBrush" Value="#059669"/>
-        <Setter Property="RenderTransform" Value="translate(0, -2px)"/>
+        <Setter Property="RenderTransform" Value="translate(0, -1px)"/>
     </Style>
 
     <Style Selector="Button.IconButton:pressed">
-        <Setter Property="RenderTransform" Value="translate(0, 0) scale(0.98)"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
     </Style>
 
     <!-- Animations avancées et micro-interactions -->
@@ -399,13 +382,9 @@
         </Setter>
         <Setter Property="Transitions">
             <Transitions>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.3"/>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"/>
             </Transitions>
         </Setter>
-    </Style>
-
-    <Style Selector="Border.HighlightCard:pointerover">
-        <Setter Property="RenderTransform" Value="translate(0, -2px)"/>
     </Style>
 
     <!-- Style spécifique pour le bouton menu avec trois points -->
@@ -422,10 +401,9 @@
         <Setter Property="Height" Value="36"/>
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.15"/>
-                <BrushTransition Property="BorderBrush" Duration="0:0:0.15"/>
-                <BrushTransition Property="Foreground" Duration="0:0:0.15"/>
-                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"/>
+                <BrushTransition Property="Background" Duration="0:0:0.1"/>
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.1"/>
+                <BrushTransition Property="Foreground" Duration="0:0:0.1"/>
             </Transitions>
         </Setter>
     </Style>
@@ -434,10 +412,9 @@
         <Setter Property="Background" Value="#059669"/>
         <Setter Property="BorderBrush" Value="#059669"/>
         <Setter Property="Foreground" Value="White"/>
-        <Setter Property="RenderTransform" Value="scale(1.1)"/>
     </Style>
 
     <Style Selector="Button.MenuActionButton:pressed">
-        <Setter Property="RenderTransform" Value="scale(0.95)"/>
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
     </Style>
 </Styles>
