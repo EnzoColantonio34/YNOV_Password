@@ -173,6 +173,9 @@
                                                 <MenuItem Header="👁️ Afficher" 
                                                           Click="ShowPassword_Click"
                                                           Tag="{Binding}"/>
+                                                <MenuItem Header="🖊️ Modifier" 
+                                                          Click="ModifyPassword_Click"
+                                                          Tag="{Binding}"/>
                                             </MenuFlyout>
                                         </Button.Flyout>
                                     </Button>

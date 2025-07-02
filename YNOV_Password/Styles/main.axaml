@@ -200,6 +200,7 @@
 
     <!-- Styles pour les menus contextuels -->
     <Style Selector="MenuItem">
+        <Setter Property="FontFamily" Value="Segoe UI,Arial,sans-serif"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Transitions">

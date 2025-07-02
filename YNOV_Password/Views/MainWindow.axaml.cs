@@ -112,6 +112,15 @@ namespace YNOV_Password.Views
             }
         }
 
+        private async void ModifyPassword_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            {
+                var dialog = new AddPasswordWindow(viewModel, entry);
+                await dialog.ShowDialog(this);
+            }
+        }
+
         private async void DuplicateAlert_Click(object? sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel && viewModel.CurrentUser != null)
