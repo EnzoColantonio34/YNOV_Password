@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows.Input;
@@ -12,7 +13,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 
 namespace YNOV_Password.ViewModels;
 
@@ -67,22 +67,20 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Initialisation avec userId = {userId}");
-            
             if (userId == 0)
             {
                 var userService = new UserDatabaseService();
                 var defaultUser = userService.GetUserByEmail("admin@example.com");
                 userId = defaultUser?.Id ?? 1;
                 CurrentUser = defaultUser;
-                System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Utilisateur par défaut chargé = {CurrentUser?.Username}");
+
             }
             else
             {
                 var userService = new UserDatabaseService();
                 var users = userService.GetAllUsers();
                 CurrentUser = users.FirstOrDefault(u => u.Id == userId);
-                System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Utilisateur chargé = {CurrentUser?.Username}");
+
             }
             
             if (CurrentUser != null)
@@ -104,7 +102,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // Charger les mots de passe via PerformSearch pour inclure la détection de doublons
             PerformSearch(string.Empty);
             
-            System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: {Passwords.Count} mots de passe chargés");
+
 
             CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
             CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
@@ -116,11 +114,11 @@ public partial class MainWindowViewModel : ViewModelBase
             AddPasswordCommand = new Commands.RelayCommand<object>(_ => ShowAddPasswordDialog());
             LogoutCommand = new Commands.RelayCommand<object>(_ => LogoutRequested?.Invoke());
             
-            System.Diagnostics.Debug.WriteLine("MainWindowViewModel: Initialisation terminée avec succès");
+
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: Erreur lors de l'initialisation = {ex.Message}");
+            LoggingService.LogError(ex, "Initialisation du MainWindowViewModel");
             // Initialiser avec des valeurs par défaut pour éviter les crashes
             Passwords = new ObservableCollection<PasswordEntry>();
             _dbService = new PasswordDatabaseService(userId);
@@ -214,7 +212,7 @@ public partial class MainWindowViewModel : ViewModelBase
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de la suppression: {ex.Message}");
+                LoggingService.LogError(ex, "Suppression du mot de passe");
             }
         }
     }
@@ -328,7 +326,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Erreur lors de l'affichage de la boîte de dialogue: {ex}");
+            LoggingService.LogError(ex, "Affichage de la boîte de dialogue d'ajout de mot de passe");
         }
     }
 
@@ -345,7 +343,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Erreur lors de l'affichage de la boîte de dialogue: {ex}");
+            LoggingService.LogError(ex, "Affichage de la boîte de dialogue d'ajout de mot de passe avec mot de passe généré");
         }
     }
 
@@ -358,7 +356,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout: {ex.Message}");
+            LoggingService.LogError(ex, $"Ajout du mot de passe pour '{entry?.Site}'");
         }
     }
 
@@ -371,7 +369,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Erreur lors de la mise à jour: {ex.Message}");
+            LoggingService.LogError(ex, $"Mise à jour du mot de passe pour '{entry?.Site}'");
         }
     }
 }

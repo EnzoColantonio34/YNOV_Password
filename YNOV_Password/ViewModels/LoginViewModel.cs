@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -158,8 +159,9 @@ namespace YNOV_Password.ViewModels
                 string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
                 return Regex.IsMatch(email, pattern);
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingService.LogError(ex, $"Validation de l'email '{email}'");
                 return false;
             }
         }

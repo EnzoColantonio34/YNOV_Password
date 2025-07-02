@@ -7,6 +7,7 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using YNOV_Password.ViewModels;
 using YNOV_Password.Views;
+using YNOV_Password.Services;
 
 namespace YNOV_Password;
 
@@ -46,31 +47,31 @@ public partial class App : Application
         // S'abonner à l'événement de completion du login
         viewModel.LoginCompleted += () =>
         {
-            System.Diagnostics.Debug.WriteLine("App: Login completed");
+
             if (viewModel.LoggedInUser != null)
             {
-                System.Diagnostics.Debug.WriteLine($"App: Utilisateur connecté = {viewModel.LoggedInUser.Username}");
+
                 // Login réussi, ouvrir la fenêtre principale avec l'utilisateur connecté
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
                     try
                     {
-                        System.Diagnostics.Debug.WriteLine("App: Création de MainWindow");
+
                         var mainWindow = new MainWindow
                         {
                             DataContext = new MainWindowViewModel(viewModel.LoggedInUser.Id),
                         };
                         desktop.MainWindow = mainWindow;
-                        System.Diagnostics.Debug.WriteLine("App: Affichage de MainWindow");
+
                         mainWindow.Show();
                         
                         // Fermer la fenêtre de login après avoir ouvert la fenêtre principale
-                        System.Diagnostics.Debug.WriteLine("App: Fermeture de LoginWindow");
+
                         loginWindow.Close();
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"App: Erreur lors de l'ouverture de MainWindow = {ex.Message}");
+                        LoggingService.LogError(ex, "Ouverture de la fenêtre principale après connexion");
                     }
                 });
             }

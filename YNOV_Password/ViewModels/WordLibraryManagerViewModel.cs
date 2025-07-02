@@ -67,6 +67,7 @@ namespace YNOV_Password.ViewModels
             }
             catch (Exception ex)
             {
+                LoggingService.LogError(ex, "Chargement des bibliothèques de mots");
                 StatusMessage = $"Erreur lors du chargement : {ex.Message}";
             }
             finally
@@ -110,6 +111,7 @@ namespace YNOV_Password.ViewModels
             }
             catch (Exception ex)
             {
+                LoggingService.LogError(ex, $"Importation du fichier de mots");
                 StatusMessage = $"Erreur lors de l'import : {ex.Message}";
             }
             finally
@@ -134,6 +136,7 @@ namespace YNOV_Password.ViewModels
             }
             catch (Exception ex)
             {
+                LoggingService.LogError(ex, $"Suppression de la bibliothèque '{library?.Name}'");
                 StatusMessage = $"Erreur lors de la suppression : {ex.Message}";
             }
             finally

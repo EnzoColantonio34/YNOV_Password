@@ -73,7 +73,7 @@ namespace YNOV_Password.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors du déchiffrement: {ex.Message}");
+                LoggingService.LogError(ex, "Déchiffrement des données");
                 return cipherText;
             }
         }
@@ -92,8 +92,9 @@ namespace YNOV_Password.Services
                 var bytes = Convert.FromBase64String(text);
                 return bytes.Length > 16; // Au moins IV (16 bytes) + quelques données
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingService.LogError(ex, "Vérification si le texte est chiffré");
                 return false;
             }
         }

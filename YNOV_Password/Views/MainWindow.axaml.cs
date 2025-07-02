@@ -208,7 +208,7 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ouverture de la fenêtre de génération: {ex.Message}");
+                LoggingService.LogError(ex, "Ouverture de la fenêtre de génération de mot de passe");
             }
         }
 
@@ -275,7 +275,7 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de la déconnexion: {ex.Message}");
+                LoggingService.LogError(ex, "Déconnexion de l'utilisateur");
             }
         }
 
@@ -372,7 +372,7 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur dans ShowConfirmationDialog: {ex.Message}");
+                LoggingService.LogError(ex, "Affichage de la boîte de dialogue de confirmation");
                 return false;
             }
         }
@@ -424,6 +424,7 @@ namespace YNOV_Password.Views
             }
             catch (Exception ex)
             {
+                LoggingService.LogError(ex, "Importation de la bibliothèque de mots");
                 await ShowErrorDialog($"Erreur lors de l'importation: {ex.Message}");
             }
         }

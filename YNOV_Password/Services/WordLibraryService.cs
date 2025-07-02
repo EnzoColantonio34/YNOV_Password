@@ -36,7 +36,7 @@ namespace YNOV_Password.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement des mots depuis la BDD: {ex.Message}");
+                LoggingService.LogError(ex, "Chargement des mots depuis la base de données");
                 _words = new List<string>();
             }
         }
@@ -66,7 +66,7 @@ namespace YNOV_Password.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement du fichier: {ex.Message}");
+                LoggingService.LogError(ex, $"Chargement du fichier de mots '{filePath}'");
                 return false;
             }
         }
@@ -111,7 +111,7 @@ namespace YNOV_Password.Services
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine($"Erreur lors de la suppression des mots en BDD: {ex.Message}");
+                    LoggingService.LogError(ex, "Suppression des mots en base de données");
                 }
             }
         }
@@ -131,7 +131,7 @@ namespace YNOV_Password.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors du chargement de la bibliothèque {libraryName}: {ex.Message}");
+                LoggingService.LogError(ex, $"Chargement de la bibliothèque '{libraryName}'");
                 _words = new List<string>();
             }
         }

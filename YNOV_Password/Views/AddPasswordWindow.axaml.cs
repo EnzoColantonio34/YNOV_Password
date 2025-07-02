@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using YNOV_Password.ViewModels;
 using YNOV_Password.Models;
-using System.Diagnostics;
 
 namespace YNOV_Password.Views
 {
@@ -12,9 +11,6 @@ namespace YNOV_Password.Views
         public AddPasswordWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
         }
 
         public AddPasswordWindow(MainWindowViewModel mainViewModel) : this()

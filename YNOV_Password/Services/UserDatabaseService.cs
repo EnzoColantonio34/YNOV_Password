@@ -52,7 +52,7 @@ namespace YNOV_Password.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de la création de l'utilisateur par défaut: {ex.Message}");
+                LoggingService.LogError(ex, "Création de l'utilisateur par défaut");
             }
         }
 
@@ -85,8 +85,9 @@ namespace YNOV_Password.Services
                 command.ExecuteNonQuery();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingService.LogError(ex, $"Enregistrement de l'utilisateur '{username}'");
                 return false;
             }
         }
@@ -117,8 +118,9 @@ namespace YNOV_Password.Services
                 }
                 return null;
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingService.LogError(ex, $"Connexion de l'utilisateur '{email}'");
                 return null;
             }
         }
@@ -146,8 +148,9 @@ namespace YNOV_Password.Services
                 }
                 return null;
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingService.LogError(ex, $"Récupération de l'utilisateur par email '{email}'");
                 return null;
             }
         }
@@ -174,9 +177,9 @@ namespace YNOV_Password.Services
                     });
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Log error if needed
+                LoggingService.LogError(ex, "Récupération de tous les utilisateurs");
             }
             return users;
         }

@@ -227,7 +227,7 @@ namespace YNOV_Password.Services
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erreur lors de la migration des mots de passe: {ex.Message}");
+                LoggingService.LogError(ex, "Migration des mots de passe non chiffrés");
             }
         }
     }
