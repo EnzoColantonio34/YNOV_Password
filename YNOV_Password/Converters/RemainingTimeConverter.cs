@@ -10,7 +10,7 @@ namespace YNOV_Password.Converters
         {
             if (value is int remainingTime && remainingTime > 0)
             {
-                return $"⏰ {remainingTime}s";
+                return $"{remainingTime}s";
             }
             return string.Empty;
         }

@@ -182,28 +182,32 @@
                                 <StackPanel Grid.Column="3" 
                                            Orientation="Horizontal"
                                            HorizontalAlignment="Center"
-                                           VerticalAlignment="Center">
+                                           VerticalAlignment="Center"
+                                           Spacing="8">
                                     
                                     <!-- Timer pour le temps restant -->
                                     <TextBlock Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}" 
-                                               Margin="5,0" 
                                                VerticalAlignment="Center"
                                                FontSize="12"
                                                Foreground="#666666"
+                                               MinWidth="30"
+                                               TextAlignment="Center"
                                                IsVisible="{Binding IsPasswordVisible}"/>
                                     
                                     <!-- Icône d'alerte pour les mots de passe dupliqués -->
                                     <Button Background="#FEF3C7" 
                                             BorderThickness="1" 
                                             BorderBrush="#F59E0B"
-                                            Padding="4" 
+                                            Padding="3" 
                                             CornerRadius="4"
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Center"
                                             Content="⚠️"
                                             IsVisible="{Binding IsDuplicate}"
                                             Cursor="Hand"
-                                            FontSize="14"
+                                            FontSize="12"
+                                            MinWidth="24"
+                                            MinHeight="24"
                                             Click="DuplicateAlert_Click"
                                             Tag="{Binding}"
                                             ToolTip.Tip="Ce mot de passe est réutilisé - Cliquez pour plus d'options">
