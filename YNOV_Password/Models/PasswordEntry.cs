@@ -15,5 +15,8 @@ namespace YNOV_Password.Models
         
         [ObservableProperty]
         private int _remainingTime = 0;
+        
+        [ObservableProperty]
+        private bool _isDuplicate = false;
     }
 }

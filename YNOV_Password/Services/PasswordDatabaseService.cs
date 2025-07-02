@@ -152,6 +152,27 @@ namespace YNOV_Password.Services
             command.ExecuteNonQuery();
         }
 
+        public void Update(PasswordEntry entry)
+        {
+            ValidateEntry(entry);
+
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "UPDATE Passwords SET Site = @site, Username = @username, Password = @password, Url = @url WHERE Id = @id AND UserId = @userId";
+            command.Parameters.AddWithValue("@id", entry.Id);
+            command.Parameters.AddWithValue("@userId", CurrentUserId);
+            command.Parameters.AddWithValue("@site", entry.Site);
+            command.Parameters.AddWithValue("@username", entry.Username ?? "");
+            
+            // Chiffrer le mot de passe avant de l'enregistrer
+            var encryptedPassword = _encryptionService.Encrypt(entry.Password ?? "");
+            command.Parameters.AddWithValue("@password", encryptedPassword);
+            
+            command.Parameters.AddWithValue("@url", entry.Url ?? "");
+            command.ExecuteNonQuery();
+        }
+
         public void Delete(int id)
         {
             using var connection = new SqliteConnection(_connectionString);

@@ -19,6 +19,7 @@
         <converters:PasswordMaskConverter x:Key="PasswordMaskConverter"/>
         <converters:PasswordVisibilityConverter x:Key="PasswordVisibilityConverter"/>
         <converters:RemainingTimeConverter x:Key="RemainingTimeConverter"/>
+        <converters:DuplicatePasswordConverter x:Key="DuplicatePasswordConverter"/>
     </Window.Resources>
 
     <Window.Styles>
@@ -177,15 +178,43 @@
                                     </Button>
                                 </Grid>
                                 
-                                <!-- Timer pour le temps restant -->
-                                <TextBlock Grid.Column="3" 
-                                           Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}" 
-                                           Margin="5,0" 
-                                           VerticalAlignment="Center"
+                                <!-- Timer et alerte de duplication -->
+                                <StackPanel Grid.Column="3" 
+                                           Orientation="Horizontal"
                                            HorizontalAlignment="Center"
-                                           FontSize="12"
-                                           Foreground="#666666"
-                                           IsVisible="{Binding IsPasswordVisible}"/>
+                                           VerticalAlignment="Center">
+                                    
+                                    <!-- Timer pour le temps restant -->
+                                    <TextBlock Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}" 
+                                               Margin="5,0" 
+                                               VerticalAlignment="Center"
+                                               FontSize="12"
+                                               Foreground="#666666"
+                                               IsVisible="{Binding IsPasswordVisible}"/>
+                                    
+                                    <!-- Icône d'alerte pour les mots de passe dupliqués -->
+                                    <Button Background="#FEF3C7" 
+                                            BorderThickness="1" 
+                                            BorderBrush="#F59E0B"
+                                            Padding="4" 
+                                            CornerRadius="4"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Center"
+                                            Content="⚠️"
+                                            IsVisible="{Binding IsDuplicate}"
+                                            Cursor="Hand"
+                                            FontSize="14"
+                                            Click="DuplicateAlert_Click"
+                                            Tag="{Binding}"
+                                            ToolTip.Tip="Ce mot de passe est réutilisé - Cliquez pour plus d'options">
+                                        <Button.Styles>
+                                            <Style Selector="Button:pointerover">
+                                                <Setter Property="Background" Value="#FDE68A"/>
+                                                <Setter Property="BorderBrush" Value="#D97706"/>
+                                            </Style>
+                                        </Button.Styles>
+                                    </Button>
+                                </StackPanel>
                                 
                                 <!-- URL cliquable -->
                                 <Button Grid.Column="4" 

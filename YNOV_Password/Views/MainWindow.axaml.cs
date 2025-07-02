@@ -112,6 +112,49 @@ namespace YNOV_Password.Views
             }
         }
 
+        private async void DuplicateAlert_Click(object? sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel && viewModel.CurrentUser != null)
+            {
+                var alertWindow = new DuplicatePasswordAlertWindow(entry, viewModel.CurrentUser)
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+
+                // Gérer les événements de la fenêtre d'alerte
+                alertWindow.ModifyPasswordRequested += async (passwordEntry) =>
+                {
+                    // Ouvrir la fenêtre de modification de mot de passe
+                    var addPasswordWindow = new AddPasswordWindow(viewModel, passwordEntry)
+                    {
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+                    await addPasswordWindow.ShowDialog(this);
+                };
+
+                alertWindow.GeneratePasswordRequested += async (passwordEntry) =>
+                {
+                    // Ouvrir le générateur de mot de passe et l'appliquer au site
+                    var passwordGeneratorWindow = new PasswordGeneratorWindow
+                    {
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
+                    };
+                    
+                    await passwordGeneratorWindow.ShowDialog(this);
+                    
+                    if (passwordGeneratorWindow.WasPasswordSelected && 
+                        !string.IsNullOrEmpty(passwordGeneratorWindow.GeneratedPassword))
+                    {
+                        // Mettre à jour le mot de passe de l'entrée
+                        passwordEntry.Password = passwordGeneratorWindow.GeneratedPassword;
+                        viewModel.UpdatePassword(passwordEntry);
+                    }
+                };
+
+                await alertWindow.ShowDialog(this);
+            }
+        }
+
         private void PasswordField_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
         {
             // Masquer tous les mots de passe visibles lorsqu'on clique ailleurs

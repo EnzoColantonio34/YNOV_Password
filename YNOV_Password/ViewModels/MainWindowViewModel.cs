@@ -94,11 +94,12 @@ public partial class MainWindowViewModel : ViewModelBase
                 _dbService = new PasswordDatabaseService(userId);
             }
             
-            Passwords = new ObservableCollection<PasswordEntry>(_dbService.GetAll());
-            OnPropertyChanged(nameof(HasNoPasswords));
-            OnPropertyChanged(nameof(IsSearchActive));
-            OnPropertyChanged(nameof(NoPasswordsMessageTitle));
-            OnPropertyChanged(nameof(NoPasswordsMessageSubtitle));
+            // Initialiser la collection vide d'abord
+            Passwords = new ObservableCollection<PasswordEntry>();
+            
+            // Charger les mots de passe via PerformSearch pour inclure la détection de doublons
+            PerformSearch(string.Empty);
+            
             System.Diagnostics.Debug.WriteLine($"MainWindowViewModel: {Passwords.Count} mots de passe chargés");
 
             CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
@@ -269,23 +270,31 @@ public partial class MainWindowViewModel : ViewModelBase
         entry.RemainingTime = 0;
     }
 
+    public void RefreshPasswords()
+    {
+        PerformSearch(SearchText);
+    }
+
     private void PerformSearch(string? searchTerm)
     {
         Passwords.Clear();
 
+        List<PasswordEntry> entries;
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
-            foreach (var entry in _dbService.GetAll())
-            {
-                Passwords.Add(entry);
-            }
+            entries = _dbService.GetAll();
         }
         else
         {
-            foreach (var entry in _dbService.Search(searchTerm))
-            {
-                Passwords.Add(entry);
-            }
+            entries = _dbService.Search(searchTerm);
+        }
+
+        // Marquer les mots de passe dupliqués AVANT d'ajouter à la collection
+        DuplicatePasswordService.MarkDuplicatePasswords(entries);
+
+        foreach (var entry in entries)
+        {
+            Passwords.Add(entry);
         }
 
         OnPropertyChanged(nameof(HasNoPasswords));
@@ -346,6 +355,19 @@ public partial class MainWindowViewModel : ViewModelBase
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Erreur lors de l'ajout: {ex.Message}");
+        }
+    }
+
+    public void UpdatePassword(PasswordEntry entry)
+    {
+        try
+        {
+            _dbService.Update(entry);
+            PerformSearch(SearchText);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Erreur lors de la mise à jour: {ex.Message}");
         }
     }
 }
