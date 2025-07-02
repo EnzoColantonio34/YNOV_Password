@@ -1,0 +1,363 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="YNOV_Password.Views.HelpWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Aide - YNOV Password"
+        Width="800"
+        Height="650"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Styles>
+        <StyleInclude Source="avares://YNOV_Password/Styles/main.axaml"/>
+    </Window.Styles>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Barre de recherche -->
+        <Border Grid.Row="0" Padding="15" Background="#F8F9FA" BorderBrush="#E9ECEF" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBox Grid.Column="0"
+                         x:Name="SearchTextBox"
+                         Watermark="Rechercher dans l'aide..."
+                         Classes="SearchBox"
+                         TextChanged="SearchTextBox_TextChanged"/>
+                
+                <TextBlock Grid.Column="2"
+                           x:Name="SearchResultsText"
+                           VerticalAlignment="Center"
+                           Foreground="Gray"
+                           FontSize="12"
+                           Margin="10,0,0,0"/>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" Padding="20" VerticalScrollBarVisibility="Auto" x:Name="MainScrollViewer">
+            <StackPanel Spacing="20" x:Name="MainContent">
+                
+                <!-- Titre principal -->
+                <TextBlock Text="Bienvenue dans votre gestionnaire de mots de passe !" 
+                           FontSize="26" 
+                           FontWeight="Bold" 
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,10"/>
+            
+            <TextBlock Text="Ce guide vous accompagnera dans l'utilisation de toutes les fonctionnalités de YNOV Password"
+                       FontSize="14"
+                       FontStyle="Italic"
+                       HorizontalAlignment="Center"
+                       Foreground="Gray"
+                       Margin="0,0,0,25"/>                <!-- Section Gestion des mots de passe -->
+                <Border Classes="HighlightCard" Padding="20" CornerRadius="8" x:Name="PasswordManagementSection">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="🔐 Gérez vos mots de passe en toute simplicité" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"/>
+                    
+                    <TextBlock Text="Votre coffre-fort numérique personnel vous permet de stocker et organiser tous vos mots de passe de manière sécurisée. Voici comment tirer le meilleur parti de cette fonctionnalité :"
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Margin="0,0,0,10"/>
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="➕ Ajouter un nouveau mot de passe :"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="Cliquez sur le bouton vert 'Ajouter' en haut à droite de votre écran. Une fenêtre s'ouvrira où vous pourrez saisir le nom du site web, votre nom d'utilisateur, votre adresse email et bien sûr votre mot de passe. N'hésitez pas à ajouter des notes personnelles pour vous rappeler des détails importants !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="👁️ Consulter un mot de passe :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Par défaut, vos mots de passe sont masqués par des points pour votre sécurité. Pour révéler un mot de passe, cliquez simplement sur l'icône en forme d'œil dans la colonne correspondante. Le mot de passe s'affichera temporairement, puis se masquera automatiquement pour votre protection."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="📋 Copier rapidement :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Pas besoin de révéler votre mot de passe pour l'utiliser ! Cliquez sur l'icône de copie et votre mot de passe sera automatiquement copié dans votre presse-papiers. Vous pourrez ensuite le coller directement dans le champ de connexion de votre site web."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="✏️ Modifier une entrée existante :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Votre mot de passe a changé ? Aucun problème ! Double-cliquez sur n'importe quelle ligne de votre tableau pour ouvrir la fenêtre de modification. Vous pourrez alors mettre à jour toutes les informations de cette entrée."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🗑️ Supprimer une entrée :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Si vous n'utilisez plus un service, vous pouvez facilement supprimer son entrée. Utilisez le menu contextuel (clic droit) ou le bouton de suppression pour retirer définitivement une entrée de votre coffre-fort."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>                <!-- Section Générateur de mots de passe -->
+                <Border Classes="HighlightCard" Padding="20" CornerRadius="8" x:Name="PasswordGeneratorSection">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="🎲 Créez des mots de passe ultra-sécurisés" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"/>
+                    
+                    <TextBlock Text="Fini les mots de passe faibles comme '123456' ou 'password' ! Notre générateur intelligent vous aide à créer des mots de passe robustes qui résisteront aux tentatives de piratage."
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Margin="0,0,0,10"/>
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="🚀 Lancement du générateur :"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="Cliquez sur le bouton 'Générer un mot de passe' dans la barre supérieure. Une fenêtre dédiée s'ouvrira avec de nombreuses options de personnalisation à votre disposition."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="⚙️ Options de personnalisation :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Vous pouvez ajuster la longueur de votre mot de passe (nous recommandons au moins 12 caractères), choisir d'inclure ou d'exclure certains types de caractères : majuscules, minuscules, chiffres, symboles spéciaux. Plus votre mot de passe est varié, plus il sera sécurisé !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="📝 Mots de passe mémorables :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Vous avez du mal à retenir des suites de caractères aléatoires ? Optez pour la génération basée sur des mots ! Le générateur peut créer des phrases de passe en combinant plusieurs mots français avec des chiffres et symboles. Par exemple : 'Soleil-Jardin-2024!' est à la fois sûr et plus facile à mémoriser."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="💾 Utilisation automatique :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Une fois votre mot de passe généré, il sera automatiquement copié dans votre presse-papiers ET l'application vous proposera de l'enregistrer directement dans une nouvelle entrée. Pratique, non ?"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>                <!-- Section Recherche -->
+                <Border Classes="HighlightCard" Padding="20" CornerRadius="8" x:Name="SearchSection">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="🔍 Trouvez instantanément ce que vous cherchez" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"/>
+                    
+                    <TextBlock Text="Avec des dizaines, voire des centaines de mots de passe stockés, la recherche devient votre meilleur allié pour retrouver rapidement ce dont vous avez besoin."
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Margin="0,0,0,10"/>
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="⚡ Recherche en temps réel :"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="La barre de recherche située juste sous le titre fonctionne comme par magie ! Dès que vous commencez à taper, les résultats se filtrent automatiquement. Tapez 'face' et tous vos comptes Facebook, ainsi que toute entrée contenant ce mot, apparaîtront instantanément."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🎯 Recherche intelligente :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Notre système de recherche est intelligent et explore plusieurs champs simultanément : le nom du site web, votre nom d'utilisateur, votre adresse email, et même les notes que vous avez ajoutées. Vous ne vous souvenez plus du nom exact du site ? Tapez juste votre nom d'utilisateur ou votre email !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🔤 Recherche flexible :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Pas besoin d'être précis ! La recherche fonctionne même avec des mots partiels. 'gmai' trouvera tout ce qui contient 'gmail', 'bank' affichera toutes vos entrées bancaires, etc. La casse n'a pas d'importance non plus !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>                <!-- Section Sécurité -->
+                <Border Classes="HighlightCard" Padding="20" CornerRadius="8" x:Name="SecuritySection">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="🛡️ Votre sécurité est notre priorité absolue" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"/>
+                    
+                    <TextBlock Text="Nous comprenons que vous nous confiez vos informations les plus sensibles. C'est pourquoi nous avons mis en place plusieurs couches de protection pour garder vos données en sécurité."
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Margin="0,0,0,10"/>
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="🔒 Chiffrement de niveau militaire :"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="Tous vos mots de passe sont chiffrés localement sur votre appareil avant d'être stockés. Nous utilisons des algorithmes de chiffrement de pointe, similaires à ceux employés par les banques et les gouvernements. Même si quelqu'un accédait à votre fichier de données, il ne verrait qu'un charabia incompréhensible."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🚨 Détection automatique des doublons :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="L'application surveille intelligemment vos mots de passe et vous alerte si vous utilisez le même mot de passe pour plusieurs sites. C'est un risque de sécurité majeur ! Si un site est compromis, tous vos autres comptes avec le même mot de passe le sont aussi. Nous vous aiderons à identifier et corriger ces doublons."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🔑 Protection par mot de passe principal :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Votre mot de passe principal est la clé de voûte de votre sécurité. Il protège l'accès à toutes vos données. Choisissez-le long (au moins 12 caractères), unique, et mémorable pour vous seul. C'est le seul mot de passe que vous devrez retenir !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="👥 Bonnes pratiques sur ordinateurs partagés :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Si vous utilisez l'application sur un ordinateur public ou partagé, pensez TOUJOURS à vous déconnecter complètement avant de partir. Utilisez le menu utilisateur en haut à droite et cliquez sur 'Se déconnecter'. Cela garantit que personne ne pourra accéder à vos mots de passe après vous."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>                <!-- Section Bibliothèque de mots -->
+                <Border Classes="HighlightCard" Padding="20" CornerRadius="8" x:Name="WordLibrarySection">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="📚 Personnalisez votre expérience avec vos propres mots" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"/>
+                    
+                    <TextBlock Text="Pour créer des mots de passe mémorables, nous utilisons des bibliothèques de mots. Vous pouvez utiliser la nôtre ou créer la vôtre avec vos mots préférés !"
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Margin="0,0,0,10"/>
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="🇫🇷 Bibliothèque française intégrée :"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="Nous fournissons par défaut une riche bibliothèque de mots français soigneusement sélectionnés. Ces mots sont parfaits pour créer des phrases de passe comme 'Montagne-Océan-Liberté-2024' qui sont à la fois sécurisées et faciles à retenir."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="📁 Importer vos propres listes :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Vous avez vos mots préférés ? Cliquez sur votre avatar en haut à droite, puis sélectionnez 'Importer une bibliothèque'. Vous pouvez uploader un fichier texte contenant vos mots (un mot par ligne). Imaginez des mots de passe basés sur vos films préférés, vos lieux de vacances, ou votre vocabulaire professionnel !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🎨 Créativité et sécurité :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Plus votre bibliothèque de mots est variée et personnelle, plus vos mots de passe seront uniques. Mélangez noms communs, adjectifs, verbes... Évitez juste les informations trop personnelles comme les noms de famille ou dates de naissance."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>                <!-- Section Conseils -->
+                <Border Classes="HighlightCard" Padding="20" CornerRadius="8" x:Name="TipsSection">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="💡 Nos conseils d'experts pour une sécurité optimale" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"/>
+                    
+                    <TextBlock Text="Voici nos recommandations pour tirer le meilleur parti de votre gestionnaire de mots de passe et renforcer votre sécurité numérique au quotidien."
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Margin="0,0,0,10"/>
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="🗝️ Le mot de passe principal parfait :"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="Votre mot de passe principal doit être votre Fort Knox numérique ! Créez une phrase longue et personnelle que vous seul connaissez. Par exemple : 'J'ai adopté mon chat Minou en 2019 !' avec quelques chiffres et symboles. Long, unique, et impossible à deviner, mais facile à retenir pour vous."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🎲 La règle d'or : un mot de passe unique par site :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="JAMAIS le même mot de passe sur deux sites différents ! Si Netflix est piraté et que vous utilisez le même mot de passe pour votre banque... vous voyez le problème ? Avec YNOV Password, vous pouvez facilement générer et stocker un mot de passe unique pour chaque service. C'est la base de la sécurité moderne."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🔍 Audit de sécurité régulier :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Prenez l'habitude de consulter régulièrement les alertes de mots de passe en double. Planifiez une 'inspection sécurité' mensuelle : parcourez votre liste, identifiez les doublons (ils sont signalés par une icône spéciale), et remplacez-les par des mots de passe uniques générés automatiquement."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="💾 Sauvegarde préventive :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Votre base de données de mots de passe est précieuse ! Pensez à faire des copies de sauvegarde régulières sur un support externe ou un cloud sécurisé. En cas de problème technique, vous pourrez récupérer toutes vos données. Mieux vaut prévenir que guérir !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🌐 Vigilance sur internet :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="Même avec les meilleurs mots de passe, restez vigilant ! Ne saisissez jamais vos identifiants sur des sites suspects, vérifiez toujours l'URL (https://), et méfiez-vous des emails de phishing qui tentent de vous faire révéler vos informations. Votre gestionnaire de mots de passe est un super-héros, mais il a besoin de votre bon sens comme coéquipier !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>                <!-- Section Support -->
+                <Border Classes="HighlightCard" Padding="20" CornerRadius="8" x:Name="SupportSection">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="🤝 Besoin d'aide supplémentaire ?" 
+                                   FontSize="18" 
+                                   FontWeight="SemiBold"/>
+                    
+                    <TextBlock Text="Notre équipe est là pour vous accompagner dans votre parcours vers une meilleure sécurité numérique."
+                               TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Margin="0,0,0,10"/>
+                    
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="📧 Une question ? Un problème ?"
+                                   FontWeight="SemiBold"/>
+                        <TextBlock Text="N'hésitez pas à nous contacter si vous rencontrez des difficultés ou si vous avez des suggestions d'amélioration. Nous sommes constamment à l'écoute de nos utilisateurs pour faire évoluer YNOV Password selon vos besoins."
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                        
+                        <TextBlock Text="🎓 Formation continue :"
+                                   FontWeight="SemiBold"
+                                   Margin="0,8,0,0"/>
+                        <TextBlock Text="La sécurité informatique évolue constamment. Nous publions régulièrement des guides et conseils pour vous tenir informé des meilleures pratiques. Restez connecté pour découvrir nos dernières recommandations !"
+                                   TextWrapping="Wrap"
+                                   Margin="15,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Message de fin -->
+            <Border Classes="HighlightCard" Padding="20" CornerRadius="8" Background="#F0F8FF">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="🎉 Félicitations !" 
+                               FontSize="16" 
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Vous êtes maintenant prêt à utiliser YNOV Password comme un expert ! Votre sécurité numérique n'a jamais été aussi solide."
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Center"
+                               FontStyle="Italic"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Bouton Fermer amélioré -->
+            <Button Content="J'ai compris, retour à l'application !" 
+                    Classes="IconButton"
+                    HorizontalAlignment="Center"
+                    Padding="25,12"
+                    Click="CloseButton_Click"
+                    FontWeight="SemiBold"
+                    Margin="0,25,0,0"/>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

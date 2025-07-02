@@ -212,6 +212,23 @@ namespace YNOV_Password.Views
             }
         }
 
+        private async void HelpButton_Click(object? sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var helpWindow = new HelpWindow
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
+
+                await helpWindow.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingService.LogError(ex, "Ouverture de la fenêtre d'aide");
+            }
+        }
+
         private void UserMenuButton_Click(object? sender, RoutedEventArgs e)
         {
         }
