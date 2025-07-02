@@ -14,6 +14,7 @@ sealed class Program
     {
         // Initialiser le service de logging et nettoyer les anciens logs
         LoggingService.LogInfo("Démarrage de l'application YNOV Password");
+        LoggingService.LogSystemInfo(); // Log des informations système
         LoggingService.CleanOldLogs();
         
         try

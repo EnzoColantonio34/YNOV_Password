@@ -1,12 +1,37 @@
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace YNOV_Password.Services
 {
     public static class LoggingService
     {
-        private static readonly string LogDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YNOV_Password", "Logs");
+        private static readonly string LogDirectory = GetPlatformSpecificLogDirectory();
+
+        /// <summary>
+        /// Détermine le répertoire de logs en fonction de l'OS
+        /// </summary>
+        /// <returns>Le chemin du répertoire de logs approprié pour l'OS</returns>
+        private static string GetPlatformSpecificLogDirectory()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                // macOS: /Users/<user>/Library/Application Support/YNOV_Password/Logs/
+                var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                return Path.Combine(userProfile, "Library", "Application Support", "YNOV_Password", "Logs");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                // Windows: C:\Users\NomUtilisateur\AppData\Local\YNOV_Password\Logs\
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YNOV_Password", "Logs");
+            }
+            else
+            {
+                // Linux ou autre: utilise LocalApplicationData par défaut
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "YNOV_Password", "Logs");
+            }
+        }
         private static readonly string LogFileName = $"app_log_{DateTime.Now:yyyy-MM-dd}.txt";
         private static readonly string LogFilePath = Path.Combine(LogDirectory, LogFileName);
 
@@ -268,6 +293,22 @@ namespace YNOV_Password.Services
                 showErrorToUser?.Invoke($"Erreur: {ex.Message}");
                 return defaultValue;
             }
+        }
+
+        /// <summary>
+        /// Log les informations sur l'OS détecté et le répertoire de logs utilisé
+        /// </summary>
+        public static void LogSystemInfo()
+        {
+            var osInfo = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ? "macOS"
+                       : RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "Windows"
+                       : RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? "Linux"
+                       : "Autre";
+            
+            LogInfo($"Système d'exploitation détecté: {osInfo}");
+            LogInfo($"Répertoire de logs: {LogDirectory}");
+            LogInfo($"Architecture: {RuntimeInformation.OSArchitecture}");
+            LogInfo($"Framework: {RuntimeInformation.FrameworkDescription}");
         }
     }
 }
