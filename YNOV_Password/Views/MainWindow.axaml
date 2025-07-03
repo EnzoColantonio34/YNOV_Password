@@ -19,109 +19,176 @@
         <converters:PasswordVisibilityConverter x:Key="PasswordVisibilityConverter"/>
         <converters:RemainingTimeConverter x:Key="RemainingTimeConverter"/>
         <converters:DuplicatePasswordConverter x:Key="DuplicatePasswordConverter"/>
+        <converters:FolderEmptyMessageConverter x:Key="FolderEmptyMessageConverter"/>
     </Window.Resources>
 
     <Window.Styles>
         <StyleInclude Source="avares://YNOV_Password/Styles/main.axaml"/>
+        
+        <Style Selector="Button.FolderSelected">
+            <Setter Property="Background" Value="{DynamicResource SystemAccentColorLight1}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
     </Window.Styles>
 
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <StackPanel>
+        <!-- Panneau principal avec dossiers et contenu -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- En-tête -->
-        <Border Classes="HeaderSection HighlightCard">
+            <!-- Panneau des dossiers -->
+            <Border Grid.Column="0" 
+                    Classes="HighlightCard" 
+                    Margin="20,20,10,20" 
+                    IsVisible="{Binding ShowFolderView}">
+                <Grid RowDefinitions="Auto,*">
+                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                        <Grid>
+                            <TextBlock Text="Dossiers" 
+                                     Classes="SectionTitle" 
+                                     HorizontalAlignment="Left"
+                                     VerticalAlignment="Center"/>
+                            <Button Content="+" 
+                                    Command="{Binding ManageFoldersCommand}"
+                                    Classes="IconButton"
+                                    HorizontalAlignment="Right"
+                                    ToolTip.Tip="Gérer les dossiers"/>
+                        </Grid>
+                    </StackPanel>
 
-            <StackPanel>
-                <!-- Titre et boutons -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" 
-                               Text="YNOV Password"
-                               Classes="Title"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Center"/>
-
-                    <Button Grid.Column="1"
-                            Content="❓"
-                            Classes="IconButton"
-                            Click="HelpButton_Click"
-                            HorizontalAlignment="Right"
-                            ToolTip.Tip="Aide - Guide d'utilisation"
-                            x:Name="HelpButton"/>
-
-                    <Button Grid.Column="2"
-                            Content="Générer un mot de passe"
-                            Classes="IconButton"
-                            Click="GeneratePasswordButton_Click"
-                            HorizontalAlignment="Right"
-                            x:Name="GeneratePasswordButton"/>
-
-                    <Button Grid.Column="3"
-                            Content="Ajouter"
-                            Classes="IconButton"
-                            Click="AddButton_Click"
-                            HorizontalAlignment="Right"
-                            x:Name="AddButton"/>
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding Folders}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:PasswordFolder">
+                                    <Button Classes="FolderButton" 
+                                            Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).SelectFolderCommand}"
+                                            CommandParameter="{Binding}"
+                                            Classes.FolderSelected="{Binding IsSelected}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <TextBlock Grid.Column="0" 
+                                                      Text="{Binding Icon}" 
+                                                      Margin="0,0,8,0"/>
+                                            <TextBlock Grid.Column="1" 
+                                                      Text="{Binding Name}"/>
+                                            <TextBlock Grid.Column="2" 
+                                                      Text="{Binding PasswordCount}" 
+                                                      Margin="8,0,0,0"
+                                                      Opacity="0.7"/>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
-
-                <!-- Barre de recherche -->
-                <TextBox Classes="SearchBox"
-                         Watermark="Rechercher..."
-                         Text="{Binding SearchText}"
-                         HorizontalAlignment="Left"/>
-            </StackPanel>
-        </Border>
-
-        <!-- Tableau des mots de passe -->
-        <Border Margin="20" CornerRadius="12" Classes="HighlightCard">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-            <!-- En-têtes du tableau -->
-            <Grid Grid.Row="0" Classes="TableHeader">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="100"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Text="Site" Classes="TableHeader" />
-                <TextBlock Grid.Column="1" Text="Nom d'utilisateur" Classes="TableHeader" />
-                <TextBlock Grid.Column="2" Text="Mot de passe" Classes="TableHeader" />
-                <TextBlock Grid.Column="3" Text="" Classes="TableHeader" HorizontalAlignment="Center" />
-                <TextBlock Grid.Column="4" Text="URL" Classes="TableHeader" />
-                <TextBlock Grid.Column="5" Text="Actions" Classes="TableHeader" HorizontalAlignment="Center" />
-            </Grid>
-
-            <!-- Message quand il n'y a pas de mots de passe -->
-            <Border Grid.Row="1" IsVisible="{Binding HasNoPasswords}" Classes="NoPasswordsMessage">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding NoPasswordsMessageTitle}" 
-                               Classes="NoPasswordsTitle"/>
-                    <TextBlock Text="{Binding NoPasswordsMessageSubtitle}" 
-                               Classes="NoPasswordsSubtitle"/>
-                </StackPanel>
             </Border>
 
-            <!-- Contenu du tableau -->
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Passwords}" IsVisible="{Binding !HasNoPasswords}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Classes="TableRow">
+            <!-- Contenu principal -->
+            <Grid Grid.Column="1">
+                <ScrollViewer HorizontalScrollBarVisibility="Disabled" 
+                            VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- En-tête -->
+                        <Border Classes="HeaderSection HighlightCard">
+                            <StackPanel>
+                                <!-- Titre et boutons -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Bouton toggle vue dossiers -->
+                                    <Button Grid.Column="0"
+                                            Content="📁"
+                                            Classes="IconButton"
+                                            Command="{Binding ToggleFolderViewCommand}"
+                                            ToolTip.Tip="Afficher/Masquer les dossiers"
+                                            Margin="0 0 8 0"/>
+
+                                    <TextBlock Grid.Column="1" 
+                                               Text="YNOV Password"
+                                               Classes="Title"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"/>
+
+                                    <Button Grid.Column="1"
+                                            Content="❓"
+                                            Classes="IconButton"
+                                            Click="HelpButton_Click"
+                                            HorizontalAlignment="Right"
+                                            ToolTip.Tip="Aide - Guide d'utilisation"
+                                            x:Name="HelpButton"/>
+
+                                    <Button Grid.Column="2"
+                                            Content="Générer un mot de passe"
+                                            Classes="IconButton"
+                                            Click="GeneratePasswordButton_Click"
+                                            HorizontalAlignment="Right"
+                                            x:Name="GeneratePasswordButton"/>
+
+                                    <Button Grid.Column="3"
+                                            Content="Ajouter"
+                                            Classes="IconButton"
+                                            Click="AddButton_Click"
+                                            HorizontalAlignment="Right"
+                                            x:Name="AddButton"/>
+                                </Grid>
+
+                                <!-- Barre de recherche -->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" 
+                                              Orientation="Horizontal" 
+                                              Spacing="8"
+                                              IsVisible="{Binding SelectedFolder, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Margin="0 0 16 0">
+                                        <TextBlock Text="{Binding SelectedFolder.Icon}"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding SelectedFolder.Name}"
+                                                 VerticalAlignment="Center"
+                                                 Classes="SubtleText"/>
+                                        <TextBlock Text="/"
+                                                 VerticalAlignment="Center"
+                                                 Classes="SubtleText"/>
+                                    </StackPanel>
+
+                                    <TextBox Grid.Column="1"
+                                             Classes="SearchBox"
+                                             Watermark="Rechercher..."
+                                             Text="{Binding SearchText}"
+                                             HorizontalAlignment="Stretch"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Tableau des mots de passe -->
+                        <Border Margin="20" CornerRadius="12" Classes="HighlightCard">
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                            <!-- En-têtes du tableau -->
+                            <Grid Grid.Row="0" Classes="TableHeader">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
@@ -131,124 +198,159 @@
                                     <ColumnDefinition Width="100"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Site}" Margin="10,0" VerticalAlignment="Center" />
-                                <TextBlock Grid.Column="1" Text="{Binding Username}" Margin="10,0" VerticalAlignment="Center" />
-                                
-                                <!-- Champ mot de passe cliquable -->
-                                <Grid Grid.Column="2">
-                                    <TextBlock Text="{Binding Password, Converter={StaticResource PasswordMaskConverter}}" 
-                                               Classes="PasswordDisplay"
-                                               Margin="10,0" 
-                                               VerticalAlignment="Center"
-                                               Background="Transparent"
-                                               IsVisible="{Binding !IsPasswordVisible}"/>
-                                    <TextBlock Text="{Binding Password}" 
-                                               Classes="PasswordDisplay"
-                                               Margin="10,0" 
-                                               VerticalAlignment="Center"
-                                               Background="Transparent"
-                                               IsVisible="{Binding IsPasswordVisible}"/>
-                                    <Button Classes="TransparentTableButton TableActionButton"
-                                            PointerPressed="PasswordField_PointerPressed">
-                                        <Button.Flyout>
-                                            <MenuFlyout>
-                                                <MenuItem Header="👁️ Afficher" 
-                                                          Click="ShowPassword_Click"
-                                                          Tag="{Binding}"/>
-                                                <MenuItem Header="🖊️ Modifier" 
-                                                          Click="ModifyPassword_Click"
-                                                          Tag="{Binding}"/>
-                                            </MenuFlyout>
-                                        </Button.Flyout>
-                                    </Button>
-                                </Grid>
-                                
-                                <!-- Timer et alerte de duplication -->
-                                <StackPanel Grid.Column="3" 
-                                           Orientation="Horizontal"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center"
-                                           Spacing="8">
-                                    
-                                    <!-- Timer pour le temps restant -->
-                                    <TextBlock Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}" 
-                                               Classes="PasswordTimer"
-                                               IsVisible="{Binding IsPasswordVisible}"/>
-                                    
-                                    <!-- Icône d'alerte pour les mots de passe dupliqués -->
-                                    <Button Classes="TableDuplicateAlert"
-                                            IsVisible="{Binding IsDuplicate}"
-                                            Click="DuplicateAlert_Click"
-                                            Tag="{Binding}"
-                                            ToolTip.Tip="Ce mot de passe est réutilisé - Cliquez pour plus d'options"/>
-                                </StackPanel>
-                                
-                                <!-- URL cliquable -->
-                                <Button Grid.Column="4" 
-                                        Classes="UrlButton TableActionButton"
-                                        Content="{Binding Url}"
-                                        Click="OpenUrl_Click"
-                                        Tag="{Binding}"/>
-                                
-                                <!-- Bouton menu déroulant -->
-                                <Button Grid.Column="5" 
-                                        Content="⋯" 
-                                        HorizontalAlignment="Center" 
-                                        Classes="MenuActionButton">
-                                    <Button.Flyout>
-                                        <MenuFlyout>
-                                            <MenuItem Header="📄 Copier MDP" 
-                                                      Click="CopyPassword_Click"
-                                                      Tag="{Binding}"/>
-                                            <MenuItem Header="👤 Copier l'utilisateur" 
-                                                      Click="CopyUsername_Click"
-                                                      Tag="{Binding}"/>
-                                            <MenuItem Header="🔗 Copier URL" 
-                                                      Click="CopyUrl_Click"
-                                                      Tag="{Binding}"/>
-                                            <Separator/>
-                                            <MenuItem Header="🗑️ Supprimer" 
-                                                      Classes="logout-button"
-                                                      Click="DeletePassword_Click"
-                                                      Tag="{Binding}"/>
-                                        </MenuFlyout>
-                                    </Button.Flyout>
-                                </Button>
+                                <TextBlock Grid.Column="0" Text="Site" Classes="TableHeader" />
+                                <TextBlock Grid.Column="1" Text="Nom d'utilisateur" Classes="TableHeader" />
+                                <TextBlock Grid.Column="2" Text="Mot de passe" Classes="TableHeader" />
+                                <TextBlock Grid.Column="3" Text="" Classes="TableHeader" HorizontalAlignment="Center" />
+                                <TextBlock Grid.Column="4" Text="URL" Classes="TableHeader" />
+                                <TextBlock Grid.Column="5" Text="Actions" Classes="TableHeader" HorizontalAlignment="Center" />
                             </Grid>
+
+                            <!-- Message quand il n'y a pas de mots de passe -->
+                            <Border Grid.Row="1" IsVisible="{Binding HasNoPasswords}" Classes="NoPasswordsMessage">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding NoPasswordsMessageTitle}" 
+                                               Classes="NoPasswordsTitle"/>
+                                    <TextBlock Text="{Binding NoPasswordsMessageSubtitle}" 
+                                               Classes="NoPasswordsSubtitle"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Contenu du tableau -->
+                            <ItemsControl Grid.Row="1" ItemsSource="{Binding Passwords}" IsVisible="{Binding !HasNoPasswords}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Classes="TableRow">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="60"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{Binding Site}" Margin="10,0" VerticalAlignment="Center" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Username}" Margin="10,0" VerticalAlignment="Center" />
+                                                
+                                                <!-- Champ mot de passe cliquable -->
+                                                <Grid Grid.Column="2">
+                                                    <TextBlock Text="{Binding Password, Converter={StaticResource PasswordMaskConverter}}" 
+                                                               Classes="PasswordDisplay"
+                                                               Margin="10,0" 
+                                                               VerticalAlignment="Center"
+                                                               Background="Transparent"
+                                                               IsVisible="{Binding !IsPasswordVisible}"/>
+                                                    <TextBlock Text="{Binding Password}" 
+                                                               Classes="PasswordDisplay"
+                                                               Margin="10,0" 
+                                                               VerticalAlignment="Center"
+                                                               Background="Transparent"
+                                                               IsVisible="{Binding IsPasswordVisible}"/>
+                                                    <Button Classes="TransparentTableButton TableActionButton"
+                                                            PointerPressed="PasswordField_PointerPressed">
+                                                        <Button.Flyout>
+                                                            <MenuFlyout>
+                                                                <MenuItem Header="👁️ Afficher" 
+                                                                          Click="ShowPassword_Click"
+                                                                          Tag="{Binding}"/>
+                                                                <MenuItem Header="🖊️ Modifier" 
+                                                                          Click="ModifyPassword_Click"
+                                                                          Tag="{Binding}"/>
+                                                            </MenuFlyout>
+                                                        </Button.Flyout>
+                                                    </Button>
+                                                </Grid>
+                                                
+                                                <!-- Timer et alerte de duplication -->
+                                                <StackPanel Grid.Column="3" 
+                                                           Orientation="Horizontal"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           Spacing="8">
+                                                
+                                                    <!-- Timer pour le temps restant -->
+                                                    <TextBlock Text="{Binding RemainingTime, Converter={StaticResource RemainingTimeConverter}}" 
+                                                               Classes="PasswordTimer"
+                                                               IsVisible="{Binding IsPasswordVisible}"/>
+                                                    
+                                                    <!-- Icône d'alerte pour les mots de passe dupliqués -->
+                                                    <Button Classes="TableDuplicateAlert"
+                                                            IsVisible="{Binding IsDuplicate}"
+                                                            Click="DuplicateAlert_Click"
+                                                            Tag="{Binding}"
+                                                            ToolTip.Tip="Ce mot de passe est réutilisé - Cliquez pour plus d'options"/>
+                                                </StackPanel>
+                                                
+                                                <!-- URL cliquable -->
+                                                <Button Grid.Column="4" 
+                                                        Classes="UrlButton TableActionButton"
+                                                        Content="{Binding Url}"
+                                                        Click="OpenUrl_Click"
+                                                        Tag="{Binding}"/>
+                                                
+                                                <!-- Bouton menu déroulant -->
+                                                <Button Grid.Column="5" 
+                                                        Content="⋯" 
+                                                        HorizontalAlignment="Center" 
+                                                        Classes="MenuActionButton">
+                                                    <Button.Flyout>
+                                                        <MenuFlyout>
+                                                            <MenuItem Header="📄 Copier MDP" 
+                                                                      Click="CopyPassword_Click"
+                                                                      Tag="{Binding}"/>
+                                                            <MenuItem Header="👤 Copier l'utilisateur" 
+                                                                      Click="CopyUsername_Click"
+                                                                      Tag="{Binding}"/>
+                                                            <MenuItem Header="🔗 Copier URL" 
+                                                                      Click="CopyUrl_Click"
+                                                                      Tag="{Binding}"/>
+                                                            <Separator/>
+                                                            <MenuItem Header="🗑️ Supprimer" 
+                                                                      Classes="logout-button"
+                                                                      Click="DeletePassword_Click"
+                                                                      Tag="{Binding}"/>
+                                                        </MenuFlyout>
+                                                    </Button.Flyout>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
                         </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+                
+                <!-- Icône utilisateur avec menu de déconnexion -->
+                <Button Name="UserMenuButton"
+                        ToolTip.Tip="Menu utilisateur"
+                        Click="UserMenuButton_Click">
+                    <Button.Content>
+                        <TextBlock Text="{Binding UserInitial}" 
+                                   Classes="UserInitial"/>
+                    </Button.Content>
+                    <Button.Flyout>
+                        <MenuFlyout Placement="TopEdgeAlignedRight">
+                            <MenuItem Header="{Binding CurrentUser.Username, StringFormat='👤 {0}'}"
+                                      Classes="user-info"
+                                      IsEnabled="False"/>
+                            <MenuItem Header="{Binding CurrentUser.Email, StringFormat='📧 {0}'}"
+                                      Classes="user-email"
+                                      IsEnabled="False"/>
+                            <Separator Background="#EEEEEE"/>
+                            <MenuItem Header="Importer une bibliothèque"
+                                      Classes="import-library-button"
+                                      Click="ImportLibraryMenuItem_Click"/>
+                            <MenuItem Header="Se déconnecter"
+                                      Classes="logout-button"
+                                      Click="LogoutMenuItem_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </Grid>
         </Grid>
-        </Border>
-    </StackPanel>
-    </ScrollViewer>
-    
-    <!-- Icône utilisateur avec menu de déconnexion -->
-    <Button Name="UserMenuButton"
-            ToolTip.Tip="Menu utilisateur"
-            Click="UserMenuButton_Click">
-        <Button.Content>
-            <TextBlock Text="{Binding UserInitial}" 
-                       Classes="UserInitial"/>
-        </Button.Content>
-        <Button.Flyout>
-            <MenuFlyout Placement="TopEdgeAlignedRight">
-                <MenuItem Header="{Binding CurrentUser.Username, StringFormat='👤 {0}'}"
-                          Classes="user-info"
-                          IsEnabled="False"/>
-                <MenuItem Header="{Binding CurrentUser.Email, StringFormat='📧 {0}'}"
-                          Classes="user-email"
-                          IsEnabled="False"/>
-                <Separator Background="#EEEEEE"/>
-                <MenuItem Header="Importer une bibliothèque"
-                          Classes="import-library-button"
-                          Click="ImportLibraryMenuItem_Click"/>
-                <MenuItem Header="Se déconnecter"
-                          Classes="logout-button"
-                          Click="LogoutMenuItem_Click"/>
-            </MenuFlyout>
-        </Button.Flyout>
-    </Button>
-</Grid>
+    </Grid>
 </Window>

@@ -55,31 +55,53 @@ namespace YNOV_Password.ViewModels
 
         private void PerformLogin()
         {
-            ErrorMessage = string.Empty;
-            SuccessMessage = string.Empty;
-            
-            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            try
             {
-                ErrorMessage = "Veuillez remplir tous les champs.";
-                return;
-            }
+                ErrorMessage = string.Empty;
+                SuccessMessage = string.Empty;
+                
+                if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+                {
+                    ErrorMessage = "Veuillez remplir tous les champs.";
+                    LoggingService.LogInfo("Tentative de connexion avec des champs vides");
+                    return;
+                }
 
-            if (!IsValidEmail(Email))
-            {
-                ErrorMessage = "L'adresse email entrée ne respecte pas le format valide (exemple: nom@domaine.com).";
-                return;
-            }
+                if (!IsValidEmail(Email))
+                {
+                    ErrorMessage = "L'adresse email entrée ne respecte pas le format valide (exemple: nom@domaine.com).";
+                    LoggingService.LogInfo($"Tentative de connexion avec un email invalide : {Email}");
+                    return;
+                }
 
-            var user = _userService.Login(Email, Password);
-            if (user != null)
-            {
-                LoggedInUser = user;
-                LoginSuccessful = true;
-                LoginCompleted?.Invoke();
+                LoggingService.LogInfo($"Tentative de connexion pour l'email : {Email}");
+                try
+                {
+                    var user = _userService.Login(Email, Password);
+                    
+                    if (user != null)
+                    {
+                        LoggingService.LogInfo($"Connexion réussie pour l'utilisateur : {user.Username}");
+                        LoggedInUser = user;
+                        LoginSuccessful = true;
+                        LoginCompleted?.Invoke();
+                    }
+                    else
+                    {
+                        LoggingService.LogInfo("Échec de la connexion : identifiants incorrects");
+                        ErrorMessage = "Email ou mot de passe incorrect.";
+                    }
+                }
+                catch (Exception loginEx)
+                {
+                    LoggingService.LogError(loginEx, "Erreur lors de la tentative de connexion");
+                    ErrorMessage = "Une erreur s'est produite lors de la connexion. Vérifiez les logs pour plus de détails.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage = "Email ou mot de passe incorrect.";
+                LoggingService.LogError(ex, "Erreur inattendue lors de la connexion");
+                ErrorMessage = $"Erreur inattendue : {ex.Message}";
             }
         }
 

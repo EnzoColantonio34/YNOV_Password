@@ -18,46 +18,53 @@ namespace YNOV_Password.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public ObservableCollection<PasswordEntry> Passwords { get; set; }
+    public ObservableCollection<PasswordEntry> Passwords { get; } = new();
+    public ObservableCollection<PasswordFolder> Folders { get; } = new();
     private readonly PasswordDatabaseService _dbService;
+    private readonly FolderDatabaseService? _folderService;
     private readonly Dictionary<PasswordEntry, Timer> _passwordTimers = new();
     
     [ObservableProperty]
     private User? _currentUser;
 
-    // Propriété calculée pour la première lettre du nom d'utilisateur
-    public string UserInitial => CurrentUser?.Username?.Length > 0 
-        ? CurrentUser.Username[0].ToString().ToUpper() 
-        : "?";
+    [ObservableProperty]
+    private PasswordFolder? _selectedFolder;
 
-    partial void OnCurrentUserChanged(User? value)
-    {
-        OnPropertyChanged(nameof(UserInitial));
-    }
+    [ObservableProperty]
+    private bool _showFolderView = true;
 
     [ObservableProperty]
     private string _searchText = string.Empty;
 
-    public bool HasNoPasswords => !Passwords.Any();
-    public bool IsSearchActive => !string.IsNullOrWhiteSpace(SearchText);
-    public string NoPasswordsMessageTitle => IsSearchActive 
-        ? "Aucun élément correspondant à la recherche..." 
-        : "Pas encore de mot de passe créé !";
-    public string NoPasswordsMessageSubtitle => IsSearchActive 
-        ? $"Aucun résultat trouvé pour \"{SearchText}\"" 
-        : "Ne tarde pas pour te sécuriser";
-
-    public ICommand CopyPasswordCommand { get; private set; } = null!;
-    public ICommand CopyUsernameCommand { get; private set; } = null!;
-    public ICommand CopyUrlCommand { get; private set; } = null!;
-    public ICommand DeletePasswordCommand { get; private set; } = null!;
-    public ICommand SearchCommand { get; private set; } = null!;
-    public ICommand AddPasswordCommand { get; private set; } = null!;
-    public ICommand ShowPasswordCommand { get; private set; } = null!;
-    public ICommand OpenUrlCommand { get; private set; } = null!;
-    public ICommand LogoutCommand { get; private set; } = null!;
+    public ICommand? CopyPasswordCommand { get; set; }
+    public ICommand? CopyUrlCommand { get; set; }
+    public ICommand? CopyUsernameCommand { get; set; }
+    public ICommand? DeletePasswordCommand { get; set; }
+    public ICommand? SearchCommand { get; set; }
+    public ICommand? ShowPasswordCommand { get; set; }
+    public ICommand? OpenUrlCommand { get; set; }
+    public ICommand? AddPasswordCommand { get; set; }
+    public ICommand? LogoutCommand { get; set; }
+    public ICommand? ManageFoldersCommand { get; set; }
+    public ICommand? SelectFolderCommand { get; set; }
+    public ICommand? ToggleFolderViewCommand { get; set; }
 
     public event Action? LogoutRequested;
+
+    public string UserInitial => CurrentUser?.Username?.Length > 0 
+        ? CurrentUser.Username[0].ToString().ToUpper() 
+        : "?";
+
+    public bool HasNoPasswords => !Passwords.Any();
+    public bool IsSearchActive => !string.IsNullOrWhiteSpace(SearchText);
+
+    public string NoPasswordsMessageTitle => IsSearchActive
+        ? "Aucun résultat trouvé"
+        : "Aucun mot de passe enregistré";
+
+    public string NoPasswordsMessageSubtitle => IsSearchActive
+        ? "Essayez d'autres termes de recherche"
+        : "Ajoutez un nouveau mot de passe pour commencer";
 
     public MainWindowViewModel() : this(0)
     {
@@ -67,74 +74,76 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         try
         {
-            if (userId == 0)
-            {
-                var userService = new UserDatabaseService();
-                var defaultUser = userService.GetUserByEmail("admin@example.com");
-                userId = defaultUser?.Id ?? 1;
-                CurrentUser = defaultUser;
-
-            }
-            else
-            {
-                var userService = new UserDatabaseService();
-                var users = userService.GetAllUsers();
-                CurrentUser = users.FirstOrDefault(u => u.Id == userId);
-
-            }
+            var userService = new UserDatabaseService();
+            var user = userService.GetUserById(userId);
             
-            if (CurrentUser != null)
+            if (user != null)
             {
-                _dbService = new PasswordDatabaseService(CurrentUser);
-                // Initialiser le service de mots avec l'ID utilisateur
+                CurrentUser = user;
+                // Créer d'abord le FolderService pour s'assurer que la table Folders existe
+                _folderService = new FolderDatabaseService(CurrentUser);
+                // Ensuite créer le PasswordService qui dépend de la table Folders
+                _dbService = new PasswordDatabaseService(CurrentUser.Id);
                 WordLibraryService.Instance.SetUserId(CurrentUser.Id);
             }
             else
             {
+                // Si pas d'utilisateur courant, on crée quand même les services dans le bon ordre
+                _folderService = new FolderDatabaseService(new User { Id = userId });
                 _dbService = new PasswordDatabaseService(userId);
-                // Initialiser le service de mots avec l'ID utilisateur
                 WordLibraryService.Instance.SetUserId(userId);
             }
-            
-            // Initialiser la collection vide d'abord
-            Passwords = new ObservableCollection<PasswordEntry>();
-            
-            // Charger les mots de passe via PerformSearch pour inclure la détection de doublons
+
+            InitializeCommands();
+            LoadFolders();
             PerformSearch(string.Empty);
-            
-
-
-            CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
-            CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
-            CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
-            DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
-            SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
-            ShowPasswordCommand = new Commands.RelayCommand<PasswordEntry>(ShowPassword);
-            OpenUrlCommand = new Commands.RelayCommand<string>(OpenUrl);
-            AddPasswordCommand = new Commands.RelayCommand<object>(_ => ShowAddPasswordDialog());
-            LogoutCommand = new Commands.RelayCommand<object>(_ => LogoutRequested?.Invoke());
-            
-
         }
         catch (Exception ex)
         {
             LoggingService.LogError(ex, "Initialisation du MainWindowViewModel");
-            // Initialiser avec des valeurs par défaut pour éviter les crashes
-            Passwords = new ObservableCollection<PasswordEntry>();
+            // En cas d'erreur, on crée quand même les services dans le bon ordre
+            _folderService = new FolderDatabaseService(new User { Id = userId });
             _dbService = new PasswordDatabaseService(userId);
-            
-            CopyPasswordCommand = new Commands.RelayCommand<string>(CopyToClipboard);
-            CopyUsernameCommand = new Commands.RelayCommand<string>(CopyUsernameToClipboard);
-            CopyUrlCommand = new Commands.RelayCommand<string>(CopyUrlToClipboard);
-            DeletePasswordCommand = new Commands.RelayCommand<PasswordEntry>(DeletePassword);
-            SearchCommand = new Commands.RelayCommand<string>(PerformSearch);
-            ShowPasswordCommand = new Commands.RelayCommand<PasswordEntry>(ShowPassword);
-            OpenUrlCommand = new Commands.RelayCommand<string>(OpenUrl);
-            AddPasswordCommand = new Commands.RelayCommand<object>(_ => ShowAddPasswordDialog());
-            LogoutCommand = new Commands.RelayCommand<object>(_ => LogoutRequested?.Invoke());
+            InitializeCommands();
         }
     }
 
+    private void InitializeCommands()
+    {
+        CopyPasswordCommand = new RelayCommand<string>(CopyToClipboard);
+        CopyUsernameCommand = new RelayCommand<string>(CopyUsernameToClipboard);
+        CopyUrlCommand = new RelayCommand<string>(CopyUrlToClipboard);
+        DeletePasswordCommand = new RelayCommand<PasswordEntry>(DeletePassword);
+        SearchCommand = new RelayCommand<string>(PerformSearch);
+        ShowPasswordCommand = new RelayCommand<PasswordEntry>(ShowPassword);
+        OpenUrlCommand = new RelayCommand<string>(OpenUrl);
+        AddPasswordCommand = new RelayCommand<object>(_ => ShowAddPasswordDialog());
+        LogoutCommand = new RelayCommand<object>(_ => LogoutRequested?.Invoke());
+        ManageFoldersCommand = new RelayCommand<object>(_ => ShowFolderManager());
+        SelectFolderCommand = new RelayCommand<PasswordFolder>(SelectFolder);
+        ToggleFolderViewCommand = new RelayCommand<object>(_ => ShowFolderView = !ShowFolderView);
+    }
+
+    private void LoadFolders()
+    {
+        if (_folderService == null) return;
+
+        Folders.Clear();
+        var folders = _folderService.GetAllFolders();
+        foreach (var folder in folders)
+        {
+            folder.PasswordCount = _folderService.GetPasswordCountInFolder(folder.Id);
+            Folders.Add(folder);
+        }
+
+        // Sélectionner le dossier "Général" par défaut
+        if (SelectedFolder == null)
+        {
+            SelectedFolder = Folders.FirstOrDefault(f => f.Name == "Général");
+        }
+    }
+
+    // Méthodes de gestion du presse-papier
     private async void CopyToClipboard(string password)
     {
         if (password != null)
@@ -171,13 +180,13 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    // Méthodes de gestion des URLs et mots de passe
     private void OpenUrl(string url)
     {
         if (!string.IsNullOrWhiteSpace(url))
         {
             try
             {
-                // Ajouter https:// si aucun protocole n'est spécifié
                 if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 {
                     url = "https://" + url;
@@ -221,18 +230,15 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (entry == null) return;
 
-        // Annuler le timer existant s'il y en a un
         if (_passwordTimers.ContainsKey(entry))
         {
             _passwordTimers[entry].Dispose();
             _passwordTimers.Remove(entry);
         }
 
-        // Afficher le mot de passe
         entry.IsPasswordVisible = true;
         entry.RemainingTime = 10;
 
-        // Créer un timer qui se déclenche chaque seconde pour mettre à jour le countdown
         var timer = new Timer(_ =>
         {
             Dispatcher.UIThread.Post(() =>
@@ -260,18 +266,17 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (entry == null) return;
 
-        // Annuler le timer s'il existe
         if (_passwordTimers.ContainsKey(entry))
         {
             _passwordTimers[entry].Dispose();
             _passwordTimers.Remove(entry);
         }
 
-        // Masquer le mot de passe et réinitialiser le timer
         entry.IsPasswordVisible = false;
         entry.RemainingTime = 0;
     }
 
+    // Méthodes de recherche et rafraîchissement
     public void RefreshPasswords()
     {
         PerformSearch(SearchText);
@@ -291,7 +296,11 @@ public partial class MainWindowViewModel : ViewModelBase
             entries = _dbService.Search(searchTerm);
         }
 
-        // Marquer les mots de passe dupliqués AVANT d'ajouter à la collection
+        if (SelectedFolder != null)
+        {
+            entries = entries.Where(p => p.FolderId == SelectedFolder.Id).ToList();
+        }
+
         DuplicatePasswordService.MarkDuplicatePasswords(entries);
 
         foreach (var entry in entries)
@@ -313,6 +322,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(NoPasswordsMessageSubtitle));
     }
 
+    // Méthodes de gestion des fenêtres
     private async void ShowAddPasswordDialog()
     {
         try
@@ -347,6 +357,22 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private async void ShowFolderManager()
+    {
+        if (CurrentUser == null || _folderService == null) return;
+
+        var viewModel = new FolderManagerViewModel(CurrentUser);
+        var window = new FolderManagerWindow(viewModel);
+        
+        if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop &&
+            desktop.MainWindow != null)
+        {
+            await window.ShowDialog(desktop.MainWindow);
+            LoadFolders();
+        }
+    }
+
+    // Méthodes CRUD
     public void AddPassword(PasswordEntry entry)
     {
         try
@@ -371,5 +397,29 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             LoggingService.LogError(ex, $"Mise à jour du mot de passe pour '{entry?.Site}'");
         }
+    }
+
+    // Méthodes de gestion des dossiers
+    private void SelectFolder(PasswordFolder? folder)
+    {
+        // Désélectionner l'ancien dossier
+        if (SelectedFolder != null)
+        {
+            SelectedFolder.IsSelected = false;
+        }
+        
+        // Sélectionner le nouveau dossier
+        if (folder != null)
+        {
+            folder.IsSelected = true;
+        }
+        
+        SelectedFolder = folder;
+        PerformSearch(SearchText);
+    }
+
+    partial void OnSelectedFolderChanged(PasswordFolder? oldValue, PasswordFolder? newValue)
+    {
+        PerformSearch(SearchText);
     }
 }

@@ -66,7 +66,10 @@ namespace YNOV_Password.Views
         
         private void CopyPassword_Click(object? sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            if (sender is MenuItem menuItem && 
+                menuItem.Tag is PasswordEntry entry && 
+                DataContext is MainWindowViewModel viewModel &&
+                viewModel.CopyPasswordCommand != null)
             {
                 viewModel.CopyPasswordCommand.Execute(entry.Password);
             }
@@ -74,7 +77,10 @@ namespace YNOV_Password.Views
 
         private void CopyUrl_Click(object? sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            if (sender is MenuItem menuItem && 
+                menuItem.Tag is PasswordEntry entry && 
+                DataContext is MainWindowViewModel viewModel &&
+                viewModel.CopyUrlCommand != null)
             {
                 viewModel.CopyUrlCommand.Execute(entry.Url);
             }
@@ -82,7 +88,10 @@ namespace YNOV_Password.Views
 
         private void CopyUsername_Click(object? sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            if (sender is MenuItem menuItem && 
+                menuItem.Tag is PasswordEntry entry && 
+                DataContext is MainWindowViewModel viewModel &&
+                viewModel.CopyUsernameCommand != null)
             {
                 viewModel.CopyUsernameCommand.Execute(entry.Username);
             }
@@ -90,7 +99,10 @@ namespace YNOV_Password.Views
 
         private void OpenUrl_Click(object? sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            if (sender is Button button && 
+                button.Tag is PasswordEntry entry && 
+                DataContext is MainWindowViewModel viewModel &&
+                viewModel.OpenUrlCommand != null)
             {
                 viewModel.OpenUrlCommand.Execute(entry.Url);
             }
@@ -98,7 +110,10 @@ namespace YNOV_Password.Views
 
         private void DeletePassword_Click(object? sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            if (sender is MenuItem menuItem && 
+                menuItem.Tag is PasswordEntry entry && 
+                DataContext is MainWindowViewModel viewModel &&
+                viewModel.DeletePasswordCommand != null)
             {
                 viewModel.DeletePasswordCommand.Execute(entry);
             }
@@ -106,7 +121,10 @@ namespace YNOV_Password.Views
 
         private void ShowPassword_Click(object? sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem menuItem && menuItem.Tag is PasswordEntry entry && DataContext is MainWindowViewModel viewModel)
+            if (sender is MenuItem menuItem && 
+                menuItem.Tag is PasswordEntry entry && 
+                DataContext is MainWindowViewModel viewModel &&
+                viewModel.ShowPasswordCommand != null)
             {
                 viewModel.ShowPasswordCommand.Execute(entry);
             }

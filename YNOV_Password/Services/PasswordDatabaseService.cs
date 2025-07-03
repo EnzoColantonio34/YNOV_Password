@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using YNOV_Password.Models;
+using System.IO;
 
 namespace YNOV_Password.Services
 {
     public class PasswordDatabaseService
     {
-        private readonly string _connectionString = "Data Source=passwords.db";
+        private readonly string _connectionString;
         private readonly EncryptionService _encryptionService;
         public int CurrentUserId { get; set; }
 
@@ -15,6 +16,7 @@ namespace YNOV_Password.Services
         {
             CurrentUserId = userId;
             _encryptionService = new EncryptionService(masterPassword);
+            _connectionString = DatabaseHelper.GetConnectionString();
             Initialize();
             
             // Migrer les mots de passe existants vers le format chiffré
@@ -34,40 +36,51 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             
-            // Créer la table Passwords si elle n'existe pas
-            var command = connection.CreateCommand();
-            command.CommandText =
-                @"CREATE TABLE IF NOT EXISTS Passwords (
+            // Commencer par supprimer la table Passwords existante
+            var dropTableCmd = connection.CreateCommand();
+            dropTableCmd.CommandText = "DROP TABLE IF EXISTS Passwords;";
+            dropTableCmd.ExecuteNonQuery();
+
+            // Créer la table Passwords avec toutes les colonnes nécessaires
+            var createTableCmd = connection.CreateCommand();
+            createTableCmd.CommandText = @"
+                CREATE TABLE Passwords (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Site TEXT,
                     Username TEXT,
                     Password TEXT,
-                    Url TEXT
+                    Url TEXT,
+                    UserId INTEGER NOT NULL DEFAULT 0,
+                    FolderId INTEGER NOT NULL DEFAULT 1,
+                    FOREIGN KEY(FolderId) REFERENCES Folders(Id)
                 );";
-            command.ExecuteNonQuery();
+            createTableCmd.ExecuteNonQuery();
 
-            // Vérifier si la colonne UserId existe déjà
-            command = connection.CreateCommand();
-            command.CommandText = "PRAGMA table_info(Passwords)";
-            using var reader = command.ExecuteReader();
-            bool userIdExists = false;
-            while (reader.Read())
-            {
-                if (reader.GetString(1) == "UserId")
-                {
-                    userIdExists = true;
-                    break;
-                }
-            }
-            reader.Close();
+            // Créer un index sur la colonne FolderId pour améliorer les performances
+            var createIndexCmd = connection.CreateCommand();
+            createIndexCmd.CommandText = "CREATE INDEX IF NOT EXISTS idx_passwords_folderid ON Passwords(FolderId);";
+            createIndexCmd.ExecuteNonQuery();
 
-            // Si la colonne UserId n'existe pas, l'ajouter
-            if (!userIdExists)
+            // Vérifier si le dossier Général existe
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT Id FROM Folders WHERE Id = 1;";
+            var result = command.ExecuteScalar();
+
+            if (result == null)
             {
+                // Créer le dossier Général s'il n'existe pas
                 command = connection.CreateCommand();
-                command.CommandText = "ALTER TABLE Passwords ADD COLUMN UserId INTEGER NOT NULL DEFAULT 1";
+                command.CommandText = @"
+                    INSERT INTO Folders (Id, Name, Description, UserId)
+                    VALUES (1, 'Général', 'Dossier par défaut', @userId);";
+                command.Parameters.AddWithValue("@userId", CurrentUserId);
                 command.ExecuteNonQuery();
             }
+
+            // Mettre à jour tous les mots de passe sans dossier
+            command = connection.CreateCommand();
+            command.CommandText = "UPDATE Passwords SET FolderId = 1 WHERE FolderId IS NULL OR FolderId = 0;";
+            command.ExecuteNonQuery();
         }
 
         public List<PasswordEntry> GetAll()
@@ -76,7 +89,7 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords WHERE UserId = @userId";
+            command.CommandText = "SELECT Id, Site, Username, Password, Url, FolderId FROM Passwords WHERE UserId = @userId";
             command.Parameters.AddWithValue("@userId", CurrentUserId);
             using var reader = command.ExecuteReader();
             while (reader.Read())
@@ -90,7 +103,8 @@ namespace YNOV_Password.Services
                     Site = reader.GetString(1),
                     Username = reader.GetString(2),
                     Password = decryptedPassword,
-                    Url = reader.GetString(4)
+                    Url = reader.GetString(4),
+                    FolderId = reader.IsDBNull(5) ? null : reader.GetInt32(5)
                 });
             }
             return list;
@@ -139,7 +153,7 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO Passwords (UserId, Site, Username, Password, Url) VALUES (@userId, @site, @username, @password, @url)";
+            command.CommandText = "INSERT INTO Passwords (UserId, Site, Username, Password, Url, FolderId) VALUES (@userId, @site, @username, @password, @url, @folderId)";
             command.Parameters.AddWithValue("@userId", CurrentUserId);
             command.Parameters.AddWithValue("@site", entry.Site);
             command.Parameters.AddWithValue("@username", entry.Username ?? "");
@@ -149,6 +163,7 @@ namespace YNOV_Password.Services
             command.Parameters.AddWithValue("@password", encryptedPassword);
             
             command.Parameters.AddWithValue("@url", entry.Url ?? "");
+            command.Parameters.AddWithValue("@folderId", entry.FolderId.HasValue ? (object)entry.FolderId.Value : DBNull.Value);
             command.ExecuteNonQuery();
         }
 
@@ -159,7 +174,7 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "UPDATE Passwords SET Site = @site, Username = @username, Password = @password, Url = @url WHERE Id = @id AND UserId = @userId";
+            command.CommandText = "UPDATE Passwords SET Site = @site, Username = @username, Password = @password, Url = @url, FolderId = @folderId WHERE Id = @id AND UserId = @userId";
             command.Parameters.AddWithValue("@id", entry.Id);
             command.Parameters.AddWithValue("@userId", CurrentUserId);
             command.Parameters.AddWithValue("@site", entry.Site);
@@ -170,6 +185,7 @@ namespace YNOV_Password.Services
             command.Parameters.AddWithValue("@password", encryptedPassword);
             
             command.Parameters.AddWithValue("@url", entry.Url ?? "");
+            command.Parameters.AddWithValue("@folderId", entry.FolderId.HasValue ? (object)entry.FolderId.Value : DBNull.Value);
             command.ExecuteNonQuery();
         }
 

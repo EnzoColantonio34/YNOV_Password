@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using System.Linq;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using YNOV_Password.Commands;
@@ -27,6 +28,10 @@ namespace YNOV_Password.ViewModels
 
         public ICommand SaveCommand { get; }
         public ICommand CancelCommand { get; }
+        public System.Collections.ObjectModel.ObservableCollection<PasswordFolder> Folders { get; }
+
+        [ObservableProperty]
+        private PasswordFolder? _selectedFolder;
 
         public string WindowTitle => _isEditing ? "Modifier le mot de passe" : "Ajouter un mot de passe";
 
@@ -35,6 +40,18 @@ namespace YNOV_Password.ViewModels
             _window = window;
             _mainViewModel = mainViewModel;
             _isEditing = false;
+
+            // Initialiser la liste des dossiers
+            Folders = mainViewModel.Folders;
+            if (mainViewModel.SelectedFolder != null)
+            {
+                SelectedFolder = mainViewModel.SelectedFolder;
+            }
+            else
+            {
+                // Sélectionner le dossier "Général" par défaut
+                SelectedFolder = Folders.FirstOrDefault(f => f.Name == "Général");
+            }
 
             SaveCommand = new RelayCommand<object>(_ => Save());
             CancelCommand = new RelayCommand<object>(_ => Cancel());
@@ -68,6 +85,7 @@ namespace YNOV_Password.ViewModels
                     _editingEntry.Username = Username;
                     _editingEntry.Password = Password;
                     _editingEntry.Url = Url;
+                    _editingEntry.FolderId = SelectedFolder?.Id;
                     
                     _mainViewModel.UpdatePassword(_editingEntry);
                 }
@@ -79,7 +97,8 @@ namespace YNOV_Password.ViewModels
                         Site = Site,
                         Username = Username,
                         Password = Password,
-                        Url = Url
+                        Url = Url,
+                        FolderId = SelectedFolder?.Id
                     };
 
                     _mainViewModel.AddPassword(newEntry);

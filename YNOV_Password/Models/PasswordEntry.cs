@@ -9,6 +9,8 @@ namespace YNOV_Password.Models
         public string? Username { get; set; }
         public string? Password { get; set; }
         public string? Url { get; set; }
+        public int? FolderId { get; set; }
+        public PasswordFolder? Folder { get; set; }
         
         [ObservableProperty]
         private bool _isPasswordVisible = false;

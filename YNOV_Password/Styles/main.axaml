@@ -1470,4 +1470,36 @@
         <Setter Property="Margin" Value="0,0,0,8"/>
         <Setter Property="BoxShadow" Value="0 1 4 0 #00000008"/>
     </Style>
+
+    <!-- Styles pour les boutons de dossier dans main.axaml -->
+    <Style Selector="Button.FolderButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#4B5563"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="Margin" Value="0,2"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1"/>
+                <BrushTransition Property="Background" Duration="0:0:0.1"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.FolderButton:pointerover">
+        <Setter Property="Background" Value="#F3F4F6"/>
+        <Setter Property="RenderTransform" Value="scale(1.01)"/>
+    </Style>
+
+    <Style Selector="Button.FolderButton.FolderSelected">
+        <Setter Property="Background" Value="#059669"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <Style Selector="Button.FolderButton.FolderSelected:pointerover">
+        <Setter Property="Background" Value="#047857"/>
+    </Style>
 </Styles>
