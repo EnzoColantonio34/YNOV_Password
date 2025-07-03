@@ -6,10 +6,18 @@ namespace YNOV_Password.Services
 {
     public class DuplicatePasswordService
     {
-        public static void MarkDuplicatePasswords(List<PasswordEntry> passwords)
+        public static void MarkDuplicatePasswords(List<PasswordEntry> passwords, PasswordDatabaseService? passwordService = null)
         {
+            var allPasswords = passwords;
+            
+            // Si un service est fourni, utiliser tous les mots de passe de l'utilisateur
+            if (passwordService != null)
+            {
+                allPasswords = passwordService.GetAll();
+            }
+
             // Regrouper les mots de passe par valeur
-            var passwordGroups = passwords
+            var passwordGroups = allPasswords
                 .Where(p => !string.IsNullOrEmpty(p.Password))
                 .GroupBy(p => p.Password)
                 .ToList();
@@ -18,7 +26,9 @@ namespace YNOV_Password.Services
             foreach (var group in passwordGroups)
             {
                 var isDuplicate = group.Count() > 1;
-                foreach (var password in group)
+                
+                // Pour les mots de passe de la liste d'origine uniquement
+                foreach (var password in passwords.Where(p => p.Password == group.Key))
                 {
                     password.IsDuplicate = isDuplicate;
                 }

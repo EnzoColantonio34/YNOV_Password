@@ -301,7 +301,7 @@ public partial class MainWindowViewModel : ViewModelBase
             entries = entries.Where(p => p.FolderId == SelectedFolder.Id).ToList();
         }
 
-        DuplicatePasswordService.MarkDuplicatePasswords(entries);
+        DuplicatePasswordService.MarkDuplicatePasswords(entries, _dbService);
 
         foreach (var entry in entries)
         {
