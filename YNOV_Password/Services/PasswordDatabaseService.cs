@@ -111,7 +111,7 @@ namespace YNOV_Password.Services
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT Id, Site, Username, Password, Url FROM Passwords WHERE UserId = @userId AND (Site LIKE @search OR Username LIKE @search)";
+            command.CommandText = "SELECT Id, Site, Username, Password, Url, FolderId FROM Passwords WHERE UserId = @userId AND (Site LIKE @search OR Username LIKE @search)";
             command.Parameters.AddWithValue("@userId", CurrentUserId);
             command.Parameters.AddWithValue("@search", $"%{searchTerm}%");
 
@@ -127,7 +127,8 @@ namespace YNOV_Password.Services
                     Site = reader.GetString(1),
                     Username = reader.GetString(2),
                     Password = decryptedPassword,
-                    Url = reader.GetString(4)
+                    Url = reader.GetString(4),
+                    FolderId = reader.IsDBNull(5) ? null : reader.GetInt32(5)
                 });
             }
             return list;

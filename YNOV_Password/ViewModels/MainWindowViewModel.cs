@@ -62,6 +62,10 @@ public partial class MainWindowViewModel : ViewModelBase
         ? "Essayez d'autres termes de recherche"
         : "Ajoutez un nouveau mot de passe pour commencer";
 
+    public string SearchWatermark => SelectedFolder != null 
+        ? $"Rechercher dans {SelectedFolder.Name}"
+        : "Rechercher...";
+
     public MainWindowViewModel() : this(0)
     {
     }
@@ -425,8 +429,9 @@ public partial class MainWindowViewModel : ViewModelBase
             folder.IsSelected = true;
         }
 
-        // Rafraîchir la liste des mots de passe
+        // Rafraîchir la liste des mots de passe et le watermark
         PerformSearch(SearchText);
+        OnPropertyChanged(nameof(SearchWatermark));
     }
 
     partial void OnSelectedFolderChanged(PasswordFolder? oldValue, PasswordFolder? newValue)
