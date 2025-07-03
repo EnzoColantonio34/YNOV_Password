@@ -35,16 +35,11 @@ namespace YNOV_Password.Services
         {
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
-            
-            // Commencer par supprimer la table Passwords existante
-            var dropTableCmd = connection.CreateCommand();
-            dropTableCmd.CommandText = "DROP TABLE IF EXISTS Passwords;";
-            dropTableCmd.ExecuteNonQuery();
 
-            // Créer la table Passwords avec toutes les colonnes nécessaires
+            // Créer la table Passwords uniquement si elle n'existe pas déjà
             var createTableCmd = connection.CreateCommand();
             createTableCmd.CommandText = @"
-                CREATE TABLE Passwords (
+                CREATE TABLE IF NOT EXISTS Passwords (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Site TEXT,
                     Username TEXT,

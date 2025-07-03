@@ -12,6 +12,7 @@
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Icon="/Assets/avalonia-logo.ico"
         Title="YNOV_Password"
+        Width="1200" Height="800"
         Classes="MainWindow">
 
     <Window.Resources>
@@ -42,8 +43,7 @@
             <!-- Panneau des dossiers -->
             <Border Grid.Column="0" 
                     Classes="HighlightCard" 
-                    Margin="20,20,10,20" 
-                    IsVisible="{Binding ShowFolderView}">
+                    Margin="20,20,10,20">
                 <Grid RowDefinitions="Auto,*">
                     <StackPanel Grid.Row="0" Margin="0,0,0,10">
                         <Grid>
@@ -99,33 +99,23 @@
                     <StackPanel>
                         <!-- En-tête -->
                         <Border Classes="HeaderSection HighlightCard">
-                            <StackPanel>
-                                <!-- Titre et boutons -->
+                            <StackPanel Spacing="16">
+                                <!-- Première ligne : Titre et boutons -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Bouton toggle vue dossiers -->
+                                    <TextBlock Grid.Column="0" 
+                                             Text="YNOV Password"
+                                             Classes="Title"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"/>
+
                                     <Button Grid.Column="0"
-                                            Content="📁"
-                                            Classes="IconButton"
-                                            Command="{Binding ToggleFolderViewCommand}"
-                                            ToolTip.Tip="Afficher/Masquer les dossiers"
-                                            Margin="0 0 8 0"/>
-
-                                    <TextBlock Grid.Column="1" 
-                                               Text="YNOV Password"
-                                               Classes="Title"
-                                               HorizontalAlignment="Left"
-                                               VerticalAlignment="Center"/>
-
-                                    <Button Grid.Column="1"
                                             Content="❓"
                                             Classes="IconButton"
                                             Click="HelpButton_Click"
@@ -133,14 +123,14 @@
                                             ToolTip.Tip="Aide - Guide d'utilisation"
                                             x:Name="HelpButton"/>
 
-                                    <Button Grid.Column="2"
+                                    <Button Grid.Column="1"
                                             Content="Générer un mot de passe"
                                             Classes="IconButton"
                                             Click="GeneratePasswordButton_Click"
                                             HorizontalAlignment="Right"
                                             x:Name="GeneratePasswordButton"/>
 
-                                    <Button Grid.Column="3"
+                                    <Button Grid.Column="2"
                                             Content="Ajouter"
                                             Classes="IconButton"
                                             Click="AddButton_Click"
@@ -148,33 +138,19 @@
                                             x:Name="AddButton"/>
                                 </Grid>
 
-                                <!-- Barre de recherche -->
+                                <!-- Deuxième ligne : Barre de recherche -->
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="300"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <StackPanel Grid.Column="0" 
-                                              Orientation="Horizontal" 
-                                              Spacing="8"
-                                              IsVisible="{Binding SelectedFolder, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                              Margin="0 0 16 0">
-                                        <TextBlock Text="{Binding SelectedFolder.Icon}"
-                                                 VerticalAlignment="Center"/>
-                                        <TextBlock Text="{Binding SelectedFolder.Name}"
-                                                 VerticalAlignment="Center"
-                                                 Classes="SubtleText"/>
-                                        <TextBlock Text="/"
-                                                 VerticalAlignment="Center"
-                                                 Classes="SubtleText"/>
-                                    </StackPanel>
-
-                                    <TextBox Grid.Column="1"
+                                    <TextBox Grid.Column="0"
                                              Classes="SearchBox"
                                              Watermark="Rechercher..."
                                              Text="{Binding SearchText}"
-                                             HorizontalAlignment="Stretch"/>
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Center"/>
                                 </Grid>
                             </StackPanel>
                         </Border>

@@ -31,9 +31,6 @@ public partial class MainWindowViewModel : ViewModelBase
     private PasswordFolder? _selectedFolder;
 
     [ObservableProperty]
-    private bool _showFolderView = true;
-
-    [ObservableProperty]
     private string _searchText = string.Empty;
 
     public ICommand? CopyPasswordCommand { get; set; }
@@ -47,7 +44,6 @@ public partial class MainWindowViewModel : ViewModelBase
     public ICommand? LogoutCommand { get; set; }
     public ICommand? ManageFoldersCommand { get; set; }
     public ICommand? SelectFolderCommand { get; set; }
-    public ICommand? ToggleFolderViewCommand { get; set; }
 
     public event Action? LogoutRequested;
 
@@ -121,7 +117,6 @@ public partial class MainWindowViewModel : ViewModelBase
         LogoutCommand = new RelayCommand<object>(_ => LogoutRequested?.Invoke());
         ManageFoldersCommand = new RelayCommand<object>(_ => ShowFolderManager());
         SelectFolderCommand = new RelayCommand<PasswordFolder>(SelectFolder);
-        ToggleFolderViewCommand = new RelayCommand<object>(_ => ShowFolderView = !ShowFolderView);
     }
 
     private void LoadFolders()
@@ -214,6 +209,7 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 _dbService.Delete(entry.Id);
                 Passwords.Remove(entry);
+                UpdateFolderPasswordCounts();
                 OnPropertyChanged(nameof(HasNoPasswords));
                 OnPropertyChanged(nameof(IsSearchActive));
                 OnPropertyChanged(nameof(NoPasswordsMessageTitle));
@@ -308,6 +304,8 @@ public partial class MainWindowViewModel : ViewModelBase
             Passwords.Add(entry);
         }
 
+        UpdateFolderPasswordCounts();
+
         OnPropertyChanged(nameof(HasNoPasswords));
         OnPropertyChanged(nameof(IsSearchActive));
         OnPropertyChanged(nameof(NoPasswordsMessageTitle));
@@ -372,6 +370,16 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private void UpdateFolderPasswordCounts()
+    {
+        if (_folderService == null) return;
+
+        foreach (var folder in Folders)
+        {
+            folder.PasswordCount = _folderService.GetPasswordCountInFolder(folder.Id);
+        }
+    }
+
     // Méthodes CRUD
     public void AddPassword(PasswordEntry entry)
     {
@@ -379,6 +387,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             _dbService.Add(entry);
             PerformSearch(SearchText);
+            UpdateFolderPasswordCounts();
         }
         catch (Exception ex)
         {
@@ -392,6 +401,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             _dbService.Update(entry);
             PerformSearch(SearchText);
+            UpdateFolderPasswordCounts();
         }
         catch (Exception ex)
         {
@@ -407,14 +417,15 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             SelectedFolder.IsSelected = false;
         }
-        
+
         // Sélectionner le nouveau dossier
+        SelectedFolder = folder;
         if (folder != null)
         {
             folder.IsSelected = true;
         }
-        
-        SelectedFolder = folder;
+
+        // Rafraîchir la liste des mots de passe
         PerformSearch(SearchText);
     }
 
