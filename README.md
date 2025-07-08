@@ -33,7 +33,7 @@ YNOV Password Manager permet de stocker, organiser et générer des mots de pass
 
 ### Clonage et compilation
 ```bash
-git clone <repository-url>
+git clone https://github.com/EnzoColantonio34/YNOV_Password.git
 cd YNOV_Password
 dotnet restore
 dotnet build
@@ -111,7 +111,7 @@ La base de données SQLite (`passwords.db`) est générée automatiquement.
 - **Entity Framework Core** (migrations automatiques, requêtes LINQ)
 - **MVVM** (CommunityToolkit.MVVM)
 - **SQLite** (base locale, portable)
-- **Styles centralisés** dans `Styles/main.axaml` (light/dark mode)
+- **Styles centralisés** dans `Styles/main.axaml` (light mode)
 
 Structure des dossiers :
 ```
@@ -127,20 +127,6 @@ YNOV_Password/
 ```
 
 ---
-
-## Points de conformité (cahier des charges)
-
-- Compilation sans erreur, exécutable sur macOS et Windows
-- Fichier de style unique, gestion light/dark mode, styles centralisés
-- Utilisation d’Entity Framework Core (migrations, LINQ)
-- Prise en charge des .dll natives (SQLite, Avalonia, etc.)
-- Fonctionnalité personnalisée : détection de doublons, gestion avancée des bibliothèques de mots
-- Aide en ligne détaillée intégrée
-- Projet testé sur deux OS
-
----
-
-## Conseils pour l’évaluation
 
 - L’utilisateur de test permet de valider rapidement toutes les fonctionnalités.
 - L’aide intégrée couvre l’ensemble des cas d’usage.
