@@ -10,6 +10,43 @@ YNOV Password Manager permet de stocker, organiser et générer des mots de pass
 
 ---
 
+## Aperçu en images
+
+<p align="center">
+  <img src="screenshots/login.png" alt="Écran de connexion" width="400" />
+  <br><em>Écran de connexion / inscription</em>
+</p>
+<p align="center">
+  <img src="screenshots/main_window.png" alt="Fenêtre principale" width="600" />
+  <br><em>Vue principale : liste des mots de passe, recherche, dossiers</em>
+</p>
+<p align="center">
+  <img src="screenshots/add_password.png" alt="Ajout d'un mot de passe" width="400" />
+  <br><em>Ajout d’un mot de passe</em>
+</p>
+<p align="center">
+  <img src="screenshots/generate_password.png" alt="Générateur de mots de passe" width="400" />
+  <br><em>Générateur de mots de passe (aléatoire ou phrase française)</em>
+</p>
+<p align="center">
+  <img src="screenshots/duplicate_passwords.png" alt="Détection de doublons" width="400" />
+  <br><em>Détection de mots de passe dupliqués</em>
+</p>
+<p align="center">
+  <img src="screenshots/folder_manager.png" alt="Gestion des dossiers" width="400" />
+  <br><em>Gestion des dossiers (création, couleur, icône)</em>
+</p>
+<p align="center">
+  <img src="screenshots/add_words.png" alt="Import de bibliothèque de mots" width="400" />
+  <br><em>Import d’une bibliothèque de mots personnalisée</em>
+</p>
+<p align="center">
+  <img src="screenshots/help_window.png" alt="Aide intégrée" width="400" />
+  <br><em>Fenêtre d’aide intégrée</em>
+</p>
+
+---
+
 ## Fonctionnalités principales
 
 - **Stockage sécurisé** : chiffrement AES-256 de tous les mots de passe, clé dérivée du mot de passe principal de l’utilisateur.
